@@ -1,10 +1,6 @@
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
 
-const Home = () => {
-  console.log('Hello world')
-  return (
-    <main>
-    <div className="text-8xl underline">Hello</div>
-    </main>
-  )
+export default function Products() {
+   const [books, setBooks] = useState([]);
 }
-export default Home
