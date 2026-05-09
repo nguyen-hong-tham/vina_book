@@ -54,7 +54,10 @@ export default function Products() {
     return price >= min && price <= max;
   };
 
+  // Apply filters and sorting
   useEffect(() => {
+    if (!mounted) return;
+    
     let result = [...books];
 
     // Search filter
@@ -76,13 +79,11 @@ export default function Products() {
       result.sort((a, b) => a.price - b.price);
     } else if (sortBy === "price-desc") {
       result.sort((a, b) => b.price - a.price);
-    } else if (sortBy === "newest") {
-      // Already ordered by created_at DESC from API
     }
     
     setFilteredBooks(result);
     setCurrentPage(1);
-  }, [books, searchTerm, priceRange, showInStock, sortBy]);
+  }, [books, searchTerm, priceRange, sortBy, mounted]);
 
   // Pagination logic
   const totalPages = Math.ceil(filteredBooks.length / itemsPerPage);
