@@ -1,44 +1,89 @@
 "use client";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
-import { ProductCard, Pagination, FilterBar, HeroBanner } from "@/components";
+import { useRouter } from "next/router";
+import { ProductCard, Pagination, FilterBar, Category } from "@/components";
 
-const fetchBooks = async () => {
-  const response = await axios.get("/api/products");
+const HeroBanner = dynamic(() => import("@/components/HeroBanner"), {
+  ssr: false,
+});
+
+const fetchBooks = async (categoryId) => {
+  const response = await axios.get("/api/products", {
+    params: categoryId ? { categoryId } : {},
+  });
   return response.data;
 };
 
 export default function Products() {
+  const router = useRouter();
+  const categoryId = router.query.categoryId;
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const {
     data: books = [],
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["books"],
-    queryFn: fetchBooks,
+    queryKey: ["books", categoryId],
+    queryFn: () => fetchBooks(categoryId),
+    enabled: router.isReady,
   });
 
   const [filteredBooks, setFilteredBooks] = useState([]);
   const [sortBy, setSortBy] = useState("newest");
   const [searchTerm, setSearchTerm] = useState("");
   const [showInStock, setShowInStock] = useState(false);
+  const [priceRange, setPriceRange] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
 
-  // TODO: Logic xử lý filter/search/sort sẽ được implement sau
-  // - Lọc theo danh mục (showInStock)
-  // - Tìm kiếm theo tiêu đề hoặc tác giả (searchTerm)
-  // - Sắp xếp: mới nhất, giá cao-thấp, phổ biến (sortBy)
+  // Helper function to check if book price is in range
+  const isPriceInRange = (price, range) => {
+    if (!range) return true;
+    if (range === "300001") return price > 300000;
+    const [min, max] = range.split("-").map(Number);
+    return price >= min && price <= max;
+  };
+
+  // Apply filters and sorting
   useEffect(() => {
-    // Placeholder: Tạm thời render tất cả sách không filter
+    if (!mounted) return;
+    
     let result = [...books];
+
+    // Search filter
+    if (searchTerm) {
+      result = result.filter(
+        (book) =>
+          book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          book.author.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    // Price range filter
+    if (priceRange) {
+      result = result.filter((book) => isPriceInRange(book.price, priceRange));
+    }
+
+    // Sort
+    if (sortBy === "price-asc") {
+      result.sort((a, b) => a.price - b.price);
+    } else if (sortBy === "price-desc") {
+      result.sort((a, b) => b.price - a.price);
+    }
     
     setFilteredBooks(result);
     setCurrentPage(1);
-  }, [books, sortBy, searchTerm, showInStock]);
+  }, [books, searchTerm, priceRange, sortBy, mounted]);
 
   // Pagination logic
   const totalPages = Math.ceil(filteredBooks.length / itemsPerPage);
@@ -47,6 +92,16 @@ export default function Products() {
     startIndex,
     startIndex + itemsPerPage,
   );
+
+  if (!mounted) {
+    return (
+      <main className="min-h-screen bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 py-16 text-center text-gray-500">
+          Đang tải...
+        </div>
+      </main>
+    );
+  }
 
   if (error) {
     return (
@@ -59,7 +114,7 @@ export default function Products() {
     );
   }
 
-  const banners = books.sort(() => 0.5 - Math.random()).slice(0, 5);
+  const banners = books.slice(0, 5);
 
   return (
     <main className="min-h-screen bg-gray-50">
@@ -91,37 +146,8 @@ export default function Products() {
             <div className="sticky top-24 bg-white rounded-xl shadow-sm border border-gray-200 p-6 h-fit hover:shadow-md transition-shadow">
               <h2 className="text-lg font-bold text-gray-900 mb-6">Danh Mục</h2>
 
-              {/* Category Placeholder */}
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-gray-400 hover:bg-gray-50 transition-all">
-                <div className="text-gray-400 mb-3 text-3xl font-light">∿</div>
-                <p className="text-sm font-medium text-gray-700">
-                  Category component
-                </p>
-                <p className="text-xs text-gray-500 mt-2">
-                  will be added later
-                </p>
-              </div>
-
-              {/* Info */}
-              <div className="mt-6 pt-6 border-t border-gray-200">
-                <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-3">
-                  Tính Năng
-                </p>
-                <ul className="text-xs text-gray-600 space-y-2">
-                  <li className="flex items-center gap-2">
-                    <span className="w-1 h-1 bg-gray-400 rounded-full"></span>
-                    Lọc danh mục
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="w-1 h-1 bg-gray-400 rounded-full"></span>
-                    Sắp xếp giá
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="w-1 h-1 bg-gray-400 rounded-full"></span>
-                    Lọc tồn kho
-                  </li>
-                </ul>
-              </div>
+              {/* Category Component */}
+              <Category />
             </div>
           </motion.aside>
 
@@ -140,6 +166,8 @@ export default function Products() {
                 onSortChange={setSortBy}
                 showInStock={showInStock}
                 onStockFilterChange={setShowInStock}
+                priceRange={priceRange}
+                onPriceRangeChange={setPriceRange}
               />
             )}
 
@@ -151,19 +179,19 @@ export default function Products() {
                     key={i}
                     className="bg-white rounded-xl overflow-hidden border border-gray-200"
                   >
-                    <div className="relative w-full h-64 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 overflow-hidden">
+                    <div className="relative w-full h-64 bg-linear-to-r from-gray-200 via-gray-100 to-gray-200 overflow-hidden">
                       <motion.div
                         animate={{ backgroundPosition: ["200% 0", "-200% 0"] }}
                         transition={{ duration: 2, repeat: Infinity }}
                         style={{ backgroundSize: "200% 100%" }}
-                        className="w-full h-full bg-gradient-to-r from-gray-200 via-white to-gray-200"
+                        className="w-full h-full bg-linear-to-r from-gray-200 via-white to-gray-200"
                       />
                     </div>
                     <div className="p-5 space-y-3">
                       <motion.div
                         animate={{ backgroundPosition: ["200% 0", "-200% 0"] }}
                         transition={{ duration: 2, repeat: Infinity }}
-                        className="h-5 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 rounded"
+                        className="h-5 bg-linear-to-r from-gray-200 via-gray-100 to-gray-200 rounded"
                       />
                       <motion.div
                         animate={{ backgroundPosition: ["200% 0", "-200% 0"] }}
@@ -172,7 +200,7 @@ export default function Products() {
                           repeat: Infinity,
                           delay: 0.1,
                         }}
-                        className="h-4 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 rounded w-2/3"
+                        className="h-4 bg-linear-to-r from-gray-200 via-gray-100 to-gray-200 rounded w-2/3"
                       />
                     </div>
                   </div>

@@ -1,39 +1,24 @@
 import pool from '@/lib/db';
 
 export default async function handler(req, res) {
-  // Chỉ cho phép GET request
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { categoryId } = req.query;
-
   try {
-    // Lấy connection từ pool
     const connection = await pool.getConnection();
-
-    const params = [];
-    let whereClause = `WHERE status = 'AVAILABLE'`;
-
-    if (categoryId) {
-      whereClause += ' AND category_id = ?';
-      params.push(categoryId);
-    }
     
     // Query lấy tất cả sách có status = AVAILABLE
-    const [books] = await connection.query(
-      `SELECT id, category_id, title, author, description, image_url, price, stock 
-       FROM books 
-       ${whereClause}
-       ORDER BY created_at DESC`,
-      params,
+    const [category] = await connection.query(
+      `SELECT id, name
+       FROM categories`
     );
     
     // Trả lại connection cho pool
     connection.release();
     
     // Phản hồi với danh sách sách
-    return res.status(200).json(books);
+    return res.status(200).json(category);
   } catch (error) {
     console.error('Error:', error);
     return res.status(500).json({ error: 'Database error' });
