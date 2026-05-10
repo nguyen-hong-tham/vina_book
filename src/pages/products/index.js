@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { ProductCard, Pagination, FilterBar, HeroBanner } from "@/components";
 
+// hàm này gọi api để lấy sách từ BE
 const fetchBooks = async () => {
   const response = await axios.get("/api/products");
   return response.data;
