@@ -27,6 +27,7 @@ export default async function handler(req, res) {
         connection = await pool.getConnection();
 
         // Query product + category
+        // Chỉ lấy sách AVAILABLE hoặc OUT_OF_STOCK (không lấy HIDDEN hoặc DELETED)
         const [rows] = await connection.query(
             `
             SELECT 
@@ -35,7 +36,7 @@ export default async function handler(req, res) {
             FROM books b
             LEFT JOIN categories c
                 ON b.category_id = c.id
-            WHERE b.id = ?
+            WHERE b.id = ? AND b.status IN ('AVAILABLE', 'OUT_OF_STOCK')
             `,
             [id]
         );

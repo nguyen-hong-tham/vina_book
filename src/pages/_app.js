@@ -1,6 +1,6 @@
 import "@/styles/globals.css";
 
-import Navbar from "../components/Navbar";
+import { Navbar, Footer } from "@/components";
 
 import {
   QueryClient,
@@ -13,8 +13,18 @@ const queryClient = new QueryClient();
 export default function App({ Component, pageProps }) {
   return (
     <QueryClientProvider client={queryClient}>
-      <Navbar />
-      <Component {...pageProps} />
+      <div className="flex flex-col min-h-screen">
+        {/* Navbar */}
+        <Navbar />
+
+        {/* Main content - flex grow */}
+        <main className="flex-grow">
+          <Component {...pageProps} />
+        </main>
+
+        {/* Footer - luôn ở dưới */}
+        <Footer />
+      </div>
     </QueryClientProvider>
   );
 }

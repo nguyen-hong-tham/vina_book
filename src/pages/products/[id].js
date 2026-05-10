@@ -1,11 +1,10 @@
-"use client";
 import { useRouter } from "next/router";
 import ProductDetail from "@/components/ProductDetail";
-import Navbar from "@/components/Navbar";
 
 export default function ProductPage() {
     const router = useRouter();
     const { id } = router.query;
+    
     if (!id) {
         return (
             <main className="min-h-screen bg-gray-50">
@@ -16,10 +15,6 @@ export default function ProductPage() {
             </main>
         );
     }
-    return (
-        <>
-          
-            <ProductDetail id={id} />
-        </>
-    );
+    
+    return <ProductDetail id={id} />;
 }

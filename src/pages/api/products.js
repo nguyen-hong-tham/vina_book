@@ -13,16 +13,18 @@ export default async function handler(req, res) {
     const connection = await pool.getConnection();
 
     const params = [];
-    let whereClause = `WHERE status = 'AVAILABLE'`;
+    // Lấy cả AVAILABLE (hiện + cho order) và OUT_OF_STOCK (hiện nhưng disable order)
+    // Không lấy HIDDEN (ẩn hoàn toàn) và DELETED (xóa)
+    let whereClause = `WHERE status IN ('AVAILABLE', 'OUT_OF_STOCK')`;
 
     if (categoryId) {
       whereClause += ' AND category_id = ?';
       params.push(categoryId);
     }
     
-    // Query lấy tất cả sách có status = AVAILABLE
+    // Query lấy tất cả sách có status = AVAILABLE hoặc OUT_OF_STOCK
     const [books] = await connection.query(
-      `SELECT id, category_id, title, author, description, image_url, price, stock 
+      `SELECT id, category_id, title, author, description, image_url, price, stock, status 
        FROM books 
        ${whereClause}
        ORDER BY created_at DESC`,

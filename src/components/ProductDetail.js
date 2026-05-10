@@ -92,21 +92,15 @@ export default function ProductDetail({ id }) {
                             {product.title}
                         </h1>
 
-
-
                         {/* Tác giả */}
                         <p className="text-lg text-gray-600 mb-4">
                             Tác giả: {product.author}
                         </p>
 
-
-
                         {/* Mô tả ngắn */}
                         <p className="text-sm text-gray-500 mb-4">
                             {product.description}
                         </p>
-
-
 
                         {/* Giá */}
                         <p className="text-2xl font-bold text-blue-600 mb-4">
@@ -114,7 +108,6 @@ export default function ProductDetail({ id }) {
                             ₫{product.price.toLocaleString("vi-VN")}
 
                         </p>
-
 
 
                         {/* ================= TRẠNG THÁI KHO ================= */}
@@ -134,7 +127,6 @@ export default function ProductDetail({ id }) {
                             </p>
 
                         </div>
-
 
 
                         {/* ================= CHỌN SỐ LƯỢNG ================= */}
@@ -211,7 +203,6 @@ export default function ProductDetail({ id }) {
                         </div>
 
 
-
                         {/* ================= NÚT GIỎ HÀNG ================= */}
 
                         <button
@@ -239,7 +230,6 @@ export default function ProductDetail({ id }) {
 
                     </div>
                 </div>
-
 
 
                 {/* ================= MÔ TẢ CHI TIẾT ================= */}
