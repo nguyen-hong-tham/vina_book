@@ -1,5 +1,4 @@
 "use client";
-import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -7,6 +6,8 @@ import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { ProductCard, Pagination, FilterBar, Category } from "@/components";
+
+const EMPTY_BOOKS = [];
 
 const HeroBanner = dynamic(() => import("@/components/HeroBanner"), {
   ssr: false,
@@ -29,7 +30,7 @@ export default function Products() {
   }, []);
 
   const {
-    data: books = [],
+    data: booksData,
     isLoading,
     error,
   } = useQuery({
@@ -37,6 +38,8 @@ export default function Products() {
     queryFn: () => fetchBooks(categoryId),
     enabled: router.isReady,
   });
+
+  const books = booksData ?? EMPTY_BOOKS;
 
   const [filteredBooks, setFilteredBooks] = useState([]);
   const [sortBy, setSortBy] = useState("newest");
@@ -74,6 +77,10 @@ export default function Products() {
       result = result.filter((book) => isPriceInRange(book.price, priceRange));
     }
 
+    if (showInStock) {
+      result = result.filter((book) => book.stock > 0);
+    }
+
     // Sort
     if (sortBy === "price-asc") {
       result.sort((a, b) => a.price - b.price);
@@ -82,8 +89,8 @@ export default function Products() {
     }
     
     setFilteredBooks(result);
-    setCurrentPage(1);
-  }, [books, searchTerm, priceRange, sortBy, mounted]);
+    setCurrentPage((page) => (page === 1 ? page : 1));
+  }, [books, searchTerm, priceRange, sortBy, showInStock, mounted]);
 
   // Pagination logic
   const totalPages = Math.ceil(filteredBooks.length / itemsPerPage);
