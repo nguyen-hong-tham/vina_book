@@ -2,25 +2,68 @@ import pool from '@/lib/db';
 
 export default async function handler(req, res) {
 
+    // Chỉ cho phép GET
     if (req.method !== 'GET') {
-        return res.status(405).json({ message: 'Method not allowed' });
+        return res.status(405).json({
+            error: 'Method not allowed'
+        });
     }
 
-    const {id} = req.query;
+    // Lấy id từ query
+    const { id } = req.query;
+
+    // Validate id
+    if (!id || isNaN(id)) {
+        return res.status(400).json({
+            error: 'Invalid product ID'
+        });
+    }
+
+    let connection;
 
     try {
-        const connection = await pool.getConnection();
-        const [rows] = await connection.query('SELECT * FROM books WHERE id = ? AND status = "AVAILABLE"', [id]);
-        connection.release(); // Giải phóng kết nối sau khi sử dụng
 
+        // Kết nối database
+        connection = await pool.getConnection();
+
+        // Query product + category
+        const [rows] = await connection.query(
+            `
+            SELECT 
+                b.*,
+                c.name AS category_name
+            FROM books b
+            LEFT JOIN categories c
+                ON b.category_id = c.id
+            WHERE b.id = ?
+            `,
+            [id]
+        );
+
+        // Không tìm thấy sản phẩm
         if (rows.length === 0) {
-            return res.status(404).json({ message: 'Book not found' });
+            return res.status(404).json({
+                error: 'Product not found'
+            });
         }
+
+        // Trả về product
         return res.status(200).json(rows[0]);
-        
-    } 
-    catch (error) {
+
+    } catch (error) {
+
         console.error('Error fetching product:', error);
-        return res.status(500).json({ message: 'Internal Server Error' });
+
+        return res.status(500).json({
+            error: 'Internal server error'
+        });
+
+    } finally {
+
+        // Luôn release connection
+        if (connection) {
+            connection.release();
+        }
+
     }
 }
