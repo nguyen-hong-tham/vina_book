@@ -2,8 +2,33 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { useState } from 'react';
+import axios from 'axios';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function ProductCard({ book, index }) {
+  const [isAdding, setIsAdding] = useState(false);
+  const [showMessage, setShowMessage] = useState('');
+  const queryClient = useQueryClient();
+
+  const handleAddToCart = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    setIsAdding(true);
+    try {
+      await axios.post('/api/cart', { bookId: book.id, quantity: 1 });
+      setShowMessage('Đã thêm vào giỏ hàng!');
+      queryClient.refetchQueries({ queryKey: ['cart'] });
+      setTimeout(() => setShowMessage(''), 2000);
+    } catch (error) {
+      setShowMessage('Lỗi: ' + (error.response?.data?.message || 'Vui lòng đăng nhập'));
+      setTimeout(() => setShowMessage(''), 3000);
+    } finally {
+      setIsAdding(false);
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -78,18 +103,50 @@ export default function ProductCard({ book, index }) {
                 </span>
               </div>
 
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                disabled={book.stock === 0}
-                className={`w-full py-2.5 px-3 rounded-lg font-semibold text-sm transition ${
-                  book.stock > 0
-                    ? 'bg-blue-600 text-white hover:bg-blue-700'
-                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                }`}
-              >
-                {book.stock > 0 ? 'Xem Chi Tiết' : 'Hết Hàng'}
-              </motion.button>
+              {/* Message */}
+              {showMessage && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  className={`text-xs font-semibold text-center py-2 rounded-lg ${
+                    showMessage.includes('Lỗi')
+                      ? 'bg-red-100 text-red-700'
+                      : 'bg-green-100 text-green-700'
+                  }`}
+                >
+                  {showMessage}
+                </motion.div>
+              )}
+
+              <div className="flex gap-2">
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={handleAddToCart}
+                  disabled={book.stock === 0 || isAdding}
+                  className={`flex-1 py-2.5 px-3 rounded-lg font-semibold text-sm transition ${
+                    book.stock > 0
+                      ? 'bg-green-600 text-white hover:bg-green-700'
+                      : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                  }`}
+                >
+                  {isAdding ? 'Đang thêm...' : 'Giỏ Hàng'}
+                </motion.button>
+
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  disabled={book.stock === 0}
+                  className={`flex-1 py-2.5 px-3 rounded-lg font-semibold text-sm transition ${
+                    book.stock > 0
+                      ? 'bg-blue-600 text-white hover:bg-blue-700'
+                      : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                  }`}
+                >
+                  {book.stock > 0 ? 'Xem Chi Tiết' : 'Hết Hàng'}
+                </motion.button>
+              </div>
             </div>
           </div>
         </motion.div>

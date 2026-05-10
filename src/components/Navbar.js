@@ -10,16 +10,34 @@ const fetchCurrentUser = async () => {
   return response.data.user;
 };
 
+const fetchCart = async () => {
+  const response = await axios.get('/api/cart');
+  return response.data;
+};
+
 export default function Navbar() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const { data: user } = useQuery({
     queryKey: ['current-user'],
     queryFn: fetchCurrentUser,
     retry: false,
+    enabled: mounted,
+  });
+
+  const { data: cart } = useQuery({
+    queryKey: ['cart'],
+    queryFn: fetchCart,
+    retry: false,
+    enabled: mounted && !!user,
   });
 
   useEffect(() => {
@@ -37,6 +55,7 @@ export default function Navbar() {
     try {
       await axios.post('/api/auth/logout');
       await queryClient.removeQueries({ queryKey: ['current-user'] });
+      await queryClient.removeQueries({ queryKey: ['cart'] });
       setDropdownOpen(false);
       router.push('/login');
     } catch (error) {
@@ -45,13 +64,15 @@ export default function Navbar() {
     }
   };
 
+  const cartItemCount = cart?.items?.length || 0;
+
   return (
     <nav className="bg-blue-600 text-white shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           
           <div className="shrink-0 font-bold text-2xl tracking-wide">
-            <Link href="/">
+            <Link href="/products">
               VinaBook
             </Link>
           </div>
@@ -63,9 +84,11 @@ export default function Navbar() {
             
             <Link href="/cart" className="hover:text-blue-200 transition-colors flex items-center">
               Giỏ Hàng 
-              <span className="ml-1 bg-yellow-400 text-blue-900 text-xs font-bold px-2 py-0.5 rounded-full">
-
-              </span>
+              {cartItemCount > 0 && (
+                <span className="ml-2 bg-yellow-400 text-blue-900 text-xs font-bold px-2 py-0.5 rounded-full">
+                  {cartItemCount}
+                </span>
+              )}
             </Link>
 
             {user ? (
@@ -102,7 +125,7 @@ export default function Navbar() {
               </div>
             ) : (
               <Link href="/login" className="hover:text-blue-200 transition-colors">
-                Tài Khoản
+                Đăng nhập
               </Link>
             )}
           </div>
