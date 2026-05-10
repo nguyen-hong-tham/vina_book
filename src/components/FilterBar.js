@@ -8,7 +8,9 @@ export default function FilterBar({
   sortBy, 
   onSortChange, 
   showInStock, 
-  onStockFilterChange 
+  onStockFilterChange,
+  priceRange,
+  onPriceRangeChange
 }) {
   return (
     <motion.div
@@ -24,30 +26,32 @@ export default function FilterBar({
           placeholder="Tìm sách..."
           value={searchTerm}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-50 transition"
-        />
+          className="px-4 py-2 border border-gray-300 rounded-lg text-black focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-50 transition"
+        />    
+
+        {/* Price Range Filter */}
+        <select
+          value={priceRange}
+          onChange={(e) => onPriceRangeChange(e.target.value)}
+          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-50 transition bg-white text-black"
+        >
+          <option value="">Tất cả giá tiền</option>
+          <option value="0-100000">0 - 100k</option>
+          <option value="100001-200000">101k - 200k</option>
+          <option value="200001-300000">201k - 300k</option>
+          <option value="300001">300k+</option>
+        </select>
 
         {/* Sort */}
         <select
           value={sortBy}
           onChange={(e) => onSortChange(e.target.value)}
-          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-50 transition bg-white"
+          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-50 transition bg-white text-black"
         >
-            chưa làm
+          <option value="newest">Mới nhất</option>
+          <option value="price-asc">Giá: Thấp → Cao</option>
+          <option value="price-desc">Giá: Cao → Thấp</option>
         </select>
-
-        {/* Stock Filter */}
-        <label className="flex items-center px-4 py-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition">
-          <input
-            type="checkbox"
-            checked={showInStock}
-            onChange={(e) => onStockFilterChange(e.target.checked)}
-            className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
-          />
-          <span className="ml-2 text-sm text-gray-700">
-           chưa làm
-          </span>
-        </label>
       </div>
     </motion.div>
   );
