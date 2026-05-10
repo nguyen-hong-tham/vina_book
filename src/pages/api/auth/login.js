@@ -16,8 +16,10 @@ export default async function handler(req, res) {
       return res.status(401).json({ message: 'Sai email hoặc mật khẩu' });
     }
 
+    const role = String(user.role || (user.email === 'admin@gmail.com' ? 'ADMIN' : 'USER')).toLowerCase();
+
     const token = jwt.sign(
-      { id: user.id, name: user.name, email: user.email },
+      { id: user.id, name: user.name, email: user.email, role },
       'asdf1234secretkey',
       { expiresIn: '1d' }
     );
@@ -30,7 +32,10 @@ export default async function handler(req, res) {
       path: '/'
     }));
 
-    res.status(200).json({ message: 'Đăng nhập thành công!' });
+    res.status(200).json({
+      message: 'Đăng nhập thành công!',
+      role,
+    });
   } catch (error) {
     res.status(500).json({ message: 'Lỗi Server' });
   }

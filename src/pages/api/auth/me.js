@@ -21,6 +21,7 @@ export default function handler(req, res) {
         id: decoded.id,
         name: decoded.name,
         email: decoded.email,
+        role: String(decoded.role || (decoded.email === 'admin@gmail.com' ? 'ADMIN' : 'USER')).toLowerCase(),
       },
     });
   } catch (error) {

@@ -25,7 +25,7 @@ export default function LoginPage() {
       setMessage(response.data.message || 'Đăng nhập thành công!');
       await queryClient.invalidateQueries({ queryKey: ['current-user'] });
       await queryClient.refetchQueries({ queryKey: ['current-user'] });
-      router.push('/products');
+      router.push(String(response.data.role || '').toLowerCase() === 'admin' ? '/admin' : '/products');
     } catch (err) {
       setError(err.response?.data?.message || 'Đăng nhập thất bại');
     } finally {

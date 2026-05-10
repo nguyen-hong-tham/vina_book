@@ -15,18 +15,18 @@ SET FOREIGN_KEY_CHECKS = 1;
 -- USERS DATA (10)
 -- =====================================================
 
-INSERT INTO users (name, email, password)
+INSERT INTO users (name, email, role, password)
 VALUES
-('Admin', 'admin@gmail.com', '123456'),
-('Tham', 'tham@gmail.com', '123456'),
-('An', 'an@gmail.com', '123456'),
-('Khoa', 'khoa@gmail.com', '123456'),
-('Long', 'long@gmail.com', '123456'),
-('Vy', 'vy@gmail.com', '123456'),
-('Trang', 'trang@gmail.com', '123456'),
-('Minh', 'minh@gmail.com', '123456'),
-('Dat', 'dat@gmail.com', '123456'),
-('Hieu', 'hieu@gmail.com', '123456');
+('Admin', 'admin@gmail.com', 'ADMIN', '123456'),
+('Tham', 'tham@gmail.com', 'USER', '123456'),
+('An', 'an@gmail.com', 'USER', '123456'),
+('Khoa', 'khoa@gmail.com', 'USER', '123456'),
+('Long', 'long@gmail.com', 'USER', '123456'),
+('Vy', 'vy@gmail.com', 'USER', '123456'),
+('Trang', 'trang@gmail.com', 'USER', '123456'),
+('Minh', 'minh@gmail.com', 'USER', '123456'),
+('Dat', 'dat@gmail.com', 'USER', '123456'),
+('Hieu', 'hieu@gmail.com', 'USER', '123456');
 
 -- =====================================================
 -- CATEGORIES DATA (7)
