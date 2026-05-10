@@ -39,7 +39,7 @@ export default function ProductCard({ book, index }) {
       <Link href={`/products/${book.id}`}>
         <motion.div
           whileHover={{ boxShadow: '0 20px 40px rgba(59, 130, 246, 0.15)' }}
-          className="bg-white rounded-xl overflow-hidden border border-gray-200 hover:border-blue-300 transition-all h-full flex flex-col cursor-pointer"
+          className="text-black bg-white rounded-xl overflow-hidden border border-gray-200 hover:border-blue-300 transition-all h-full flex flex-col cursor-pointer"
         >
           {/* Image */}
           <div className="relative w-full h-64 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden flex items-center justify-center">

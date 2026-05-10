@@ -1,4 +1,5 @@
 'use client';
+import React, { useEffect, useState } from 'react';
 import Pagination from './Pagination';
 
 export default function ProductTable({
@@ -13,12 +14,28 @@ export default function ProductTable({
   onHide = () => { }, // hàm gọi khi click hide
   onShow = () => { },// hàm gọi khi click show
 }) {
-  const categoryMap = {
-    1: 'Kỹ Năng',
-    2: 'Tâm Lý',
-    3: 'Công Nghệ',
-    4: 'Truyện'
-  };
+  const [categoryMap, setCategoryMap] = useState({});
+
+  useEffect(() => {
+    let mounted = true;
+    fetch('/api/category')
+      .then((res) => res.json())
+      .then((payload) => {
+        const categories = payload?.data || payload?.categories || payload || [];
+        const map = {};
+        categories.forEach((c) => {
+          if (!c) return;
+          const id = c.id ?? c.category_id ?? c.value;
+          const name = c.name || c.title || c.label || c.category_name;
+          if (id != null) map[id] = name;
+        });
+        if (mounted) setCategoryMap(map);
+      })
+      .catch(() => {});
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const getCategoryName = (categoryId) => {
     return categoryMap[categoryId] || 'N/A';

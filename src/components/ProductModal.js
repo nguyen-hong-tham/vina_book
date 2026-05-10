@@ -23,6 +23,21 @@ export default function ProductModal({
   });
 
   const [error, setError] = useState({});
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    let mounted = true;
+    fetch('/api/category')
+      .then((res) => res.json())
+      .then((payload) => {
+        const list = payload?.data || payload?.categories || payload || [];
+        if (mounted) setCategories(list);
+      })
+      .catch(() => {});
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   // useEffect reset form :reset form khi mở modal + đổ dữ liệu cũ vào form khi edit
   useEffect(() => {
@@ -184,7 +199,7 @@ export default function ProductModal({
               onChange={handleChange}
               disabled={loading}
               placeholder="Nhập tên sách..."
-              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 transition ${error.title ? 'border-red-500' : 'border-gray-300'
+              className={`text-black w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 transition ${error.title ? 'border-red-500' : 'border-gray-300'
                 }`}
             />
             {error.title && <p className="text-red-500 text-sm mt-1">⚠️ {error.title}</p>}
@@ -202,7 +217,7 @@ export default function ProductModal({
               onChange={handleChange}
               disabled={loading}
               placeholder="Nhập tác giả..."
-              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 transition ${error.author ? 'border-red-500' : 'border-gray-300'
+              className={`text-black w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 transition ${error.author ? 'border-red-500' : 'border-gray-300'
                 }`}
             />
             {error.author && <p className="text-red-500 text-sm mt-1"> {error.author}</p>}
@@ -223,7 +238,7 @@ export default function ProductModal({
                 disabled={loading}
                 placeholder="1000"
                 min="1000"
-                className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 transition ${error.price ? 'border-red-500' : 'border-gray-300'
+                className={`text-black w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 transition ${error.price ? 'border-red-500' : 'border-gray-300'
                   }`}
               />
               {error.price && <p className="text-red-500 text-sm mt-1">⚠️ {error.price}</p>}
@@ -242,7 +257,7 @@ export default function ProductModal({
                 disabled={loading}
                 placeholder="0"
                 min="0"
-                className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 transition ${error.stock ? 'border-red-500' : 'border-gray-300'
+                className={`text-black w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 transition ${error.stock ? 'border-red-500' : 'border-gray-300'
                   }`}
               />
               {error.stock && <p className="text-red-500 text-sm mt-1">⚠️ {error.stock}</p>}
@@ -259,15 +274,20 @@ export default function ProductModal({
               value={formData.category_id}
               onChange={handleChange}
               disabled={loading}
-              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 transition ${
+              className={`text-black w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 transition ${
                 error.category_id ? 'border-red-500' : 'border-gray-300'
               }`}
             >
               <option value="">-- Chọn danh mục --</option>
-              <option value="1">Kỹ Năng</option>
-              <option value="2">Tâm Lý</option>
-              <option value="3">Công Nghệ</option>
-              <option value="4">Truyện</option>
+              {categories.map((c) => {
+                const id = c.id ?? c.value ?? c.category_id;
+                const name = c.name || c.title || c.label || c.category_name;
+                return (
+                  <option key={id} value={id}>
+                    {name}
+                  </option>
+                );
+              })}
             </select>
             {error.category_id && <p className="text-red-500 text-sm mt-1">⚠️ {error.category_id}</p>}
           </div>
@@ -284,7 +304,7 @@ export default function ProductModal({
               disabled={loading}
               placeholder="Nhập mô tả sản phẩm..."
               rows="3"
-              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 transition ${
+              className={`text-black w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 transition ${
                 error.description ? 'border-red-500' : 'border-gray-300'
               }`}
             />
@@ -303,7 +323,7 @@ export default function ProductModal({
               onChange={handleChange}
               disabled={loading}
               placeholder="https://example.com/image.jpg"
-              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 transition ${
+              className={`text-black w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 transition ${
                 error.image_url ? 'border-red-500' : 'border-gray-300'
               }`}
             />
