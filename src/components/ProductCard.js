@@ -131,7 +131,7 @@ export default function ProductCard({ book, index }) {
                       : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                   }`}
                 >
-                  {isAdding ? 'Đang thêm...' : '🛒 Giỏ Hàng'}
+                  {isAdding ? 'Đang thêm...' : 'Giỏ Hàng'}
                 </motion.button>
 
                 <motion.button

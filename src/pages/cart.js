@@ -4,7 +4,6 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 
 const fetchCart = async () => {
@@ -13,11 +12,11 @@ const fetchCart = async () => {
 };
 
 export default function CartPage() {
-  const router = useRouter();
   const [mounted, setMounted] = useState(false);
+  const [checkoutResult, setCheckoutResult] = useState(null);
 
   useEffect(() => {
-    setMounted(true);
+    queueMicrotask(() => setMounted(true));
   }, []);
 
   const { data: cart, isLoading, error, refetch } = useQuery({
@@ -38,11 +37,19 @@ export default function CartPage() {
     onSuccess: () => refetch(),
   });
 
+  const checkoutMutation = useMutation({
+    mutationFn: () => axios.post('/api/checkout'),
+    onSuccess: async (response) => {
+      setCheckoutResult(response.data);
+      await refetch();
+    },
+  });
+
   if (!mounted) return null;
 
   if (isLoading) {
     return (
-      <main className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 px-4 py-8">
+      <main className="min-h-screen bg-linear-to-b from-slate-50 to-slate-100 px-4 py-8">
         <div className="max-w-6xl mx-auto flex items-center justify-center h-screen">
           <div className="text-slate-500">Đang tải giỏ hàng...</div>
         </div>
@@ -52,7 +59,7 @@ export default function CartPage() {
 
   if (error) {
     return (
-      <main className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 px-4 py-8">
+      <main className="min-h-screen bg-linear-to-b from-slate-50 to-slate-100 px-4 py-8">
         <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -78,7 +85,7 @@ export default function CartPage() {
   const isEmpty = items.length === 0;
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 px-4 py-8">
+    <main className="min-h-screen bg-linear-to-b from-slate-50 to-slate-100 px-4 py-8">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <motion.div
@@ -93,6 +100,30 @@ export default function CartPage() {
             {isEmpty ? 'Giỏ hàng trống' : `${items.length} sản phẩm`}
           </h1>
         </motion.div>
+
+        {checkoutResult ? (
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-8 rounded-3xl border border-emerald-200 bg-emerald-50 p-6 shadow-sm"
+          >
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-700 mb-2">
+              Thanh toán thành công
+            </p>
+            <h2 className="text-2xl font-bold text-emerald-900 mb-2">
+              Đơn hàng #{checkoutResult.orderId} đã được tạo
+            </h2>
+            <p className="text-emerald-800 mb-4">
+              Tổng tiền: {Number(checkoutResult.totalAmount).toLocaleString('vi-VN')}đ
+            </p>
+            <Link
+              href="/products"
+              className="inline-flex items-center rounded-xl bg-emerald-600 px-5 py-3 font-semibold text-white transition hover:bg-emerald-700"
+            >
+              Tiếp tục mua sắm
+            </Link>
+          </motion.div>
+        ) : null}
 
         {isEmpty ? (
           <motion.div
@@ -167,7 +198,7 @@ export default function CartPage() {
                   className="rounded-2xl bg-white border border-slate-200 shadow-md p-4 flex gap-4 hover:shadow-lg transition-shadow"
                 >
                   {/* Image */}
-                  <div className="w-24 h-32 rounded-lg bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                  <div className="w-24 h-32 rounded-lg bg-linear-to-br from-slate-100 to-slate-200 flex items-center justify-center shrink-0 overflow-hidden">
                     {item.image_url ? (
                       <img
                         src={item.image_url}
@@ -286,9 +317,11 @@ export default function CartPage() {
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
+                onClick={() => checkoutMutation.mutate()}
+                disabled={checkoutMutation.isPending || isEmpty}
                 className="w-full py-3 px-4 rounded-lg font-semibold text-white bg-blue-600 hover:bg-blue-700 transition shadow-md hover:shadow-lg mb-3"
               >
-                Thanh toán
+                {checkoutMutation.isPending ? 'Đang xử lý...' : 'Thanh toán'}
               </motion.button>
 
               {/* Continue Shopping */}

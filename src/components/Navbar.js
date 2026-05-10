@@ -83,7 +83,7 @@ export default function Navbar() {
             </Link>
             
             <Link href="/cart" className="hover:text-blue-200 transition-colors flex items-center">
-              🛒 Giỏ Hàng 
+              Giỏ Hàng 
               {cartItemCount > 0 && (
                 <span className="ml-2 bg-yellow-400 text-blue-900 text-xs font-bold px-2 py-0.5 rounded-full">
                   {cartItemCount}
