@@ -281,8 +281,8 @@ export async function getServerSideProps({ query }) {
     const connection = await pool.getConnection();
     
     let q = `
-      SELECT id, title, author, price, stock, image_url as imageUrl, 
-             category_id as categoryId, status
+      SELECT id, title, author, price, stock, image_url, 
+             category_id, status
       FROM books 
       WHERE status IN ('AVAILABLE', 'OUT_OF_STOCK')
     `;
@@ -300,7 +300,6 @@ export async function getServerSideProps({ query }) {
       props: {
         initialBooks: books || [],
       },
-      revalidate: 60, // ISR: Revalidate every 60 seconds
     };
   } catch (error) {
     console.error("getServerSideProps error:", error);
@@ -308,7 +307,6 @@ export async function getServerSideProps({ query }) {
       props: {
         initialBooks: [],
       },
-      revalidate: 10,
     };
   }
 }
