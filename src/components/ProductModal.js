@@ -1,7 +1,7 @@
 'use client';
 // Đây là popup form: create product + edit product
 
-import { useState, useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 export default function ProductModal({
   isOpen,       // trạng thái mở/đóng modal
@@ -24,6 +24,18 @@ export default function ProductModal({
 
   const [error, setError] = useState({});
   const [categories, setCategories] = useState([]);
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState('');
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [uploadError, setUploadError] = useState('');
+
+  const cloudinaryCloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+  const cloudinaryUploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+
+  const canUploadToCloudinary = useMemo(
+    () => Boolean(cloudinaryCloudName && cloudinaryUploadPreset),
+    [cloudinaryCloudName, cloudinaryUploadPreset]
+  );
 
   useEffect(() => {
     let mounted = true;
@@ -43,32 +55,45 @@ export default function ProductModal({
   useEffect(() => {
     if (isOpen) {
 
-      if (mode === 'edit' && initialData !== null && initialData !== undefined) {
-        // fill dữ liệu cũ vào input
-        setFormData({
-          title: initialData.title || '',
-          author: initialData.author || '',
-          price: initialData.price || '',
-          stock: initialData.stock || '',
-          category_id: initialData.category_id || '',
-          description: initialData.description || '',
-          image_url: initialData.image_url || ''
-        });
-      } else {
-        setFormData({
-          title: '',
-          author: '',
-          price: '',
-          stock: '',
-          category_id: '',
-          description: '',
-          image_url: ''
-        });
-      }
-      setError({}); //reset error về rỗng
+      queueMicrotask(() => {
+        if (mode === 'edit' && initialData !== null && initialData !== undefined) {
+          // fill dữ liệu cũ vào input
+          setFormData({
+            title: initialData.title || '',
+            author: initialData.author || '',
+            price: initialData.price || '',
+            stock: initialData.stock || '',
+            category_id: initialData.category_id || '',
+            description: initialData.description || '',
+            image_url: initialData.image_url || ''
+          });
+        } else {
+          setFormData({
+            title: '',
+            author: '',
+            price: '',
+            stock: '',
+            category_id: '',
+            description: '',
+            image_url: ''
+          });
+        }
+        setError({}); //reset error về rỗng
+        setImageFile(null);
+        setImagePreview('');
+        setUploadError('');
+      });
     }
 
   }, [isOpen, initialData, mode]) // mỗi khi mở modal hoặc dữ liệu cũ thay đổi thì reset formData
+
+  useEffect(() => {
+    return () => {
+      if (imagePreview?.startsWith('blob:')) {
+        URL.revokeObjectURL(imagePreview);
+      }
+    };
+  }, [imagePreview]);
 
 
   //  =======================khi user nhập input -> update formData =========================
@@ -87,6 +112,53 @@ export default function ProductModal({
       }));
     }
   }
+
+  const handleImageChange = (e) => {
+    const file = e.target.files?.[0] || null;
+    if (imagePreview?.startsWith('blob:')) {
+      URL.revokeObjectURL(imagePreview);
+    }
+    setImageFile(file);
+    setUploadError('');
+    setImagePreview(file ? URL.createObjectURL(file) : '');
+
+    if (file && error.image_url) {
+      setError((prev) => ({
+        ...prev,
+        image_url: '',
+      }));
+    }
+  };
+
+  const uploadImageToCloudinary = async () => {
+    if (!imageFile) {
+      return formData.image_url;
+    }
+
+    if (!canUploadToCloudinary) {
+      throw new Error('Thiếu cấu hình Cloudinary. Hãy thêm NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME và NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET.');
+    }
+
+    const uploadData = new FormData();
+    uploadData.append('file', imageFile);
+    uploadData.append('upload_preset', cloudinaryUploadPreset);
+
+    const response = await fetch(
+      `https://api.cloudinary.com/v1_1/${cloudinaryCloudName}/image/upload`,
+      {
+        method: 'POST',
+        body: uploadData,
+      }
+    );
+
+    if (!response.ok) {
+      const payload = await response.json().catch(() => ({}));
+      throw new Error(payload?.error?.message || 'Upload hình ảnh thất bại');
+    }
+
+    const payload = await response.json();
+    return payload.secure_url;
+  };
 
 
   // ======================kiểm tra form hợp lệ trước khi submit======================
@@ -131,9 +203,9 @@ export default function ProductModal({
       newError.description = 'Mô tả không được để trống';
     }
 
-    // Image URL - Required
-    if (!formData.image_url.trim()) {
-      newError.image_url = 'Link hình ảnh không được để trống';
+    // Image - Required: either upload file or paste URL
+    if (!formData.image_url.trim() && !imageFile) {
+      newError.image_url = 'Vui lòng tải ảnh lên hoặc nhập link hình ảnh';
     }
 
     setError(newError);
@@ -148,8 +220,28 @@ export default function ProductModal({
     if (!validateForm()) {
       return; // nếu form không hợp lệ thì dừng submit
     }
+
     try {
-      onSubmit(formData, initialData?.id); //gọi hàm submit từ props, truyền dữ liệu form + id lên
+      const runSubmit = async () => {
+        setUploadingImage(true);
+        try {
+          const imageUrl = imageFile ? await uploadImageToCloudinary() : formData.image_url.trim();
+          await onSubmit(
+            {
+              ...formData,
+              image_url: imageUrl,
+            },
+            initialData?.id
+          ); //gọi hàm submit từ props, truyền dữ liệu form + id lên
+        } catch (err) {
+          console.error('Error submitting form:', err);
+          setUploadError(err.message || 'Không thể upload ảnh');
+        } finally {
+          setUploadingImage(false);
+        }
+      };
+
+      runSubmit();
     } catch (err) {
       console.error('Error submitting form:', err);
       // có thể set lỗi chung ở đây nếu onSubmit ném lỗi
@@ -163,6 +255,7 @@ export default function ProductModal({
   // tạo biến title và buttonText tùy theo mode để hiển thị khác nhau giữa create và edit
   const title = mode === 'create' ? 'Tạo Sản Phẩm Mới' : 'Chỉnh Sửa Sản Phẩm';
   const buttonText = mode === 'create' ? 'Tạo Sản Phẩm' : 'Lưu Thay Đổi';
+  const isBusy = loading || uploadingImage;
   return (
     <>
       {/* Overlay */}
@@ -178,7 +271,7 @@ export default function ProductModal({
           <h2 className="text-2xl font-bold text-gray-900">{title}</h2>
           <button
             onClick={onClose}
-            disabled={loading}
+            disabled={isBusy}
             className="text-gray-500 hover:text-gray-700 disabled:opacity-50 text-2xl transition"
           >
             ✕
@@ -197,7 +290,7 @@ export default function ProductModal({
               name="title"
               value={formData.title}
               onChange={handleChange}
-              disabled={loading}
+              disabled={isBusy}
               placeholder="Nhập tên sách..."
               className={`text-black w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 transition ${error.title ? 'border-red-500' : 'border-gray-300'
                 }`}
@@ -215,7 +308,7 @@ export default function ProductModal({
               name="author"
               value={formData.author}
               onChange={handleChange}
-              disabled={loading}
+              disabled={isBusy}
               placeholder="Nhập tác giả..."
               className={`text-black w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 transition ${error.author ? 'border-red-500' : 'border-gray-300'
                 }`}
@@ -235,7 +328,7 @@ export default function ProductModal({
                 name="price"
                 value={formData.price}
                 onChange={handleChange}
-                disabled={loading}
+                disabled={isBusy}
                 placeholder="1000"
                 min="1000"
                 className={`text-black w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 transition ${error.price ? 'border-red-500' : 'border-gray-300'
@@ -254,7 +347,7 @@ export default function ProductModal({
                 name="stock"
                 value={formData.stock}
                 onChange={handleChange}
-                disabled={loading}
+                disabled={isBusy}
                 placeholder="0"
                 min="0"
                 className={`text-black w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 transition ${error.stock ? 'border-red-500' : 'border-gray-300'
@@ -273,7 +366,7 @@ export default function ProductModal({
               name="category_id"
               value={formData.category_id}
               onChange={handleChange}
-              disabled={loading}
+              disabled={isBusy}
               className={`text-black w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 transition ${
                 error.category_id ? 'border-red-500' : 'border-gray-300'
               }`}
@@ -301,7 +394,7 @@ export default function ProductModal({
               name="description"
               value={formData.description}
               onChange={handleChange}
-              disabled={loading}
+              disabled={isBusy}
               placeholder="Nhập mô tả sản phẩm..."
               rows="3"
               className={`text-black w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 transition ${
@@ -311,23 +404,44 @@ export default function ProductModal({
             {error.description && <p className="text-red-500 text-sm mt-1">⚠️ {error.description}</p>}
           </div>
 
-          {/* Image URL - Required */}
+          {/* Image Upload */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Link Hình Ảnh <span className="text-red-500">*</span>
+              Hình Ảnh <span className="text-red-500">*</span>
             </label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              disabled={isBusy}
+              className="text-black w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 transition bg-white"
+            />
+            <p className="text-xs text-gray-500 mt-2">
+              Tải ảnh lên Cloudinary để tự lấy link.{' '}
+              {!canUploadToCloudinary && 'Hiện chưa cấu hình Cloudinary nên bạn vẫn có thể dán link thủ công bên dưới.'}
+            </p>
+            {(imagePreview || formData.image_url) && (
+              <div className="mt-3 overflow-hidden rounded-lg border border-gray-200 bg-gray-50">
+                <img
+                  src={imagePreview || formData.image_url}
+                  alt="Preview"
+                  className="h-48 w-full object-cover"
+                />
+              </div>
+            )}
             <input
               type="url"
               name="image_url"
               value={formData.image_url}
               onChange={handleChange}
-              disabled={loading}
-              placeholder="https://example.com/image.jpg"
+              disabled={isBusy}
+              placeholder="Hoặc dán link ảnh nếu cần"
               className={`text-black w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 transition ${
                 error.image_url ? 'border-red-500' : 'border-gray-300'
               }`}
             />
             {error.image_url && <p className="text-red-500 text-sm mt-1">⚠️ {error.image_url}</p>}
+            {uploadError && <p className="text-red-500 text-sm mt-1">⚠️ {uploadError}</p>}
           </div>
 
           {/* Buttons */}
@@ -335,7 +449,7 @@ export default function ProductModal({
             <button
               type="button"
               onClick={onClose}
-              disabled={loading}
+              disabled={isBusy}
               className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 disabled:opacity-50 font-medium transition"
             >
               Hủy
@@ -343,10 +457,10 @@ export default function ProductModal({
 
             <button
               type="submit"
-              disabled={loading}
+              disabled={isBusy}
               className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-blue-400 font-medium transition flex items-center gap-2"
             >
-              {loading && (
+              {isBusy && (
                 <span className="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
               )}
               {buttonText}
