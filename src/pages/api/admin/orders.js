@@ -187,51 +187,63 @@ export async function updateOrderStatus(req, res) {
    }
    try {
       const connection = await pool.getConnection();
+
+      await connection.beginTransaction();
+
+      // fetch current order status
+      const [[orderRow]] = await connection.query(
+         `SELECT status FROM orders WHERE id = ?`,
+         [orderId]
+      );
+
+      if (!orderRow) {
+         await connection.rollback();
+         connection.release();
+         return res.status(404).json({ error: 'Không tìm thấy đơn hàng' });
+      }
+
+      const prevStatus = orderRow.status;
+
       const [result] = await connection.query(
          `
          UPDATE orders
          SET status = ?
          WHERE id = ?
          `,
-
-         [
-            status,
-            orderId
-         ]
-
+         [status, orderId]
       );
+
+      // If changing to REJECT from a non-REJECT status, restore stock
+      if (status === 'REJECT' && prevStatus !== 'REJECT') {
+         const [details] = await connection.query(
+            `SELECT book_id, quantity FROM order_details WHERE order_id = ?`,
+            [orderId]
+         );
+
+         for (const d of details) {
+            await connection.query(
+               `UPDATE books SET stock = stock + ? WHERE id = ?`,
+               [d.quantity, d.book_id]
+            );
+         }
+      }
+
+      await connection.commit();
       connection.release();
 
       if (result.affectedRows === 0) {
-
-         return res.status(404).json({
-
-            error: 'Không tìm thấy đơn hàng'
-
-         });
-
+         return res.status(404).json({ error: 'Không tìm thấy đơn hàng' });
       }
+
       return res.status(200).json({
-
          message: 'Cập nhật trạng thái thành công',
-
          orderId,
-
-         newStatus: status
-
+         newStatus: status,
       });
 
    } catch (error) {
-      console.error(
-         'Error updating order status:',
-         error
-      );
-      return res.status(500).json({
-
-         error: 'Lỗi khi cập nhật trạng thái'
-
-      });
-
+      console.error('Error updating order status:', error);
+      return res.status(500).json({ error: 'Lỗi khi cập nhật trạng thái' });
    }
 
 }

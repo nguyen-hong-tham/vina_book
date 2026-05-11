@@ -3,10 +3,12 @@ import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { ShoppingCart } from "lucide-react";
 
 const fetchProduct = async (id) => {
-    const response = await axios.get(`/api/product/${id}`);
+    const response = await axios.get(`/api/products/${id}`);
     return response.data;
 }
 
@@ -17,6 +19,9 @@ export default function ProductDetail({ id }) {
     });
 
     const [quantity, setQuantity] = useState(1);
+    const [adding, setAdding] = useState(false);
+    const queryClient = useQueryClient();
+    const router = useRouter();
 
     if (isLoading) {
         return (
@@ -51,7 +56,29 @@ export default function ProductDetail({ id }) {
             alert("Sản phẩm này hiện đang hết hàng!");
             return;
         }
-        alert(`Đã thêm ${quantity} x ${product.title} vào giỏ hàng!`);
+
+        (async () => {
+            try {
+                setAdding(true);
+                await axios.post('/api/cart', { bookId: product.id, quantity });
+                try { queryClient.invalidateQueries(['cart']); } catch (e) {}
+                alert(`Đã thêm ${quantity} x ${product.title} vào giỏ hàng!`);
+            } catch (err) {
+                const status = err?.response?.status;
+                if (status === 401) {
+                    router.push('/login');
+                    return;
+                }
+                if (status === 403) {
+                    alert(err.response?.data?.message || 'Bạn không có quyền');
+                    return;
+                }
+                console.error('Add to cart error', err);
+                alert('Có lỗi khi thêm vào giỏ hàng');
+            } finally {
+                setAdding(false);
+            }
+        })();
     };
 
 
@@ -137,7 +164,7 @@ export default function ProductDetail({ id }) {
                                 Số lượng:
                             </label>
                             {/* Box quantity */}
-                            <div className="flex items-center border border-gray-300 rounded-lg">
+                            <div className="text-black flex items-center border border-gray-300 rounded-lg">
                                 {/* Nút giảm */}
                                 <button
 
@@ -206,24 +233,22 @@ export default function ProductDetail({ id }) {
                         {/* ================= NÚT GIỎ HÀNG ================= */}
 
                         <button
-
                             onClick={handleAddToCart}
-
-                            disabled={isOutOfStock}
-
+                            disabled={isOutOfStock || adding}
                             className={`px-6 py-3 rounded-md font-medium text-white flex items-center gap-2 ${
-                                isOutOfStock
+                                isOutOfStock || adding
                                     ? "bg-gray-400 cursor-not-allowed"
                                     : "bg-blue-600 hover:bg-blue-700"
                             }`}
                         >
-
                             {/* Icon */}
                             <ShoppingCart size={20} />
 
                             {/* Text */}
                             {isOutOfStock
                                 ? "Hết hàng"
+                                : adding
+                                ? 'Đang thêm...'
                                 : "Thêm vào giỏ"}
 
                         </button>

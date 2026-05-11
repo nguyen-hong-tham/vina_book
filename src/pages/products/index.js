@@ -1,45 +1,48 @@
-"use client";
 import dynamic from "next/dynamic";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { ProductCard, Pagination, FilterBar, Category } from "@/components";
+import pool from "@/lib/db";
 
 const EMPTY_BOOKS = [];
 
 const HeroBanner = dynamic(() => import("@/components/HeroBanner"), {
-  ssr: false,
+  ssr: true,
 });
 
-const fetchBooks = async (categoryId) => {
-  const response = await axios.get("/api/products", {
-    params: categoryId ? { categoryId } : {},
-  });
-  return response.data;
-};
-
-export default function Products() {
+export default function Products({ initialBooks = [] }) {
   const router = useRouter();
   const categoryId = router.query.categoryId;
   const [mounted, setMounted] = useState(false);
+  const [books, setBooks] = useState(initialBooks);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const {
-    data: booksData,
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ["books", categoryId],
-    queryFn: () => fetchBooks(categoryId),
-    enabled: router.isReady,
-  });
+  // Fetch additional data when categoryId changes on client
+  useEffect(() => {
+    if (!router.isReady || !categoryId) return;
+    
+    const fetchBooks = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch(`/api/products?categoryId=${categoryId}`);
+        const data = await response.json();
+        setBooks(data);
+        setError(null);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  const books = booksData ?? EMPTY_BOOKS;
+    fetchBooks();
+  }, [categoryId, router.isReady]);
 
   const [filteredBooks, setFilteredBooks] = useState([]);
   const [sortBy, setSortBy] = useState("newest");
@@ -270,4 +273,42 @@ export default function Products() {
       </div>
     </main>
   );
+}
+
+// SSR: Server-Side Rendering - Fetch data on every request before rendering
+export async function getServerSideProps({ query }) {
+  try {
+    const connection = await pool.getConnection();
+    
+    let q = `
+      SELECT id, title, author, price, stock, image_url as imageUrl, 
+             category_id as categoryId, status
+      FROM books 
+      WHERE status IN ('AVAILABLE', 'OUT_OF_STOCK')
+    `;
+    
+    if (query.categoryId) {
+      q += ` AND category_id = ${parseInt(query.categoryId)}`;
+    }
+    
+    q += ` ORDER BY created_at DESC`;
+    
+    const [books] = await connection.query(q);
+    connection.release();
+    
+    return {
+      props: {
+        initialBooks: books || [],
+      },
+      revalidate: 60, // ISR: Revalidate every 60 seconds
+    };
+  } catch (error) {
+    console.error("getServerSideProps error:", error);
+    return {
+      props: {
+        initialBooks: [],
+      },
+      revalidate: 10,
+    };
+  }
 }
