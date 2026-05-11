@@ -35,10 +35,10 @@ export default async function handler(req, res) {
     await conn.beginTransaction();
 
     const [items] = await conn.query(
-      `SELECT c.book_id, c.quantity, b.price
+      `SELECT c.book_id, c.quantity, b.price, b.stock
        FROM cart c
        JOIN books b ON b.id = c.book_id
-       WHERE c.user_id = ?`,
+       WHERE c.user_id = ? FOR UPDATE`,
       [userId]
     );
 
@@ -63,6 +63,19 @@ export default async function handler(req, res) {
       await conn.query(
         'INSERT INTO order_details (order_id, book_id, quantity, price) VALUES (?, ?, ?, ?)',
         [orderId, item.book_id, item.quantity, item.price]
+      );
+    }
+
+    // Decrease stock for each item, ensure enough stock
+    for (const item of items) {
+      if (item.stock < item.quantity) {
+        await conn.rollback();
+        return res.status(400).json({ message: `Sản phẩm ${item.book_id} không đủ hàng` });
+      }
+
+      await conn.query(
+        'UPDATE books SET stock = stock - ? WHERE id = ?',
+        [item.quantity, item.book_id]
       );
     }
 

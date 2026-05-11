@@ -102,16 +102,16 @@ export default function AdminOrders() {
   return (
     <AdminLayout>
       <div className="p-6">
-        <h1 className="text-3xl font-bold mb-6">Quản Lý Đơn Hàng</h1>
+        <h1 className="text-black text-3xl font-bold mb-6">Quản Lý Đơn Hàng</h1>
 
         {error && (
-          <div className="mb-4 p-4 bg-red-100 text-red-700 rounded">
+          <div className="text-black mb-4 p-4 bg-red-100 text-red-700 rounded">
             {error}
           </div>
         )}
 
         {/* Bảng đơn hàng */}
-        <div className="bg-white rounded-lg shadow">
+        <div className="text-black bg-white rounded-lg shadow">
           <OrderTable
             orders={orders}
             loading={loading}

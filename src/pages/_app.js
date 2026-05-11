@@ -13,7 +13,7 @@ const queryClient = new QueryClient();
 export default function App({ Component, pageProps }) {
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="flex flex-col min-h-screen">
+      <div className="flex flex-col min-h-screen bg-white text-gray-900">
         {/* Navbar */}
         <Navbar />
 

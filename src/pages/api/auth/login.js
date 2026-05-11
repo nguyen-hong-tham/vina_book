@@ -16,6 +16,11 @@ export default async function handler(req, res) {
       return res.status(401).json({ message: 'Sai email hoặc mật khẩu' });
     }
 
+    // Check user status
+    if (String(user.status || 'ACTIVE').toUpperCase() === 'LOCKED') {
+      return res.status(403).json({ message: 'Tài khoản đã bị khóa' });
+    }
+
     const role = String(user.role || (user.email === 'admin@gmail.com' ? 'ADMIN' : 'USER')).toLowerCase();
 
     const token = jwt.sign(

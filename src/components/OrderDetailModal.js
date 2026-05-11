@@ -37,7 +37,7 @@ export default function OrderDetailModal({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-bold">Chi Tiết Đơn Hàng #{order.id}</h2>
+          <h2 className="text-black text-xl font-bold">Chi Tiết Đơn Hàng #{order.id}</h2>
           <button
             onClick={onClose}
             className="text-2xl text-gray-500 hover:text-gray-700"
@@ -47,11 +47,11 @@ export default function OrderDetailModal({
         </div>
 
         {loading ? (
-          <div className="text-center py-8">Đang tải chi tiết...</div>
+          <div className="text-black text-center py-8">Đang tải chi tiết...</div>
         ) : (
           <>
             {/* Thông tin khách hàng */}
-            <div className="mb-6 p-4 bg-gray-50 rounded">
+            <div className="text-black mb-6 p-4 bg-gray-50 rounded">
               <h3 className="font-bold mb-3"> Thông Tin Khách Hàng</h3>
               <p className="text-sm"><span className="font-medium">Tên:</span> {order.user_name}</p>
               <p className="text-sm"><span className="font-medium">Email:</span> {order.email}</p>
@@ -60,14 +60,14 @@ export default function OrderDetailModal({
 
             {/* Trạng thái đơn hàng */}
             <div className="mb-6 p-4 bg-blue-50 rounded">
-              <h3 className="font-bold mb-2">Trạng Thái Đơn Hàng</h3>
+              <h3 className="text-black font-bold mb-2">Trạng Thái Đơn Hàng</h3>
               <p className={`text-lg font-bold ${statusColors[order.status]}`}>
                 {statusTexts[order.status]}
               </p>
             </div>
 
             {/* Chi tiết sản phẩm */}
-            <div className="mb-6">
+            <div className="text-black mb-6">
               <h3 className="font-bold mb-3">Sản Phẩm Trong Đơn Hàng</h3>
               <div className="space-y-3">
                 {details.length > 0 ? (
@@ -101,7 +101,7 @@ export default function OrderDetailModal({
             {/* Tổng tiền */}
             <div className="mb-6 p-4 bg-gray-100 rounded">
               <div className="flex justify-between items-center">
-                <span className="font-bold text-lg">Tổng Tiền:</span>
+                <span className="font-bold text-lg text-green-600">Tổng Tiền:</span>
                 <span className="font-bold text-2xl text-green-600">
                   {order.total_amount.toLocaleString('vi-VN')}₫
                 </span>

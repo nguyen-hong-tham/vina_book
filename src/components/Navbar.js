@@ -23,7 +23,7 @@ export default function Navbar() {
   const dropdownRef = useRef(null);
 
   useEffect(() => {
-    setMounted(true);
+    queueMicrotask(() => setMounted(true));
   }, []);
 
   const { data: user } = useQuery({
@@ -33,11 +33,13 @@ export default function Navbar() {
     enabled: mounted,
   });
 
+  const isAdmin = String(user?.role || '').toLowerCase() === 'admin';
+
   const { data: cart } = useQuery({
     queryKey: ['cart'],
     queryFn: fetchCart,
     retry: false,
-    enabled: mounted && !!user,
+    enabled: mounted && !!user && !isAdmin,
   });
 
   useEffect(() => {
@@ -72,24 +74,28 @@ export default function Navbar() {
         <div className="flex justify-between h-16 items-center">
           
           <div className="shrink-0 font-bold text-2xl tracking-wide">
-            <Link href="/products">
+            <Link href={isAdmin ? '/admin' : '/products'}>
               VinaBook
             </Link>
           </div>
 
           <div className="flex items-center space-x-6 font-medium">
-            <Link href="/products" className="hover:text-blue-200 transition-colors">
-              Cửa Hàng
-            </Link>
-            
-            <Link href="/cart" className="hover:text-blue-200 transition-colors flex items-center">
-              Giỏ Hàng 
-              {cartItemCount > 0 && (
-                <span className="ml-2 bg-yellow-400 text-blue-900 text-xs font-bold px-2 py-0.5 rounded-full">
-                  {cartItemCount}
-                </span>
-              )}
-            </Link>
+            {!isAdmin && (
+              <>
+                <Link href="/products" className="hover:text-blue-200 transition-colors">
+                  Cửa Hàng
+                </Link>
+
+                <Link href="/cart" className="hover:text-blue-200 transition-colors flex items-center">
+                  Giỏ Hàng
+                  {cartItemCount > 0 && (
+                    <span className="ml-2 bg-yellow-400 text-blue-900 text-xs font-bold px-2 py-0.5 rounded-full">
+                      {cartItemCount}
+                    </span>
+                  )}
+                </Link>
+              </>
+            )}
 
             {user ? (
               <div ref={dropdownRef} className="relative">
@@ -112,6 +118,13 @@ export default function Navbar() {
                       className="block px-4 py-2 text-sm hover:bg-slate-100 transition-colors"
                     >
                       Hồ sơ
+                    </Link>
+                    <Link
+                      href="/orders"
+                      onClick={() => setDropdownOpen(false)}
+                      className="block px-4 py-2 text-sm hover:bg-slate-100 transition-colors"
+                    >
+                      Lịch sử đơn hàng
                     </Link>
                     <button
                       type="button"
