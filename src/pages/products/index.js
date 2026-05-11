@@ -23,6 +23,12 @@ export default function Products({ initialBooks = [] }) {
     setMounted(true);
   }, []);
 
+  useEffect(() => {
+    setBooks(initialBooks);
+    setError(null);
+    setIsLoading(false);
+  }, [initialBooks]);
+
   // Fetch additional data when categoryId changes on client
   useEffect(() => {
     if (!router.isReady || !categoryId) return;
