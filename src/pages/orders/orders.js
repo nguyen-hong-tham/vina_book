@@ -2,6 +2,20 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
 
+const statusText = {
+  PENDING: 'Chờ xác nhận',
+  ACCEPT: 'Đã xác nhận',
+  DONE: 'Hoàn thành',
+  REJECT: 'Đã từ chối',
+};
+
+const statusClass = {
+  PENDING: 'bg-yellow-100 text-yellow-700 border-yellow-300',
+  ACCEPT: 'bg-blue-100 text-blue-700 border-blue-300',
+  DONE: 'bg-green-100 text-green-700 border-green-300',
+  REJECT: 'bg-red-100 text-red-700 border-red-300',
+};
+
 export default function OrdersPage() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -39,7 +53,16 @@ export default function OrdersPage() {
               <div key={o.id} className="border rounded p-4 flex justify-between items-center">
                 <div>
                   <div className="font-semibold">Đơn #{o.id}</div>
-                  <div className="text-sm text-slate-600">{o.item_count} mặt hàng • {o.status}</div>
+                  <div className="mt-2">
+                    <span
+                      className={`inline-flex rounded-full border px-3 py-1 text-xs font-semibold ${
+                        statusClass[o.status] || 'bg-gray-100 text-gray-700 border-gray-300'
+                      }`}
+                    >
+                      {statusText[o.status] || o.status}
+                    </span>
+                  </div>
+                  <div className="text-sm text-slate-600 mt-2">{o.item_count} mặt hàng</div>
                   <div className="text-sm text-slate-500">{new Date(o.created_at).toLocaleString()}</div>
                 </div>
                 <div className="text-right">

@@ -1,9 +1,10 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useMemo } from 'react';
 import Pagination from './Pagination';
 
 export default function ProductTable({
   products = [], //danh sách sản phẩm
+  categories = [], //danh sách danh mục từ page cha
   loading = false, //loading table
   error = null, //lỗi nếu có
   page = 1, //trang hiện tại
@@ -14,34 +15,30 @@ export default function ProductTable({
   onHide = () => { }, // hàm gọi khi click hide
   onShow = () => { },// hàm gọi khi click show
 }) {
-  const [categoryMap, setCategoryMap] = useState({});
-
-  useEffect(() => {
-    let mounted = true;
-    fetch('/api/category')
-      .then((res) => res.json())
-      .then((payload) => {
-        const categories = payload?.data || payload?.categories || payload || [];
-        const map = {};
-        categories.forEach((c) => {
-          if (!c) return;
-          const id = c.id ?? c.category_id ?? c.value;
-          const name = c.name || c.title || c.label || c.category_name;
-          if (id != null) map[id] = name;
-        });
-        if (mounted) setCategoryMap(map);
-      })
-      .catch(() => {});
-    return () => {
-      mounted = false;
-    };
-  }, []);
+  const categoryMap = useMemo(() => {
+    const map = {};
+    categories.forEach((c) => {
+      if (!c) return;
+      const id = c.id ?? c.category_id ?? c.value;
+      const name = c.name || c.title || c.label || c.category_name;
+      if (id != null) map[id] = name;
+    });
+    return map;
+  }, [categories]);
 
   const getCategoryName = (categoryId) => {
     return categoryMap[categoryId] || 'N/A';
   };
 
-  const renderStatusBadge = (status) => {
+  const renderStatusBadge = (status, stock) => {
+    if (Number(stock) === 0) {
+      return (
+        <span className="inline-block px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
+          Hết hàng
+        </span>
+      );
+    }
+
     const statusConfig = {
       AVAILABLE: { text: 'Có sẵn', color: 'bg-green-100 text-green-800' },
       OUT_OF_STOCK: { text: 'Hết hàng', color: 'bg-yellow-100 text-yellow-800' },
@@ -232,7 +229,7 @@ export default function ProductTable({
                   </td>
 
                   <td className="px-6 py-4 text-sm">
-                    {renderStatusBadge(product.status)}
+                    {renderStatusBadge(product.status, product.stock)}
                   </td>
 
                   <td className="px-6 py-4 text-center">

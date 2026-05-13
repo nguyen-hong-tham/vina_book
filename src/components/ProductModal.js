@@ -8,6 +8,7 @@ export default function ProductModal({
   mode = 'create', // 'create' hoặc 'edit'
   initialData = {}, // dữ liệu cũ khi edit
   loading = false, // trạng thái loading khi submit form
+  categories = [], // danh sách danh mục từ parent
   onSubmit, // hàm gọi khi submit form, nhận vào object { title, author, description, image_url, price, stock, category_id }
   onClose // hàm gọi khi đóng modal
 }) {
@@ -23,7 +24,6 @@ export default function ProductModal({
   });
 
   const [error, setError] = useState({});
-  const [categories, setCategories] = useState([]);
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState('');
   const [uploadingImage, setUploadingImage] = useState(false);
@@ -36,20 +36,6 @@ export default function ProductModal({
     () => Boolean(cloudinaryCloudName && cloudinaryUploadPreset),
     [cloudinaryCloudName, cloudinaryUploadPreset]
   );
-
-  useEffect(() => {
-    let mounted = true;
-    fetch('/api/category')
-      .then((res) => res.json())
-      .then((payload) => {
-        const list = payload?.data || payload?.categories || payload || [];
-        if (mounted) setCategories(list);
-      })
-      .catch(() => {});
-    return () => {
-      mounted = false;
-    };
-  }, []);
 
   // useEffect reset form :reset form khi mở modal + đổ dữ liệu cũ vào form khi edit
   useEffect(() => {
@@ -458,6 +444,7 @@ export default function ProductModal({
             <button
               type="submit"
               disabled={isBusy}
+              display="block"
               className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-blue-400 font-medium transition flex items-center gap-2"
             >
               {isBusy && (

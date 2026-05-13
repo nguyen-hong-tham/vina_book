@@ -7,8 +7,6 @@ export default function FilterBar({
   onSearchChange, 
   sortBy, 
   onSortChange, 
-  showInStock, 
-  onStockFilterChange,
   priceRange,
   onPriceRangeChange
 }) {

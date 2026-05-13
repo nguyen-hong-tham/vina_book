@@ -6,6 +6,7 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
+import Head from "next/head";
 
 // tạo query client
 const queryClient = new QueryClient();
