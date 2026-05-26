@@ -21,13 +21,10 @@ export default function Products({ initialBooks = [] }) {
 
   useEffect(() => {
     setMounted(true);
-  }, []);
-
-  useEffect(() => {
     setBooks(initialBooks);
     setError(null);
     setIsLoading(false);
-  }, [initialBooks]);
+  }, []);
 
   // Fetch additional data when categoryId changes on client
   useEffect(() => {
@@ -98,7 +95,7 @@ export default function Products({ initialBooks = [] }) {
     }
     
     setFilteredBooks(result);
-    setCurrentPage((page) => (page === 1 ? page : 1));
+    setCurrentPage(1);
   }, [books, searchTerm, priceRange, sortBy, showInStock, mounted]);
 
   // Pagination logic
