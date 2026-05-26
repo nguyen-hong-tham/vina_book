@@ -45,7 +45,6 @@ export default function AdminPage() {
       <div className="p-6 space-y-6">
         <div>
           <h1 className="text-3xl font-bold text-slate-900">Thống kê quản trị</h1>
-          <p className="mt-2 text-sm text-slate-500">Tổng quan nhanh, không cần biểu đồ.</p>
         </div>
 
         {error && (

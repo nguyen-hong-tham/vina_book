@@ -11,7 +11,7 @@ const HeroBanner = dynamic(() => import("@/components/HeroBanner"), {
   ssr: true,
 });
 
-export default function Products({ initialBooks = [] }) {
+export default function Products({ initialBooks = EMPTY_BOOKS }) {
   const router = useRouter();
   const categoryId = router.query.categoryId;
   const [mounted, setMounted] = useState(false);
@@ -278,7 +278,7 @@ export default function Products({ initialBooks = [] }) {
   );
 }
 
-// SSR: Server-Side Rendering - Fetch data on every request before rendering
+
 export async function getServerSideProps({ query }) {
   try {
     const connection = await pool.getConnection();
