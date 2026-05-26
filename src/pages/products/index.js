@@ -11,7 +11,7 @@ const HeroBanner = dynamic(() => import("@/components/HeroBanner"), {
   ssr: true,
 });
 
-export default function Products({ initialBooks = EMPTY_BOOKS }) {
+export default function Products({ initialBooks = [] }) {
   const router = useRouter();
   const categoryId = router.query.categoryId;
   const [mounted, setMounted] = useState(false);
@@ -21,6 +21,9 @@ export default function Products({ initialBooks = EMPTY_BOOKS }) {
 
   useEffect(() => {
     setMounted(true);
+  }, []);
+
+  useEffect(() => {
     setBooks(initialBooks);
     setError(null);
     setIsLoading(false);
@@ -47,7 +50,7 @@ export default function Products({ initialBooks = EMPTY_BOOKS }) {
     fetchBooks();
   }, [categoryId, router.isReady]);
 
-  const [filteredBooks, setFilteredBooks] = useState([]);
+  const [filteredBooks, setFilteredBooks] = useState(initialBooks || []);
   const [sortBy, setSortBy] = useState("newest");
   const [searchTerm, setSearchTerm] = useState("");
   const [showInStock, setShowInStock] = useState(false);
@@ -65,8 +68,6 @@ export default function Products({ initialBooks = EMPTY_BOOKS }) {
 
   // Apply filters and sorting
   useEffect(() => {
-    if (!mounted) return;
-    
     let result = [...books];
 
     // Search filter
@@ -96,7 +97,7 @@ export default function Products({ initialBooks = EMPTY_BOOKS }) {
     
     setFilteredBooks(result);
     setCurrentPage(1);
-  }, [books, searchTerm, priceRange, sortBy, showInStock, mounted]);
+  }, [books, searchTerm, priceRange, sortBy, showInStock]);
 
   // Pagination logic
   const totalPages = Math.ceil(filteredBooks.length / itemsPerPage);
@@ -105,27 +106,6 @@ export default function Products({ initialBooks = EMPTY_BOOKS }) {
     startIndex,
     startIndex + itemsPerPage,
   );
-
-  if (!mounted) {
-    return (
-      <main className="min-h-screen bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 py-16 text-center text-gray-500">
-          Đang tải...
-        </div>
-      </main>
-    );
-  }
-
-  if (error) {
-    return (
-      <main className="min-h-screen bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 py-16 text-center">
-          <h1 className="text-3xl font-bold text-red-600 mb-2">Lỗi!</h1>
-          <p className="text-gray-700">{error.message}</p>
-        </div>
-      </main>
-    );
-  }
 
   const banners = books.slice(0, 5);
 
@@ -278,9 +258,10 @@ export default function Products({ initialBooks = EMPTY_BOOKS }) {
   );
 }
 
-
+// SSR: Server-Side Rendering - Fetch data on every request before rendering
 export async function getServerSideProps({ query }) {
   try {
+    console.log(' getServerSideProps - Fetching books...');
     const connection = await pool.getConnection();
     
     let q = `
@@ -296,8 +277,12 @@ export async function getServerSideProps({ query }) {
     
     q += ` ORDER BY created_at DESC`;
     
+    console.log(' SQL Query:', q);
     const [books] = await connection.query(q);
     connection.release();
+    
+    console.log(' Books fetched:', books?.length || 0, 'items');
+    console.log(' Sample:', books?.[0]);
     
     return {
       props: {
@@ -305,7 +290,8 @@ export async function getServerSideProps({ query }) {
       },
     };
   } catch (error) {
-    console.error("getServerSideProps error:", error);
+    console.error(" getServerSideProps error:", error.message);
+    console.error("Full error:", error);
     return {
       props: {
         initialBooks: [],

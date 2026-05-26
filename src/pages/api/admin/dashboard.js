@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
 import pool from '@/lib/db';
 
-const JWT_SECRET = 'asdf1234secretkey';
+const JWT_SECRET = process.env.JWT_SECRET;
 
 function requireAdmin(req, res) {
   const cookies = parse(req.headers.cookie || '');

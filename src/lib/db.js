@@ -1,15 +1,45 @@
-import mysql from "mysql2/promise";
-//Tạo một pool (nhóm) kết nối để tái sử dụng
-const pool = mysql.createPool({
-  host: process.env.DB_HOST, //Địa chỉ server MySQL
-  port: process.env.DB_PORT,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+import { Pool } from 'pg';
 
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false,
+  },
+  max: 10,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 2000,
 });
 
-export default pool;
+// Wrapper để tương thích với code cũ sử dụng mysql2
+const wrappedPool = {
+  async getConnection() {
+    const client = await pool.connect();
+    return {
+      query: async (sql) => {
+        try {
+          const result = await client.query(sql);
+          return [result.rows];
+        } catch (err) {
+          console.error('Query error:', sql, err);
+          throw err;
+        }
+      },
+      release: () => client.release(),
+    };
+  },
+  
+  async query(sql) {
+    const client = await pool.connect();
+    try {
+      const result = await client.query(sql);
+      return [result.rows];
+    } catch (err) {
+      console.error('Database query error:', sql, err);
+      throw err;
+    } finally {
+      client.release();
+    }
+  },
+};
+
+export default wrappedPool;

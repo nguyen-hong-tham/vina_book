@@ -2,7 +2,7 @@ import db from '@/lib/db';
 import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
 
-const JWT_SECRET = 'asdf1234secretkey';
+const JWT_SECRET = process.env.JWT_SECRET;
 
 async function getUserIdFromCookie(req) {
   const cookies = parse(req.headers.cookie || '');
