@@ -8,6 +8,9 @@ import { motion } from 'framer-motion';
 export default function HeroBanner({ banners, isLoading }) {
   if (isLoading) return null;
 
+  // Only enable loop if there are enough slides
+  const shouldLoop = banners && banners.length > 2;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -31,7 +34,7 @@ export default function HeroBanner({ banners, isLoading }) {
           clickable: true,
           dynamicBullets: true,
         }}
-        loop={true}
+        loop={shouldLoop}
         className="w-full h-64 md:h-80"
       >
         {banners.map((book, idx) => (
