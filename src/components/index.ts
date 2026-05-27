@@ -9,5 +9,6 @@ export { default as ProductTable } from './ProductTable';
 export { default as AdminLayout } from './AdminLayout';
 export { default as AdminSidebar } from './AdminSidebar';
 export { default as ProductModal } from './ProductModal';
+export { default as ChatWidget } from './ChatWidget';
 // export { default as AdminSidebar } from './AdminSidebar';
 

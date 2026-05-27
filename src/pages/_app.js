@@ -1,7 +1,6 @@
 import "@/styles/globals.css";
 
-import { Navbar, Footer } from "@/components";
-
+import { Navbar, Footer,ChatWidget } from "@/components";
 import {
   QueryClient,
   QueryClientProvider,
@@ -25,6 +24,7 @@ export default function App({ Component, pageProps }) {
 
         {/* Footer - luôn ở dưới */}
         <Footer />
+        <ChatWidget />
       </div>
     </QueryClientProvider>
   );
