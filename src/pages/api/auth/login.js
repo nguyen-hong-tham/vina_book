@@ -17,7 +17,7 @@ export default async function handler(req, res) {
     }
 
     // Check user status
-    if (String(user.status || 'ACTIE').toUpperCase() === 'LOCKED') {
+    if (String(user.status || 'ACTIVE').toUpperCase() === 'LOCKED') {
       return res.status(403).json({ message: 'Tài khoản đã bị khóa' });
     }
 
@@ -25,13 +25,13 @@ export default async function handler(req, res) {
 
     const token = jwt.sign(
       { id: user.id, name: user.name, email: user.email, role },
-      process.en.JWT_SECRET,
+      process.env.JWT_SECRET,
       { expiresIn: '1d' }
     );
 
     res.setHeader('Set-Cookie', serialize('token', token, {
       httpOnly: true,
-      secure: process.en.NODE_EN !== 'deelopment',
+      secure: process.env.NODE_ENV !== 'development',
       sameSite: 'strict',
       maxAge: 60 * 60 * 24, // 1 ngày
       path: '/'
@@ -42,6 +42,6 @@ export default async function handler(req, res) {
       role,
     });
   } catch (error) {
-    res.status(500).json({ message: 'Lỗi Serer' });
+    res.status(500).json({ message: 'Lỗi Server' });
   }
 }

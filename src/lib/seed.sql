@@ -16,13 +16,13 @@ SET FOREIGN_KEY_CHECKS = 1;
 -- =====================================================
 
 INSERT INTO users (name, email, role, password)
-ALUES
+VALUES
 ('Admin', 'admin@gmail.com', 'ADMIN', '123456'),
 ('Tham', 'tham@gmail.com', 'USER', '123456'),
 ('An', 'an@gmail.com', 'USER', '123456'),
 ('Khoa', 'khoa@gmail.com', 'USER', '123456'),
 ('Long', 'long@gmail.com', 'USER', '123456'),
-('y', 'y@gmail.com', 'USER', '123456'),
+('Vy', 'vy@gmail.com', 'USER', '123456'),
 ('Trang', 'trang@gmail.com', 'USER', '123456'),
 ('Minh', 'minh@gmail.com', 'USER', '123456'),
 ('Dat', 'dat@gmail.com', 'USER', '123456'),
@@ -33,8 +33,8 @@ ALUES
 -- =====================================================
 
 INSERT INTO categories (name)
-ALUES
-('Noel'),
+VALUES
+('Novel'),
 ('Science'),
 ('Programming'),
 ('History'),
@@ -56,43 +56,43 @@ INSERT INTO books (
     stock,
     status
 )
-ALUES
+VALUES
 
-(1,'The Great Gatsby','F. Scott Fitzgerald','Classic noel','https://picsum.photos/200?1',120000,10,'AAILABLE'),
-(1,'1984','George Orwell','Dystopian noel','https://picsum.photos/200?2',130000,5,'AAILABLE'),
+(1,'The Great Gatsby','F. Scott Fitzgerald','Classic novel','https://picsum.photos/200?1',120000,10,'AVAILABLE'),
+(1,'1984','George Orwell','Dystopian novel','https://picsum.photos/200?2',130000,5,'AVAILABLE'),
 (1,'To Kill a Mockingbird','Harper Lee','Classic literature','https://picsum.photos/200?3',140000,0,'OUT_OF_STOCK'),
-(1,'Pride and Prejudice','Jane Austen','Romance noel','https://picsum.photos/200?4',125000,7,'AAILABLE'),
+(1,'Pride and Prejudice','Jane Austen','Romance novel','https://picsum.photos/200?4',125000,7,'AVAILABLE'),
 
-(2,'Brief Answers to the Big Questions','Stephen Hawking','Science unierse','https://picsum.photos/200?5',180000,8,'AAILABLE'),
+(2,'Brief Answers to the Big Questions','Stephen Hawking','Science universe','https://picsum.photos/200?5',180000,8,'AVAILABLE'),
 (2,'Physics of Time','Albert Newton','Physics concepts','https://picsum.photos/200?6',220000,0,'OUT_OF_STOCK'),
-(2,'Quantum Mechanics','Max Planck','Quantum science','https://picsum.photos/200?7',250000,4,'AAILABLE'),
+(2,'Quantum Mechanics','Max Planck','Quantum science','https://picsum.photos/200?7',250000,4,'AVAILABLE'),
 (2,'Astronomy Basics','Carl Sagan','Space science','https://picsum.photos/200?8',190000,3,'HIDDEN'),
 
-(3,'Clean Code','Robert C. Martin','Programming practices','https://picsum.photos/200?9',250000,5,'AAILABLE'),
-(3,'JaaScript Basics','John Doe','Learn JaaScript','https://picsum.photos/200?10',150000,0,'OUT_OF_STOCK'),
-(3,'React Mastery','Meta De','Adanced React','https://picsum.photos/200?11',270000,2,'AAILABLE'),
-(3,'NodeJS Backend','Backend Team','NodeJS API','https://picsum.photos/200?12',230000,9,'AAILABLE'),
+(3,'Clean Code','Robert C. Martin','Programming practices','https://picsum.photos/200?9',250000,5,'AVAILABLE'),
+(3,'JavaScript Basics','John Doe','Learn JavaScript','https://picsum.photos/200?10',150000,0,'OUT_OF_STOCK'),
+(3,'React Mastery','Meta Dev','Advanced React','https://picsum.photos/200?11',270000,2,'AVAILABLE'),
+(3,'NodeJS Backend','Backend Team','NodeJS API','https://picsum.photos/200?12',230000,9,'AVAILABLE'),
 (3,'Python Crash Course','Eric Matthes','Learn Python','https://picsum.photos/200?13',240000,6,'HIDDEN'),
 
-(4,'World War II','Winston Churchill','History book','https://picsum.photos/200?14',200000,2,'AAILABLE'),
+(4,'World War II','Winston Churchill','History book','https://picsum.photos/200?14',200000,2,'AVAILABLE'),
 (4,'Ancient Rome','Marcus Aurelius','Roman history','https://picsum.photos/200?15',175000,0,'OUT_OF_STOCK'),
-(4,'ietnam History','Tran Trong Kim','ietnam history','https://picsum.photos/200?16',185000,4,'AAILABLE'),
-(4,'Greek Mythology','Homer','Greek myths','https://picsum.photos/200?17',195000,1,'AAILABLE'),
+(4,'Vietnam History','Tran Trong Kim','Vietnam history','https://picsum.photos/200?16',185000,4,'AVAILABLE'),
+(4,'Greek Mythology','Homer','Greek myths','https://picsum.photos/200?17',195000,1,'AVAILABLE'),
 
-(5,'Doraemon','Fujiko F Fujio','Famous manga','https://picsum.photos/200?18',50000,20,'AAILABLE'),
-(5,'Naruto ol 1','Masashi Kishimoto','Naruto manga','https://picsum.photos/200?19',60000,15,'AAILABLE'),
-(5,'One Piece ol 1','Eiichiro Oda','Pirate manga','https://picsum.photos/200?20',65000,12,'AAILABLE'),
+(5,'Doraemon','Fujiko F Fujio','Famous manga','https://picsum.photos/200?18',50000,20,'AVAILABLE'),
+(5,'Naruto Vol 1','Masashi Kishimoto','Naruto manga','https://picsum.photos/200?19',60000,15,'AVAILABLE'),
+(5,'One Piece Vol 1','Eiichiro Oda','Pirate manga','https://picsum.photos/200?20',65000,12,'AVAILABLE'),
 (5,'Attack on Titan','Hajime Isayama','Titan manga','https://picsum.photos/200?21',70000,0,'OUT_OF_STOCK'),
 
 (6,'Rich Dad Poor Dad','Robert Kiyosaki','Business mindset','https://picsum.photos/200?22',175000,7,'HIDDEN'),
-(6,'The Lean Startup','Eric Ries','Startup guide','https://picsum.photos/200?23',260000,3,'AAILABLE'),
-(6,'Zero To One','Peter Thiel','Startup ideas','https://picsum.photos/200?24',240000,5,'AAILABLE'),
-(6,'Business Strategy','Michael Porter','Business model','https://picsum.photos/200?25',280000,2,'AAILABLE'),
+(6,'The Lean Startup','Eric Ries','Startup guide','https://picsum.photos/200?23',260000,3,'AVAILABLE'),
+(6,'Zero To One','Peter Thiel','Startup ideas','https://picsum.photos/200?24',240000,5,'AVAILABLE'),
+(6,'Business Strategy','Michael Porter','Business model','https://picsum.photos/200?25',280000,2,'AVAILABLE'),
 
-(7,'Atomic Habits','James Clear','Habit psychology','https://picsum.photos/200?26',220000,8,'AAILABLE'),
-(7,'Think Fast and Slow','Daniel Kahneman','Psychology thinking','https://picsum.photos/200?27',210000,6,'AAILABLE'),
-(7,'Deep Work','Cal Newport','Focus productiity','https://picsum.photos/200?28',190000,0,'OUT_OF_STOCK'),
-(7,'The Power of Habit','Charles Duhigg','Habit building','https://picsum.photos/200?29',205000,4,'AAILABLE'),
+(7,'Atomic Habits','James Clear','Habit psychology','https://picsum.photos/200?26',220000,8,'AVAILABLE'),
+(7,'Think Fast and Slow','Daniel Kahneman','Psychology thinking','https://picsum.photos/200?27',210000,6,'AVAILABLE'),
+(7,'Deep Work','Cal Newport','Focus productivity','https://picsum.photos/200?28',190000,0,'OUT_OF_STOCK'),
+(7,'The Power of Habit','Charles Duhigg','Habit building','https://picsum.photos/200?29',205000,4,'AVAILABLE'),
 
 (1,'Deleted Test Book','Unknown','Deleted book','https://picsum.photos/200?30',100000,1,'DELETED');
 
@@ -101,7 +101,7 @@ ALUES
 -- =====================================================
 
 INSERT INTO cart (user_id, book_id, quantity)
-ALUES
+VALUES
 (1,1,2),
 (2,5,1),
 (3,9,1),
@@ -118,7 +118,7 @@ ALUES
 -- =====================================================
 
 INSERT INTO orders (user_id, total_amount, status)
-ALUES
+VALUES
 (1,490000,'PENDING'),
 (2,150000,'DONE'),
 (3,320000,'ACCEPT'),
@@ -145,7 +145,7 @@ INSERT INTO order_details (
     quantity,
     price
 )
-ALUES
+VALUES
 
 (1,1,2,120000),
 (1,9,1,250000),

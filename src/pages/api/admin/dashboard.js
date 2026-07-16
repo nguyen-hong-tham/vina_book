@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
 import pool from '@/lib/db';
 
-const JWT_SECRET = process.en.JWT_SECRET;
+const JWT_SECRET = process.env.JWT_SECRET;
 
 function requireAdmin(req, res) {
   const cookies = parse(req.headers.cookie || '');
@@ -14,7 +14,7 @@ function requireAdmin(req, res) {
   }
 
   try {
-    const decoded = jwt.erify(token, JWT_SECRET);
+    const decoded = jwt.verify(token, JWT_SECRET);
     if (String(decoded.role || '').toLowerCase() !== 'admin') {
       res.status(403).json({ message: 'Không có quyền truy cập' });
       return null;
@@ -40,7 +40,7 @@ export default async function handler(req, res) {
     const [[userCountRow]] = await connection.query('SELECT COUNT(*) AS total FROM users');
     const [[productCountRow]] = await connection.query("SELECT COUNT(*) AS total FROM books WHERE status != 'DELETED'");
     const [[orderCountRow]] = await connection.query('SELECT COUNT(*) AS total FROM orders');
-    const [[reenueRow]] = await connection.query("SELECT COALESCE(SUM(total_amount), 0) AS total FROM orders WHERE status IN ('ACCEPT', 'DONE')");
+    const [[revenueRow]] = await connection.query("SELECT COALESCE(SUM(total_amount), 0) AS total FROM orders WHERE status IN ('ACCEPT', 'DONE')");
 
     const [recentOrders] = await connection.query(
       `SELECT o.id, o.total_amount, o.status, o.created_at, u.name AS user_name, u.email
@@ -57,7 +57,7 @@ export default async function handler(req, res) {
         users: userCountRow.total,
         products: productCountRow.total,
         orders: orderCountRow.total,
-        reenue: reenueRow.total,
+        revenue: revenueRow.total,
       },
       recentOrders,
     });

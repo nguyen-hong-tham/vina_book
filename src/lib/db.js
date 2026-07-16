@@ -1,7 +1,7 @@
 import { Pool } from 'pg';
 
 const pool = new Pool({
-  connectionString: process.en.DATABASE_URL,
+  connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false,
   },
@@ -10,18 +10,18 @@ const pool = new Pool({
   connectionTimeoutMillis: 15000,
 });
 
-// Wrapper để tương thích ới code cũ sử dụng mysql2
+// Wrapper để tương thích với code cũ sử dụng mysql2
 const wrappedPool = {
   async getConnection() {
     const client = await pool.connect();
     return {
       query: async (sql, params = []) => {
         try {
-          // Conert ? placeholders to $1, $2, etc. for PostgreSQL
+          // Convert ? placeholders to $1, $2, etc. for PostgreSQL
           let pgSql = sql;
           let paramIndex = 1;
           pgSql = pgSql.replace(/\?/g, () => `$${paramIndex++}`);
-
+          
           const result = await client.query(pgSql, params);
           return [result.rows];
         } catch (err) {
@@ -32,15 +32,15 @@ const wrappedPool = {
       release: () => client.release(),
     };
   },
-
+  
   async query(sql, params = []) {
     const client = await pool.connect();
     try {
-      // Conert ? placeholders to $1, $2, etc. for PostgreSQL
+      // Convert ? placeholders to $1, $2, etc. for PostgreSQL
       let pgSql = sql;
       let paramIndex = 1;
       pgSql = pgSql.replace(/\?/g, () => `$${paramIndex++}`);
-
+      
       const result = await client.query(pgSql, params);
       return [result.rows];
     } catch (err) {

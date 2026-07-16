@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, Naigation, Pagination as SwiperPagination, EffectFade } from 'swiper/modules';
+import { Autoplay, Navigation, Pagination as SwiperPagination, EffectFade } from 'swiper/modules';
 import { motion } from 'framer-motion';
 
 export default function HeroBanner({ banners, isLoading }) {
@@ -12,22 +12,22 @@ export default function HeroBanner({ banners, isLoading }) {
   const shouldLoop = banners && banners.length > 2;
 
   return (
-    <motion.di
+    <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: 0.1 }}
-      className="rounded-xl oerflow-hidden shadow-md"
+      className="rounded-xl overflow-hidden shadow-md"
     >
       <Swiper
-        modules={[Autoplay, Naigation, SwiperPagination, EffectFade]}
+        modules={[Autoplay, Navigation, SwiperPagination, EffectFade]}
         effect="fade"
         autoplay={{
           delay: 4000,
           disableOnInteraction: false,
         }}
-        naigation={{
+        navigation={{
           nextEl: '.swiper-button-next',
-          preEl: '.swiper-button-pre',
+          prevEl: '.swiper-button-prev',
         }}
         pagination={{
           el: '.swiper-pagination',
@@ -39,22 +39,22 @@ export default function HeroBanner({ banners, isLoading }) {
       >
         {banners.map((book, idx) => (
           <SwiperSlide key={idx}>
-            <di className="relatie w-full h-full oerflow-hidden">
+            <div className="relative w-full h-full overflow-hidden">
               <img
                 src={
                   book.image_url ||
                   'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f'
                 }
                 alt={book.title}
-                className="w-full h-full object-coer"
+                className="w-full h-full object-cover"
               />
 
-              {/* oerlay */}
-              <di className="absolute inset-0 bg-black/45"></di>
+              {/* overlay */}
+              <div className="absolute inset-0 bg-black/45"></div>
 
               {/* content */}
-              <di className="absolute inset-0 flex items-center">
-                <di className="px-10 md:px-16 max-w-xl">
+              <div className="absolute inset-0 flex items-center">
+                <div className="px-10 md:px-16 max-w-xl">
                   <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 drop-shadow-lg">
                     {book.title}
                   </h2>
@@ -65,20 +65,20 @@ export default function HeroBanner({ banners, isLoading }) {
                   </p>
 
                   <Link href={`/products/${book.id}`}>
-                    <button className="bg-white text-black px-6 py-3 rounded-xl font-semibold hoer:scale-105 transition">
+                    <button className="bg-white text-black px-6 py-3 rounded-xl font-semibold hover:scale-105 transition">
                       Xem Chi Tiết
                     </button>
                   </Link>
-                </di>
-              </di>
-            </di>
+                </div>
+              </div>
+            </div>
           </SwiperSlide>
         ))}
 
-        <button className="swiper-button-pre !text-white !top-1/2 !-translate-y-1/2 !left-4 !w-10 !h-10 !after:!text-lg after:!font-bold hoer:!bg-black/20 rounded-full transition"></button>
-        <button className="swiper-button-next !text-white !top-1/2 !-translate-y-1/2 !right-4 !w-10 !h-10 !after:!text-lg after:!font-bold hoer:!bg-black/20 rounded-full transition"></button>
-        <di className="swiper-pagination !bottom-4 !w-auto !left-1/2 !-translate-x-1/2"></di>
+        <button className="swiper-button-prev !text-white !top-1/2 !-translate-y-1/2 !left-4 !w-10 !h-10 !after:!text-lg after:!font-bold hover:!bg-black/20 rounded-full transition"></button>
+        <button className="swiper-button-next !text-white !top-1/2 !-translate-y-1/2 !right-4 !w-10 !h-10 !after:!text-lg after:!font-bold hover:!bg-black/20 rounded-full transition"></button>
+        <div className="swiper-pagination !bottom-4 !w-auto !left-1/2 !-translate-x-1/2"></div>
       </Swiper>
-    </motion.di>
+    </motion.div>
   );
 }

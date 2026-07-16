@@ -2,7 +2,7 @@ import pool from '@/lib/db';
 
 export async function getOrders(req, res) {
 
-   /// ==================== lấy page à limit từ query params ==================== ///
+   /// ==================== lấy page và limit từ query params ==================== ///
    const { page = 1, limit = 10 } = req.query;
 
    /// ==================== tính offset cho pagination ==================== ///
@@ -66,7 +66,7 @@ export async function getOrders(req, res) {
          'Error fetching orders:',
          error
       );
-      /// ==================== trả serer error ==================== ///
+      /// ==================== trả server error ==================== ///
       return res.status(500).json({
 
          error: 'Lỗi khi lấy danh sách đơn hàng'
@@ -161,10 +161,10 @@ export async function getOrderDetail(req, res) {
 }
 
 export async function updateOrderStatus(req, res) {
-   /// ==================== lấy orderId à status từ body ==================== ///
+   /// ==================== lấy orderId và status từ body ==================== ///
    const { orderId, status } = req.body;
    /// ==================== tạo danh sách status hợp lệ ==================== ///
-   const alidStatuses = [
+   const validStatuses = [
 
       'PENDING',
 
@@ -176,7 +176,7 @@ export async function updateOrderStatus(req, res) {
 
    ];
    /// ==================== kiểm tra status hợp lệ ==================== ///
-   if (!alidStatuses.includes(status)) {
+   if (!validStatuses.includes(status)) {
 
       return res.status(400).json({
 
@@ -202,7 +202,7 @@ export async function updateOrderStatus(req, res) {
          return res.status(404).json({ error: 'Không tìm thấy đơn hàng' });
       }
 
-      const preStatus = orderRow.status;
+      const prevStatus = orderRow.status;
 
       const [result] = await connection.query(
          `
@@ -214,7 +214,7 @@ export async function updateOrderStatus(req, res) {
       );
 
       // If changing to REJECT from a non-REJECT status, restore stock
-      if (status === 'REJECT' && preStatus !== 'REJECT') {
+      if (status === 'REJECT' && prevStatus !== 'REJECT') {
          const [details] = await connection.query(
             `SELECT book_id, quantity FROM order_details WHERE order_id = ?`,
             [orderId]

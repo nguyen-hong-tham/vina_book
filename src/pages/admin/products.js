@@ -47,7 +47,7 @@ export default function AdminProducts() {
           search
         } // Tạo query:  /api/admin/products?page=1&limit=10&search=harry
       });
-      setProducts(response.data.data); //Lưu products ào state.
+      setProducts(response.data.data); //Lưu products vào state.
       setTotalPages(response.data.totalPages);
     } catch (err) {
       setError('Failed to fetch products');
@@ -67,8 +67,8 @@ export default function AdminProducts() {
 
   // ========================= Xử lý tìm kiếm =========================
   const handleSearchSubmit = (e) => {
-    e.preentDefault();  //Do: <form> => reload page => preentDefault() để ngăn reload
-    setPage(1); // Reset ề trang 1 khi tìm kiếm
+    e.preventDefault();  //Do: <form> => reload page => preventDefault() để ngăn reload
+    setPage(1); // Reset về trang 1 khi tìm kiếm
     setSearch(searchInput); // Cập nhật search để gọi API
   };
 
@@ -95,7 +95,7 @@ export default function AdminProducts() {
     const trimmedName = categoryInput.trim();
 
     if (!trimmedName) {
-      setCategoryMessage('ui lòng nhập tên danh mục');
+      setCategoryMessage('Vui lòng nhập tên danh mục');
       return;
     }
 
@@ -107,8 +107,8 @@ export default function AdminProducts() {
       const createdCategory = response.data?.data;
 
       if (createdCategory) {
-        setCategories((pre) =>
-          [...pre, createdCategory].sort((a, b) => String(a.name).localeCompare(String(b.name)))
+        setCategories((prev) =>
+          [...prev, createdCategory].sort((a, b) => String(a.name).localeCompare(String(b.name)))
         );
       }
 
@@ -131,7 +131,7 @@ export default function AdminProducts() {
 
   // ========================= Xử lý mở modal chỉnh sửa sản phẩm =========================
   const handleEdit = (product) => {
-    setSelectedProduct(product); //Lưu sản phẩm được chọn ào state
+    setSelectedProduct(product); //Lưu sản phẩm được chọn vào state
     setModalMode('edit'); //Chế độ chỉnh sửa
     setModalOpen(true); //Mở modal
   };
@@ -216,7 +216,7 @@ export default function AdminProducts() {
     try {
       const response = await axios.patch(
         `/api/admin/products?id=${productId}`,
-        { status: 'AAILABLE' }
+        { status: 'AVAILABLE' }
       );
       if (response.data.success) {
         await fetchProducts();
@@ -236,20 +236,20 @@ export default function AdminProducts() {
 
   return (
     <AdminLayout>
-      <di className="space-y-6">
+      <div className="space-y-6">
         {/* Header */}
-        <di className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-          <di>
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+          <div>
             <h1 className="text-3xl font-bold text-gray-900">Quản Lý Sản Phẩm</h1>
             <p className="text-gray-600 mt-1">Quản lý danh sách sách trong cửa hàng</p>
-          </di>
+          </div>
 
-          <di className="w-full lg:max-w-3xl space-y-3">
-            <di className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
+          <div className="w-full lg:max-w-3xl space-y-3">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
               <button
                 onClick={handleCreate}
                 disabled={loading}
-                className="px-6 py-3 bg-blue-600 text-white rounded-lg hoer:bg-blue-700 disabled:opacity-50 font-medium transition flex items-center justify-center gap-2"
+                className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 font-medium transition flex items-center justify-center gap-2"
               >
                 Tạo Sản Phẩm
               </button>
@@ -257,44 +257,44 @@ export default function AdminProducts() {
               <button
                 type="button"
                 onClick={handleOpenCategoryModal}
-                className="px-6 py-3 bg-emerald-600 text-white rounded-lg hoer:bg-emerald-700 font-medium transition flex items-center justify-center gap-2"
+                className="px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 font-medium transition flex items-center justify-center gap-2"
               >
                 Tạo Danh Mục
               </button>
-            </di>
-          </di>
-        </di>
+            </div>
+          </div>
+        </div>
 
         {/* Search Bar */}
         <form onSubmit={handleSearchSubmit} className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
-          <di className="flex gap-3">
+          <div className="flex gap-3">
             <input
               type="text"
-              alue={searchInput}
-              onChange={(e) => setSearchInput(e.target.alue)}
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
               placeholder="Tìm kiếm theo tên sách..."
               className="text-black flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <button
               type="submit"
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hoer:bg-blue-700 font-medium transition"
+              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition"
             >
-              Tìm
+               Tìm
             </button>
             {search && (
               <button
                 type="button"
                 onClick={handleResetSearch}
-                className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hoer:bg-gray-50 font-medium transition"
+                className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition"
               >
                 Reset
               </button>
             )}
-          </di>
+          </div>
         </form>
 
         {/* Table */}
-        <di className="bg-white rounded-lg shadow-sm border border-gray-200 oerflow-hidden">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
           <ProductTable
             products={products}
             categories={categories}
@@ -308,8 +308,8 @@ export default function AdminProducts() {
             onHide={handleHide}
             onShow={handleShow}
           />
-        </di>
-      </di>
+        </div>
+      </div>
 
       {/* Modal */}
       <ProductModal
@@ -324,36 +324,36 @@ export default function AdminProducts() {
 
       {categoryModalOpen && (
         <>
-          <di
+          <div
             className="fixed inset-0 z-40 bg-black/50"
             onClick={handleCloseCategoryModal}
           />
 
-          <di className="fixed left-1/2 top-1/2 z-50 w-full max-w-2xl -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-white p-6 shadow-2xl max-h-[90h] oerflow-y-auto">
-            <di className="flex items-center justify-between mb-5">
-              <di>
+          <div className="fixed left-1/2 top-1/2 z-50 w-full max-w-2xl -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-white p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-5">
+              <div>
                 <h2 className="text-2xl font-bold text-gray-900">Tạo Danh Mục</h2>
                 <p className="text-sm text-gray-500 mt-1">Tạo nhanh danh mục mới cho sản phẩm</p>
-              </di>
+              </div>
               <button
                 type="button"
                 onClick={handleCloseCategoryModal}
-                className="text-2xl text-gray-500 hoer:text-gray-700"
+                className="text-2xl text-gray-500 hover:text-gray-700"
               >
                 ✕
               </button>
-            </di>
+            </div>
 
-            <di className="space-y-4">
-              <di>
+            <div className="space-y-4">
+              <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Tên danh mục mới
                 </label>
-                <di className="flex gap-3">
+                <div className="flex gap-3">
                   <input
                     type="text"
-                    alue={categoryInput}
-                    onChange={(e) => setCategoryInput(e.target.alue)}
+                    value={categoryInput}
+                    onChange={(e) => setCategoryInput(e.target.value)}
                     disabled={creatingCategory}
                     placeholder="Nhập tên danh mục..."
                     className="text-black flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:bg-gray-100"
@@ -362,35 +362,35 @@ export default function AdminProducts() {
                     type="button"
                     onClick={handleCreateCategory}
                     disabled={creatingCategory}
-                    className="px-5 py-3 bg-emerald-600 text-white rounded-lg hoer:bg-emerald-700 disabled:opacity-50 font-medium transition flex items-center gap-2"
+                    className="px-5 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 font-medium transition flex items-center gap-2"
                   >
                     {creatingCategory && (
                       <span className="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                     )}
                     Tạo Danh Mục
                   </button>
-                </di>
+                </div>
 
                 {categoryMessage && (
                   <p className={`mt-2 text-sm ${categoryMessage.includes('thành công') ? 'text-emerald-600' : 'text-red-600'}`}>
                     {categoryMessage}
                   </p>
                 )}
-              </di>
+              </div>
 
-              <di className="rounded-xl border border-gray-200 bg-gray-50 p-4">
-                <di className="flex items-center justify-between mb-3">
+              <div className="rounded-xl border border-gray-200 bg-gray-50 p-4">
+                <div className="flex items-center justify-between mb-3">
                   <h3 className="text-sm font-semibold text-gray-700">Danh mục hiện có</h3>
                   <button
                     type="button"
                     onClick={fetchCategories}
-                    className="text-sm text-blue-600 hoer:underline"
+                    className="text-sm text-blue-600 hover:underline"
                   >
                     Làm mới
                   </button>
-                </di>
+                </div>
 
-                <di className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2">
                   {categories.length > 0 ? (
                     categories.map((category) => (
                       <span
@@ -403,10 +403,10 @@ export default function AdminProducts() {
                   ) : (
                     <span className="text-sm text-slate-500">Chưa có danh mục nào.</span>
                   )}
-                </di>
-              </di>
-            </di>
-          </di>
+                </div>
+              </div>
+            </div>
+          </div>
         </>
       )}
     </AdminLayout>

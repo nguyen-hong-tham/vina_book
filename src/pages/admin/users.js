@@ -7,7 +7,7 @@ import AdminLayout from '@/components/AdminLayout';
 export default function AdminUsersPage() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [saingId, setSaingId] = useState(null);
+  const [savingId, setSavingId] = useState(null);
   const [error, setError] = useState('');
   const [search, setSearch] = useState('');
   const [editingUser, setEditingUser] = useState(null);
@@ -31,7 +31,7 @@ export default function AdminUsersPage() {
 
     loadUsers();
 
-    // load current user id to preent self-demotion UI
+    // load current user id to prevent self-demotion UI
     const loadCurrent = async () => {
       try {
         const r = await axios.get('/api/auth/me');
@@ -54,13 +54,13 @@ export default function AdminUsersPage() {
     return users.filter((user) => {
       return [user.name, user.email, user.role]
         .filter(Boolean)
-        .some((alue) => String(alue).toLowerCase().includes(keyword));
+        .some((value) => String(value).toLowerCase().includes(keyword));
     });
   }, [search, users]);
 
   const handleToggleRole = async (user) => {
     const nextRole = user.role === 'admin' ? 'USER' : 'ADMIN';
-    setSaingId(user.id);
+    setSavingId(user.id);
     setError('');
 
     try {
@@ -75,15 +75,15 @@ export default function AdminUsersPage() {
         )
       );
     } catch (err) {
-      setError('Không cập nhật được ai trò người dùng');
+      setError('Không cập nhật được vai trò người dùng');
     } finally {
-      setSaingId(null);
+      setSavingId(null);
     }
   };
 
   const handleToggleLock = async (user) => {
-    const nextStatus = user.status === 'LOCKED' ? 'ACTIE' : 'LOCKED';
-    setSaingId(user.id);
+    const nextStatus = user.status === 'LOCKED' ? 'ACTIVE' : 'LOCKED';
+    setSavingId(user.id);
     setError('');
 
     try {
@@ -96,7 +96,7 @@ export default function AdminUsersPage() {
     } catch (err) {
       setError('Không thay đổi được trạng thái người dùng');
     } finally {
-      setSaingId(null);
+      setSavingId(null);
     }
   };
 
@@ -114,9 +114,9 @@ export default function AdminUsersPage() {
     setError('');
   };
 
-  const handleSaeEdit = async () => {
+  const handleSaveEdit = async () => {
     if (!editingUser) return;
-    setSaingId(editingUser.id);
+    setSavingId(editingUser.id);
     try {
       await axios.put('/api/admin/users', {
         userId: editingUser.id,
@@ -129,44 +129,44 @@ export default function AdminUsersPage() {
     } catch (err) {
       setError('Không lưu được thông tin người dùng');
     } finally {
-      setSaingId(null);
+      setSavingId(null);
     }
   };
 
   return (
     <AdminLayout>
-      <di className="p-6 space-y-6">
-        <di className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-          <di>
+      <div className="p-6 space-y-6">
+        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div>
             <h1 className="text-3xl font-bold text-slate-900">Quản Lý Người Dùng</h1>
-            <p className="mt-2 text-sm text-slate-500">Danh sách người dùng à ai trò hiện tại.</p>
-          </di>
+            <p className="mt-2 text-sm text-slate-500">Danh sách người dùng và vai trò hiện tại.</p>
+          </div>
 
-          <di className="w-full md:max-w-sm">
+          <div className="w-full md:max-w-sm">
             <input
-              alue={search}
-              onChange={(e) => setSearch(e.target.alue)}
-              placeholder="Tìm theo tên, email, ai trò..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Tìm theo tên, email, vai trò..."
               className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none ring-0 placeholder:text-slate-400 focus:border-blue-500"
             />
-          </di>
-        </di>
+          </div>
+        </div>
 
         {error && (
-          <di className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-red-700">
+          <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-red-700">
             {error}
-          </di>
+          </div>
         )}
 
-        <di className="oerflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200">
-          <di className="oerflow-x-auto">
+        <div className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200">
+          <div className="overflow-x-auto">
             <table className="w-full text-left">
               <thead className="border-b border-slate-200 bg-slate-50 text-sm text-slate-500">
                 <tr>
                   <th className="px-4 py-3">ID</th>
                   <th className="px-4 py-3">Tên</th>
                   <th className="px-4 py-3">Email</th>
-                  <th className="px-4 py-3">ai trò</th>
+                  <th className="px-4 py-3">Vai trò</th>
                   <th className="px-4 py-3">Trạng thái</th>
                   <th className="px-4 py-3">Đơn hàng</th>
                   <th className="px-4 py-3">Ngày tạo</th>
@@ -199,38 +199,38 @@ export default function AdminUsersPage() {
                         </span>
                       </td>
                       <td className="px-4 py-4 text-slate-700">{user.order_count}</td>
-                      <td className="px-4 py-4 text-slate-500">{new Date(user.created_at).toLocaleDateString('i-N')}</td>
+                      <td className="px-4 py-4 text-slate-500">{new Date(user.created_at).toLocaleDateString('vi-VN')}</td>
                       <td className="px-4 py-4 text-right">
                         <button
                           type="button"
                           onClick={() => handleToggleRole(user)}
                           disabled={
-                            saingId === user.id || (currentUserId && currentUserId === user.id && user.role === 'admin')
+                            savingId === user.id || (currentUserId && currentUserId === user.id && user.role === 'admin')
                           }
-                          className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hoer:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-60"
+                          className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-60"
                         >
-                          {saingId === user.id
+                          {savingId === user.id
                             ? 'Đang lưu...'
                             : currentUserId === user.id && user.role === 'admin'
-                              ? 'Không thể hạ quyền'
-                              : user.role === 'admin'
-                                ? 'Hạ quyền'
-                                : 'Nâng quyền'}
+                            ? 'Không thể hạ quyền'
+                            : user.role === 'admin'
+                            ? 'Hạ quyền'
+                            : 'Nâng quyền'}
                         </button>
 
                         <button
                           type="button"
                           onClick={() => handleToggleLock(user)}
-                          disabled={saingId === user.id || (currentUserId && currentUserId === user.id)}
-                          className="ml-2 rounded-xl bg-red-600 px-4 py-2 text-sm font-medium text-white transition hoer:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
+                          disabled={savingId === user.id || (currentUserId && currentUserId === user.id)}
+                          className="ml-2 rounded-xl bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
                         >
-                          {saingId === user.id ? 'Đang lưu...' : user.status === 'LOCKED' ? 'Mở khóa' : 'Khóa'}
+                          {savingId === user.id ? 'Đang lưu...' : user.status === 'LOCKED' ? 'Mở khóa' : 'Khóa'}
                         </button>
 
                         <button
                           type="button"
                           onClick={() => openEdit(user)}
-                          className="ml-2 rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hoer:bg-slate-50"
+                          className="ml-2 rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
                         >
                           Chỉnh sửa
                         </button>
@@ -240,31 +240,31 @@ export default function AdminUsersPage() {
                 )}
               </tbody>
             </table>
-          </di>
-        </di>
-      </di>
+          </div>
+        </div>
+      </div>
       {editingUser ? (
-        <di className="text-black fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <di className="w-full max-w-md rounded-2xl bg-white p-6">
+        <div className="text-black fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="w-full max-w-md rounded-2xl bg-white p-6">
             <h3 className="text-lg font-bold">Chỉnh sửa người dùng</h3>
-            <di className="mt-4 space-y-3">
-              <di>
+            <div className="mt-4 space-y-3">
+              <div>
                 <label className="block text-sm text-slate-600">Tên</label>
-                <input alue={editName} onChange={(e) => setEditName(e.target.alue)} className="w-full rounded-md border px-3 py-2" />
-              </di>
-              <di>
+                <input value={editName} onChange={(e) => setEditName(e.target.value)} className="w-full rounded-md border px-3 py-2" />
+              </div>
+              <div>
                 <label className="block text-sm text-slate-600">Email</label>
-                <input alue={editEmail} onChange={(e) => setEditEmail(e.target.alue)} className="w-full rounded-md border px-3 py-2" />
-              </di>
-              {error && <di className="text-sm text-red-600">{error}</di>}
-            </di>
+                <input value={editEmail} onChange={(e) => setEditEmail(e.target.value)} className="w-full rounded-md border px-3 py-2" />
+              </div>
+              {error && <div className="text-sm text-red-600">{error}</div>}
+            </div>
 
-            <di className="mt-6 flex justify-end gap-3">
+            <div className="mt-6 flex justify-end gap-3">
               <button onClick={closeEdit} className="rounded-md px-4 py-2 border">Hủy</button>
-              <button onClick={handleSaeEdit} disabled={saingId === editingUser.id} className="rounded-md bg-blue-600 px-4 py-2 text-white">{saingId === editingUser.id ? 'Đang lưu...' : 'Lưu'}</button>
-            </di>
-          </di>
-        </di>
+              <button onClick={handleSaveEdit} disabled={savingId === editingUser.id} className="rounded-md bg-blue-600 px-4 py-2 text-white">{savingId === editingUser.id ? 'Đang lưu...' : 'Lưu'}</button>
+            </div>
+          </div>
+        </div>
       ) : null}
     </AdminLayout>
   );

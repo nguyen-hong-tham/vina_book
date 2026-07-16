@@ -26,7 +26,7 @@ export default async function handler(req, res) {
 
       const categoryName = name.trim();
       const [result] = await connection.query(
-        `INSERT INTO categories (name) ALUES (?)`,
+        `INSERT INTO categories (name) VALUES (?)`,
         [categoryName]
       );
 

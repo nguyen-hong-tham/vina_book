@@ -2,19 +2,19 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "swiper/css";
-@import "swiper/css/naigation";
+@import "swiper/css/navigation";
 @import "swiper/css/pagination";
 @import "swiper/css/effect-fade";
 
-@custom-ariant dark (&:is(.dark *));
+@custom-variant dark (&:is(.dark *));
 
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
-  --popoer: oklch(1 0 0);
-  --popoer-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
   --primary: oklch(0.205 0 0);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
@@ -23,7 +23,7 @@
   --muted-foreground: oklch(0.556 0 0);
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
-  --destructie: oklch(0.577 0.245 27.325);
+  --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
@@ -44,47 +44,47 @@
 }
 
 @theme inline {
-  --color-background: ar(--background);
-  --color-foreground: ar(--foreground);
-  --font-sans: ar(--font-sans);
-  --font-mono: ar(--font-geist-mono);
-  --font-heading: ar(--font-sans);
-  --color-sidebar-ring: ar(--sidebar-ring);
-  --color-sidebar-border: ar(--sidebar-border);
-  --color-sidebar-accent-foreground: ar(--sidebar-accent-foreground);
-  --color-sidebar-accent: ar(--sidebar-accent);
-  --color-sidebar-primary-foreground: ar(--sidebar-primary-foreground);
-  --color-sidebar-primary: ar(--sidebar-primary);
-  --color-sidebar-foreground: ar(--sidebar-foreground);
-  --color-sidebar: ar(--sidebar);
-  --color-chart-5: ar(--chart-5);
-  --color-chart-4: ar(--chart-4);
-  --color-chart-3: ar(--chart-3);
-  --color-chart-2: ar(--chart-2);
-  --color-chart-1: ar(--chart-1);
-  --color-ring: ar(--ring);
-  --color-input: ar(--input);
-  --color-border: ar(--border);
-  --color-destructie: ar(--destructie);
-  --color-accent-foreground: ar(--accent-foreground);
-  --color-accent: ar(--accent);
-  --color-muted-foreground: ar(--muted-foreground);
-  --color-muted: ar(--muted);
-  --color-secondary-foreground: ar(--secondary-foreground);
-  --color-secondary: ar(--secondary);
-  --color-primary-foreground: ar(--primary-foreground);
-  --color-primary: ar(--primary);
-  --color-popoer-foreground: ar(--popoer-foreground);
-  --color-popoer: ar(--popoer);
-  --color-card-foreground: ar(--card-foreground);
-  --color-card: ar(--card);
-  --radius-sm: calc(ar(--radius) * 0.6);
-  --radius-md: calc(ar(--radius) * 0.8);
-  --radius-lg: ar(--radius);
-  --radius-xl: calc(ar(--radius) * 1.4);
-  --radius-2xl: calc(ar(--radius) * 1.8);
-  --radius-3xl: calc(ar(--radius) * 2.2);
-  --radius-4xl: calc(ar(--radius) * 2.6);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -95,9 +95,9 @@
 }
 
 body {
-  background: ar(--background);
-  color: ar(--foreground);
-  font-family: Arial, Heletica, sans-serif;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .dark {
@@ -105,8 +105,8 @@ body {
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
-  --popoer: oklch(0.205 0 0);
-  --popoer-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
   --primary: oklch(0.922 0 0);
   --primary-foreground: oklch(0.205 0 0);
   --secondary: oklch(0.269 0 0);
@@ -115,7 +115,7 @@ body {
   --muted-foreground: oklch(0.708 0 0);
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
-  --destructie: oklch(0.704 0.191 22.216);
+  --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);
@@ -146,8 +146,8 @@ body {
   }
 }
 
-/* Swiper Naigation Buttons */
-.swiper-button-pre,
+/* Swiper Navigation Buttons */
+.swiper-button-prev,
 .swiper-button-next {
   width: 40px;
   height: 40px;
@@ -159,8 +159,8 @@ body {
   transition: background 0.3s;
 }
 
-.swiper-button-pre:hoer,
-.swiper-button-next:hoer {
+.swiper-button-prev:hover,
+.swiper-button-next:hover {
   background: rgba(0, 0, 0, 0.5);
 }
 
@@ -172,6 +172,6 @@ body {
   height: 8px;
 }
 
-.swiper-pagination-bullet-actie {
+.swiper-pagination-bullet-active {
   background: rgba(255, 255, 255, 1);
 }

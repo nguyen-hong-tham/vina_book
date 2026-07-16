@@ -37,44 +37,45 @@ export default function OrdersPage() {
     fetchOrders();
   }, []);
 
-  if (loading) return <di className="p-6">Đang tải đơn hàng...</di>;
-  if (error) return <di className="p-6 text-red-600">{error}</di>;
+  if (loading) return <div className="p-6">Đang tải đơn hàng...</div>;
+  if (error) return <div className="p-6 text-red-600">{error}</div>;
 
   return (
     <main>
-      <di className="max-w-4xl mx-auto p-6">
+      <div className="max-w-4xl mx-auto p-6">
         <h1 className="text-2xl font-bold mb-4">Lịch sử đơn hàng</h1>
 
         {orders.length === 0 ? (
-          <di className="p-4 bg-yellow-50 border border-yellow-200 rounded">Bạn chưa có đơn hàng nào.</di>
+          <div className="p-4 bg-yellow-50 border border-yellow-200 rounded">Bạn chưa có đơn hàng nào.</div>
         ) : (
-          <di className="space-y-4">
+          <div className="space-y-4">
             {orders.map((o) => (
-              <di key={o.id} className="border rounded p-4 flex justify-between items-center">
-                <di>
-                  <di className="font-semibold">Đơn #{o.id}</di>
-                  <di className="mt-2">
+              <div key={o.id} className="border rounded p-4 flex justify-between items-center">
+                <div>
+                  <div className="font-semibold">Đơn #{o.id}</div>
+                  <div className="mt-2">
                     <span
-                      className={`inline-flex rounded-full border px-3 py-1 text-xs font-semibold ${statusClass[o.status] || 'bg-gray-100 text-gray-700 border-gray-300'
-                        }`}
+                      className={`inline-flex rounded-full border px-3 py-1 text-xs font-semibold ${
+                        statusClass[o.status] || 'bg-gray-100 text-gray-700 border-gray-300'
+                      }`}
                     >
                       {statusText[o.status] || o.status}
                     </span>
-                  </di>
-                  <di className="text-sm text-slate-600 mt-2">{o.item_count} mặt hàng</di>
-                  <di className="text-sm text-slate-500">{new Date(o.created_at).toLocaleString()}</di>
-                </di>
-                <di className="text-right">
-                  <di className="font-semibold">{o.total_amount?.toLocaleString?.() || o.total_amount}₫</di>
+                  </div>
+                  <div className="text-sm text-slate-600 mt-2">{o.item_count} mặt hàng</div>
+                  <div className="text-sm text-slate-500">{new Date(o.created_at).toLocaleString()}</div>
+                </div>
+                <div className="text-right">
+                  <div className="font-semibold">{o.total_amount?.toLocaleString?.() || o.total_amount}₫</div>
                   <Link href={`/orders/${o.id}`} className="mt-2 inline-block text-sm text-blue-600">
                     Xem chi tiết
                   </Link>
-                </di>
-              </di>
+                </div>
+              </div>
             ))}
-          </di>
+          </div>
         )}
-      </di>
+      </div>
     </main>
   );
 }

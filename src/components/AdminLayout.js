@@ -35,9 +35,9 @@ export default function AdminLayout({ children }) {
 
   if (!mounted || isLoading) {
     return (
-      <di className="min-h-screen flex items-center justify-center bg-gray-100 text-gray-500">
+      <div className="min-h-screen flex items-center justify-center bg-gray-100 text-gray-500">
         Đang tải trang quản trị...
-      </di>
+      </div>
     );
   }
 
@@ -46,7 +46,7 @@ export default function AdminLayout({ children }) {
   }
 
   return (
-    <di className="flex min-h-screen bg-gray-100">
+    <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar (fixed bên trái) */}
       <AdminSidebar />
 
@@ -54,6 +54,6 @@ export default function AdminLayout({ children }) {
       <main className="ml-64 w-full p-8">
         {children}
       </main>
-    </di>
+    </div>
   );
 }

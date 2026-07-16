@@ -15,7 +15,7 @@ export default function LoginPage() {
   const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
-    e.preentDefault();
+    e.preventDefault();
     setLoading(true);
     setMessage('');
     setError('');
@@ -23,7 +23,7 @@ export default function LoginPage() {
     try {
       const response = await axios.post('/api/auth/login', { email, password });
       setMessage(response.data.message || 'Đăng nhập thành công!');
-      await queryClient.inalidateQueries({ queryKey: ['current-user'] });
+      await queryClient.invalidateQueries({ queryKey: ['current-user'] });
       await queryClient.refetchQueries({ queryKey: ['current-user'] });
       router.push(String(response.data.role || '').toLowerCase() === 'admin' ? '/admin' : '/products');
     } catch (err) {
@@ -38,25 +38,25 @@ export default function LoginPage() {
       className="min-h-screen flex items-center justify-center px-4 py-12"
       style={{ backgroundColor: '#f8fafc' }}
     >
-      <di className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+      <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
         <motion.section
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
           className="hidden lg:flex flex-col justify-between rounded-3xl bg-blue-600 text-white p-10 shadow-2xl"
         >
-          <di>
-            <p className="text-blue-100 uppercase tracking-[0.3em] text-sm mb-4">inaBook</p>
+          <div>
+            <p className="text-blue-100 uppercase tracking-[0.3em] text-sm mb-4">VinaBook</p>
             <h1 className="text-4xl font-bold leading-tight mb-4">Đăng nhập để tiếp tục mua sách</h1>
             <p className="text-blue-100 text-lg leading-8 max-w-md">
-              Quản lý tài khoản, xem lịch sử à khám phá bộ sưu tập sách nhanh hơn sau khi đăng nhập.
+              Quản lý tài khoản, xem lịch sử và khám phá bộ sưu tập sách nhanh hơn sau khi đăng nhập.
             </p>
-          </di>
+          </div>
 
-          <di className="grid grid-cols-2 gap-4 text-sm text-blue-100 mt-10">
-            <di className="rounded-2xl bg-white/10 p-4 backdrop-blur-sm">Bảo mật bằng cookie HTTP-only</di>
-            <di className="rounded-2xl bg-white/10 p-4 backdrop-blur-sm">Điều hướng nhanh qua API auth</di>
-          </di>
+          <div className="grid grid-cols-2 gap-4 text-sm text-blue-100 mt-10">
+            <div className="rounded-2xl bg-white/10 p-4 backdrop-blur-sm">Bảo mật bằng cookie HTTP-only</div>
+            <div className="rounded-2xl bg-white/10 p-4 backdrop-blur-sm">Điều hướng nhanh qua API auth</div>
+          </div>
         </motion.section>
 
         <motion.section
@@ -65,66 +65,66 @@ export default function LoginPage() {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="rounded-3xl bg-white shadow-xl border border-slate-200 p-8 sm:p-10"
         >
-          <di className="mb-8">
+          <div className="mb-8">
             <p className="text-sm font-semibold uppercase tracking-[0.25em] text-blue-600 mb-2">Tài khoản</p>
             <h2 className="text-3xl font-bold text-slate-900">Đăng nhập</h2>
-            <p className="text-slate-500 mt-2">Nhập email à mật khẩu để ào hệ thống.</p>
-          </di>
+            <p className="text-slate-500 mt-2">Nhập email và mật khẩu để vào hệ thống.</p>
+          </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
-            <di>
+            <div>
               <label className="block text-sm font-medium text-slate-700 mb-2">Email</label>
               <input
                 type="email"
-                alue={email}
-                onChange={(e) => setEmail(e.target.alue)}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 className="w-full px-4 py-3 rounded-xl border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                 required
               />
-            </di>
+            </div>
 
-            <di>
+            <div>
               <label className="block text-sm font-medium text-slate-700 mb-2">Mật khẩu</label>
               <input
                 type="password"
-                alue={password}
-                onChange={(e) => setPassword(e.target.alue)}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 className="w-full px-4 py-3 rounded-xl border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                 required
               />
-            </di>
+            </div>
 
             {error ? (
-              <di className="rounded-xl bg-red-50 border border-red-200 text-red-700 px-4 py-3 text-sm">
+              <div className="rounded-xl bg-red-50 border border-red-200 text-red-700 px-4 py-3 text-sm">
                 {error}
-              </di>
+              </div>
             ) : null}
 
             {message ? (
-              <di className="rounded-xl bg-green-50 border border-green-200 text-green-700 px-4 py-3 text-sm">
+              <div className="rounded-xl bg-green-50 border border-green-200 text-green-700 px-4 py-3 text-sm">
                 {message}
-              </di>
+              </div>
             ) : null}
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-xl bg-blue-600 text-white font-semibold py-3.5 hoer:bg-blue-700 transition disabled:opacity-70 disabled:cursor-not-allowed"
+              className="w-full rounded-xl bg-blue-600 text-white font-semibold py-3.5 hover:bg-blue-700 transition disabled:opacity-70 disabled:cursor-not-allowed"
             >
               {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
             </button>
           </form>
 
-          <di className="mt-6 flex items-center justify-between text-sm text-slate-600">
+          <div className="mt-6 flex items-center justify-between text-sm text-slate-600">
             <span>Chưa có tài khoản?</span>
-            <Link href="/register" className="font-semibold text-blue-600 hoer:text-blue-700">
+            <Link href="/register" className="font-semibold text-blue-600 hover:text-blue-700">
               Đăng ký ngay
             </Link>
-          </di>
+          </div>
         </motion.section>
-      </di>
+      </div>
     </main>
   );
 }

@@ -2,7 +2,7 @@ import db from '@/lib/db';
 import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
 
-const JWT_SECRET = process.en.JWT_SECRET;
+const JWT_SECRET = process.env.JWT_SECRET;
 
 async function getUserIdFromCookie(req) {
   const cookies = parse(req.headers.cookie || '');
@@ -11,7 +11,7 @@ async function getUserIdFromCookie(req) {
   if (!token) return null;
 
   try {
-    const decoded = jwt.erify(token, JWT_SECRET);
+    const decoded = jwt.verify(token, JWT_SECRET);
     return decoded.id;
   } catch {
     return null;
@@ -53,7 +53,7 @@ export default async function handler(req, res) {
     );
 
     const [orderResult] = await conn.query(
-      'INSERT INTO orders (user_id, total_amount, status) ALUES (?, ?, ?)',
+      'INSERT INTO orders (user_id, total_amount, status) VALUES (?, ?, ?)',
       [userId, totalAmount, 'PENDING']
     );
 
@@ -61,7 +61,7 @@ export default async function handler(req, res) {
 
     for (const item of items) {
       await conn.query(
-        'INSERT INTO order_details (order_id, book_id, quantity, price) ALUES (?, ?, ?, ?)',
+        'INSERT INTO order_details (order_id, book_id, quantity, price) VALUES (?, ?, ?, ?)',
         [orderId, item.book_id, item.quantity, item.price]
       );
     }

@@ -1,8 +1,8 @@
 import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
 
-//const JWT_SECRET = process.en.JWT_SECRET;
-const JWT_SECRET = process.en.JWT_SECRET;
+//const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = process.env.JWT_SECRET ;
 
 export default function handler(req, res) {
   if (req.method !== 'GET') return res.status(405).end();
@@ -15,7 +15,7 @@ export default function handler(req, res) {
       return res.status(401).json({ message: 'Chưa đăng nhập' });
     }
 
-    const decoded = jwt.erify(token, JWT_SECRET);
+    const decoded = jwt.verify(token, JWT_SECRET);
 
     return res.status(200).json({
       user: {

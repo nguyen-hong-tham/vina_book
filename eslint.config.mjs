@@ -1,15 +1,15 @@
 import { defineConfig, globalIgnores } from "eslint/config";
-import nextitals from "eslint-config-next/core-web-itals";
+import nextVitals from "eslint-config-next/core-web-vitals";
 
 const eslintConfig = defineConfig([
-  ...nextitals,
-  // Oerride default ignores of eslint-config-next.
+  ...nextVitals,
+  // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:
     ".next/**",
     "out/**",
     "build/**",
-    "next-en.d.ts",
+    "next-env.d.ts",
   ]),
 ]);
 

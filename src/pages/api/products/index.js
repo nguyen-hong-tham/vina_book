@@ -13,16 +13,16 @@ export default async function handler(req, res) {
     const connection = await pool.getConnection();
 
     const params = [];
-    // Lấy cả AAILABLE (hiện + cho order) à OUT_OF_STOCK (hiện nhưng disable order)
-    // Không lấy HIDDEN (ẩn hoàn toàn) à DELETED (xóa)
-    let whereClause = `WHERE status IN ('AAILABLE', 'OUT_OF_STOCK')`;
+    // Lấy cả AVAILABLE (hiện + cho order) và OUT_OF_STOCK (hiện nhưng disable order)
+    // Không lấy HIDDEN (ẩn hoàn toàn) và DELETED (xóa)
+    let whereClause = `WHERE status IN ('AVAILABLE', 'OUT_OF_STOCK')`;
 
     if (categoryId) {
       whereClause += ' AND category_id = ?';
       params.push(categoryId);
     }
-
-    // Query lấy tất cả sách có status = AAILABLE hoặc OUT_OF_STOCK
+    
+    // Query lấy tất cả sách có status = AVAILABLE hoặc OUT_OF_STOCK
     const [books] = await connection.query(
       `SELECT id, category_id, title, author, description, image_url, price, stock, status 
        FROM books 
@@ -30,11 +30,11 @@ export default async function handler(req, res) {
        ORDER BY created_at DESC`,
       params,
     );
-
+    
     // Trả lại connection cho pool
     connection.release();
-
-    // Phản hồi ới danh sách sách
+    
+    // Phản hồi với danh sách sách
     return res.status(200).json(books);
   } catch (error) {
     console.error('Error:', error);

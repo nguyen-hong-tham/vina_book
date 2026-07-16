@@ -7,7 +7,7 @@
 import pool from '@/lib/db';
 
 // req chứa request từ frontend gửi lên
-// res dùng để trả response ề frontend
+// res dùng để trả response về frontend
 export default async function handler(req, res) {
 
     const { id } = req.query; // lấy id từ URL query
@@ -50,10 +50,10 @@ export default async function handler(req, res) {
             ////================GET ALL=================//
             else {
 
-                // pagination + search
+                 // pagination + search
                 const { page = 1, limit = 10, search = '' } = req.query;
 
-                // tính ị trí bắt đầu lấy dữ liệu
+                // tính vị trí bắt đầu lấy dữ liệu
                 const offset = (parseInt(page) - 1) * parseInt(limit);
 
                 // tạo keyword search
@@ -103,7 +103,7 @@ export default async function handler(req, res) {
             } = req.body;
 
 
-            // ---------------alidation required fields-------------------
+            // ---------------validation required fields-------------------
             if (!title || !author || !description || price === undefined || stock === undefined || !category_id || !image_url) {
                 connection.release();
                 return res.status(400).json({
@@ -112,7 +112,7 @@ export default async function handler(req, res) {
                 });
             }
 
-            if (isNaN(price) || isNaN(stock)) // price à stock phải là số ?
+            if (isNaN(price) || isNaN(stock)) // price và stock phải là số ?
             {
                 connection.release();
                 return res.status(400).json({
@@ -133,7 +133,7 @@ export default async function handler(req, res) {
             const [result] = await connection.query(
                 `INSERT INTO books 
                 (title, author, description, image_url, price, stock, category_id,status) 
-                ALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
                 [
                     title,
                     author,
@@ -142,13 +142,13 @@ export default async function handler(req, res) {
                     price,
                     stock,
                     category_id,
-                    'AAILABLE'
+                    'AVAILABLE'
                 ]
             );
 
             connection.release();
 
-            // trả ề id product mới tạo để frontend có thể redirect sang trang chi tiết hoặc edit
+            // trả về id product mới tạo để frontend có thể redirect sang trang chi tiết hoặc edit
             return res.status(201).json({
                 success: true,
                 data: result.insertId,
@@ -165,7 +165,7 @@ export default async function handler(req, res) {
                 connection.release();
                 return res.status(400).json({
                     success: false,
-                    error: 'Inalid product ID'
+                    error: 'Invalid product ID'
                 });
             }
 
@@ -190,7 +190,7 @@ export default async function handler(req, res) {
 
             }
 
-            // price à stock phải là số ?
+            // price và stock phải là số ?
             if (isNaN(price) || isNaN(stock)) {
                 connection.release();
                 return res.status(400).json({
@@ -216,7 +216,7 @@ export default async function handler(req, res) {
                 [id]
             );
 
-            // nếu không tìm thấy product hoặc product đã bị xóa mềm thì trả ề lỗi 404
+            // nếu không tìm thấy product hoặc product đã bị xóa mềm thì trả về lỗi 404
             if (exitingProduct.length === 0) {
                 connection.release();
                 return res.status(404).json({
@@ -257,22 +257,22 @@ export default async function handler(req, res) {
                 connection.release();
                 return res.status(400).json({
                     success: false,
-                    error: 'Inalid product ID'
+                    error: 'Invalid product ID'
                 });
             }
-
+            
             // ============lấy status từ body
             const { status } = req.body;
 
             // ===========danh sách status hợp lệ
-            const alidStatuses = ['AAILABLE', 'OUT_OF_STOCK', 'HIDDEN'];
+            const validStatuses = ['AVAILABLE', 'OUT_OF_STOCK', 'HIDDEN'];
 
             // ============check status hợp lệ
-            if (!alidStatuses.includes(status)) {
+            if (!validStatuses.includes(status)) {
                 connection.release();
                 return res.status(400).json({
                     success: false,
-                    message: 'Inalid status. Must be one of: AAILABLE, OUT_OF_STOCK, HIDDEN'
+                    message: 'Invalid status. Must be one of: AVAILABLE, OUT_OF_STOCK, HIDDEN'
                 });
             }
 
@@ -291,7 +291,7 @@ export default async function handler(req, res) {
                     error: 'Product not found'
                 });
             }
-
+            
 
             const [result] = await connection.query(
                 `UPDATE books 
@@ -318,7 +318,7 @@ export default async function handler(req, res) {
                 connection.release();
                 return res.status(400).json({
                     success: false,
-                    error: 'Inalid product ID'
+                    error: 'Invalid product ID'
                 });
             }
 
@@ -361,7 +361,7 @@ export default async function handler(req, res) {
         console.log(error);
 
         return res.status(500).json({
-            message: 'Serer error'
+            message: 'Server error'
         });
 
     } finally {

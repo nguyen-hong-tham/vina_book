@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/naigation";
+import { useRouter } from "next/navigation";
 import { ShoppingCart } from "lucide-react";
 
 const fetchProduct = async (id) => {
@@ -26,24 +26,24 @@ export default function ProductDetail({ id }) {
     if (isLoading) {
         return (
             <main className="min-h-screen bg-gray-50">
-                <di className="max-w-7xl mx-auto px-4 py-16 text-center">
+                <div className="max-w-7xl mx-auto px-4 py-16 text-center">
                     <h1 className="text-3xl font-bold text-gray-600 mb-2">Đang tải...</h1>
-                </di>
+                </div>
             </main>
         );
     }
 
     if (isError) {
         return (
-            <di className="min-h-screen flex items-center justify-center bg-gray-50">
-                <di className="text-center">
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+                <div className="text-center">
                     <h2 className="text-2xl font-bold text-red-600 mb-2">Lỗi!</h2>
                     <p className="text-gray-600">{error?.message || "Không thể tải sản phẩm"}</p>
-                    <Link href="/products" className="text-blue-600 hoer:underline mt-4 inline-block">
+                    <Link href="/products" className="text-blue-600 hover:underline mt-4 inline-block">
                         Quay lại danh sách sản phẩm
                     </Link>
-                </di>
-            </di>
+                </div>
+            </div>
         );
     }
 
@@ -61,8 +61,8 @@ export default function ProductDetail({ id }) {
             try {
                 setAdding(true);
                 await axios.post('/api/cart', { bookId: product.id, quantity });
-                try { queryClient.inalidateQueries(['cart']); } catch (e) { }
-                alert(`Đã thêm ${quantity} x ${product.title} ào giỏ hàng!`);
+                try { queryClient.invalidateQueries(['cart']); } catch (e) {}
+                alert(`Đã thêm ${quantity} x ${product.title} vào giỏ hàng!`);
             } catch (err) {
                 const status = err?.response?.status;
                 if (status === 401) {
@@ -74,7 +74,7 @@ export default function ProductDetail({ id }) {
                     return;
                 }
                 console.error('Add to cart error', err);
-                alert('Có lỗi khi thêm ào giỏ hàng');
+                alert('Có lỗi khi thêm vào giỏ hàng');
             } finally {
                 setAdding(false);
             }
@@ -85,18 +85,18 @@ export default function ProductDetail({ id }) {
 
     // ================= UI =================
 
-    return (
+    return(
 
         // Container chính
         <main className="min-h-screen bg-gray-50">
 
-            <di className="max-w-7xl mx-auto px-4 py-16">
+            <div className="max-w-7xl mx-auto px-4 py-16">
 
                 {/* Grid chia 2 cột */}
-                <di className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 
                     {/* ================= ẢNH ================= */}
-                    <di>
+                    <div>
 
                         <img
                             // Nếu không có ảnh thì dùng placeholder
@@ -104,15 +104,15 @@ export default function ProductDetail({ id }) {
 
                             alt={product.title}
 
-                            className="w-full h-96 object-coer rounded-lg"
+                            className="w-full h-96 object-cover rounded-lg"
                         />
 
-                    </di>
+                    </div>
 
 
 
                     {/* ================= THÔNG TIN ================= */}
-                    <di>
+                    <div>
 
                         {/* Tên sách */}
                         <h1 className="text-3xl font-bold text-gray-900 mb-2">
@@ -132,19 +132,20 @@ export default function ProductDetail({ id }) {
                         {/* Giá */}
                         <p className="text-2xl font-bold text-blue-600 mb-4">
 
-                            ₫{product.price.toLocaleString("i-N")}
+                            ₫{product.price.toLocaleString("vi-VN")}
 
                         </p>
 
 
                         {/* ================= TRẠNG THÁI KHO ================= */}
 
-                        <di className="mb-6">
+                        <div className="mb-6">
 
-                            <p className={`text-lg font-semibold ${isOutOfStock
+                            <p className={`text-lg font-semibold ${
+                                isOutOfStock
                                     ? "text-red-600"
                                     : "text-green-600"
-                                }`}>
+                            }`}>
 
                                 {isOutOfStock
                                     ? " Hết hàng"
@@ -152,18 +153,18 @@ export default function ProductDetail({ id }) {
 
                             </p>
 
-                        </di>
+                        </div>
 
 
                         {/* ================= CHỌN SỐ LƯỢNG ================= */}
 
-                        <di className="flex items-center space-x-4 mb-6">
+                        <div className="flex items-center space-x-4 mb-6">
 
                             <label className="block text-sm font-medium text-gray-700">
                                 Số lượng:
                             </label>
                             {/* Box quantity */}
-                            <di className="text-black flex items-center border border-gray-300 rounded-lg">
+                            <div className="text-black flex items-center border border-gray-300 rounded-lg">
                                 {/* Nút giảm */}
                                 <button
 
@@ -174,7 +175,7 @@ export default function ProductDetail({ id }) {
                                         )
                                     }
 
-                                    className="px-4 py-2 text-gray-600 hoer:bg-gray-100"
+                                    className="px-4 py-2 text-gray-600 hover:bg-gray-100"
 
                                     disabled={isOutOfStock}
                                 >
@@ -184,14 +185,14 @@ export default function ProductDetail({ id }) {
                                 <input
 
                                     type="number"
-                                    alue={quantity}
+                                    value={quantity}
                                     onChange={(e) =>
 
                                         setQuantity(
 
                                             Math.max(
                                                 1,
-                                                parseInt(e.target.alue) || 1
+                                                parseInt(e.target.value) || 1
                                             )
 
                                         )
@@ -208,7 +209,7 @@ export default function ProductDetail({ id }) {
 
                                         setQuantity(
 
-                                            // Không ượt quá stock
+                                            // Không vượt quá stock
                                             Math.min(
                                                 product.stock,
                                                 quantity + 1
@@ -217,16 +218,16 @@ export default function ProductDetail({ id }) {
                                         )
                                     }
 
-                                    className="px-4 py-2 text-gray-600 hoer:bg-gray-100"
+                                    className="px-4 py-2 text-gray-600 hover:bg-gray-100"
 
                                     disabled={isOutOfStock}
                                 >
                                     +
                                 </button>
 
-                            </di>
+                            </div>
 
-                        </di>
+                        </div>
 
 
                         {/* ================= NÚT GIỎ HÀNG ================= */}
@@ -234,10 +235,11 @@ export default function ProductDetail({ id }) {
                         <button
                             onClick={handleAddToCart}
                             disabled={isOutOfStock || adding}
-                            className={`px-6 py-3 rounded-md font-medium text-white flex items-center gap-2 ${isOutOfStock || adding
+                            className={`px-6 py-3 rounded-md font-medium text-white flex items-center gap-2 ${
+                                isOutOfStock || adding
                                     ? "bg-gray-400 cursor-not-allowed"
-                                    : "bg-blue-600 hoer:bg-blue-700"
-                                }`}
+                                    : "bg-blue-600 hover:bg-blue-700"
+                            }`}
                         >
                             {/* Icon */}
                             <ShoppingCart size={20} />
@@ -246,13 +248,13 @@ export default function ProductDetail({ id }) {
                             {isOutOfStock
                                 ? "Hết hàng"
                                 : adding
-                                    ? 'Đang thêm...'
-                                    : "Thêm ào giỏ"}
+                                ? 'Đang thêm...'
+                                : "Thêm vào giỏ"}
 
                         </button>
 
-                    </di>
-                </di>
+                    </div>
+                </div>
 
 
                 {/* ================= MÔ TẢ CHI TIẾT ================= */}
@@ -260,7 +262,7 @@ export default function ProductDetail({ id }) {
                 {/* Chỉ hiện nếu có description */}
                 {product.description && (
 
-                    <di className="mt-12">
+                    <div className="mt-12">
 
                         <h2 className="text-2xl font-bold text-gray-900 mb-4">
                             Mô Tả Chi Tiết
@@ -272,11 +274,11 @@ export default function ProductDetail({ id }) {
 
                         </p>
 
-                    </di>
+                    </div>
 
                 )}
 
-            </di>
+            </div>
         </main>
     );
 }

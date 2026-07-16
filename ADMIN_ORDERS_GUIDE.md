@@ -2,8 +2,8 @@
 
 ## 📋 Tổng Quan
 
-Trang admin orders cho phép quản lý các đơn hàng từ khách hàng ới các tính năng:
-- Xem danh sách đơn hàng ới phân trang
+Trang admin orders cho phép quản lý các đơn hàng từ khách hàng với các tính năng:
+- Xem danh sách đơn hàng với phân trang
 - Xem chi tiết đơn hàng (sản phẩm, số lượng, giá)
 - Thay đổi trạng thái đơn hàng (PENDING → ACCEPT → DONE hoặc REJECT)
 - Popup để xử lý trạng thái
@@ -62,12 +62,12 @@ CREATE TABLE order_details (
 );
 ```
 
-##  Bước 1: Tạo API Endpoint
+## 🚀 Bước 1: Tạo API Endpoint
 
 **File: `src/pages/api/admin/orders.js`**
 
 ### Hàm 1: Lấy danh sách đơn hàng
-```jaascript
+```javascript
 export async function getOrders(req, res) {
   const { page = 1, limit = 10 } = req.query;
   const offset = (page - 1) * limit;
@@ -106,7 +106,7 @@ export async function getOrders(req, res) {
 ```
 
 ### Hàm 2: Lấy chi tiết đơn hàng
-```jaascript
+```javascript
 export async function getOrderDetail(req, res) {
   const { orderId } = req.query;
 
@@ -145,13 +145,13 @@ export async function getOrderDetail(req, res) {
 ```
 
 ### Hàm 3: Cập nhật trạng thái đơn hàng
-```jaascript
+```javascript
 export async function updateOrderStatus(req, res) {
   const { orderId, status } = req.body;
   
   // Kiểm tra trạng thái hợp lệ
-  const alidStatuses = ['PENDING', 'ACCEPT', 'REJECT', 'DONE'];
-  if (!alidStatuses.includes(status)) {
+  const validStatuses = ['PENDING', 'ACCEPT', 'REJECT', 'DONE'];
+  if (!validStatuses.includes(status)) {
     return res.status(400).json({ error: 'Trạng thái không hợp lệ' });
   }
 
@@ -183,7 +183,7 @@ export async function updateOrderStatus(req, res) {
 ```
 
 ### Route Handler
-```jaascript
+```javascript
 import pool from '@/lib/db';
 
 export default async function handler(req, res) {
@@ -206,7 +206,7 @@ export default async function handler(req, res) {
 
 **File: `src/components/OrderTable.js`**
 
-```jaascript
+```javascript
 'use client';
 import { useState } from 'react';
 import Pagination from './Pagination';
@@ -217,7 +217,7 @@ export default function OrderTable({
   page = 1,
   totalPages = 1,
   onPageChange = () => {},
-  oniewDetail = () => {},
+  onViewDetail = () => {},
   onUpdateStatus = () => {},
 }) {
   const statusConfig = {
@@ -232,7 +232,7 @@ export default function OrderTable({
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('i-N', {
+    return new Date(dateString).toLocaleDateString('vi-VN', {
       year: 'numeric',
       month: '2-digit',
       day: '2-digit',
@@ -242,15 +242,15 @@ export default function OrderTable({
   };
 
   if (loading) {
-    return <di className="text-center py-8">Đang tải...</di>;
+    return <div className="text-center py-8">Đang tải...</div>;
   }
 
   if (orders.length === 0) {
-    return <di className="text-center py-8 text-gray-500">Không có đơn hàng nào</di>;
+    return <div className="text-center py-8 text-gray-500">Không có đơn hàng nào</div>;
   }
 
   return (
-    <di className="oerflow-x-auto">
+    <div className="overflow-x-auto">
       <table className="w-full border-collapse">
         <thead className="bg-gray-100">
           <tr>
@@ -266,13 +266,13 @@ export default function OrderTable({
           {orders.map((order) => {
             const statusInfo = getStatusColor(order.status);
             return (
-              <tr key={order.id} className="border-b hoer:bg-gray-50">
+              <tr key={order.id} className="border-b hover:bg-gray-50">
                 <td className="p-3 font-bold">#{order.id}</td>
                 <td className="p-3">
-                  <di className="font-medium">{order.user_name}</di>
-                  <di className="text-sm text-gray-500">{order.email}</di>
+                  <div className="font-medium">{order.user_name}</div>
+                  <div className="text-sm text-gray-500">{order.email}</div>
                 </td>
-                <td className="p-3 text-right font-bold">{order.total_amount.toLocaleString('i-N')}₫</td>
+                <td className="p-3 text-right font-bold">{order.total_amount.toLocaleString('vi-VN')}₫</td>
                 <td className="p-3 text-center">
                   <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${statusInfo.color}`}>
                     {statusInfo.badge} {statusInfo.text}
@@ -280,22 +280,22 @@ export default function OrderTable({
                 </td>
                 <td className="p-3 text-sm text-gray-600">{formatDate(order.created_at)}</td>
                 <td className="p-3 text-center">
-                  <di className="flex gap-2 justify-center">
+                  <div className="flex gap-2 justify-center">
                     <button
-                      onClick={() => oniewDetail(order.id)}
-                      className="px-3 py-1 bg-blue-500 text-white rounded hoer:bg-blue-600 text-sm"
+                      onClick={() => onViewDetail(order.id)}
+                      className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm"
                     >
                       Chi tiết
                     </button>
                     {(order.status === 'PENDING' || order.status === 'ACCEPT') && (
                       <button
                         onClick={() => onUpdateStatus(order.id, order.status)}
-                        className="px-3 py-1 bg-purple-500 text-white rounded hoer:bg-purple-600 text-sm"
+                        className="px-3 py-1 bg-purple-500 text-white rounded hover:bg-purple-600 text-sm"
                       >
                         Xử lý
                       </button>
                     )}
-                  </di>
+                  </div>
                 </td>
               </tr>
             );
@@ -308,7 +308,7 @@ export default function OrderTable({
         totalPages={totalPages}
         onPageChange={onPageChange}
       />
-    </di>
+    </div>
   );
 }
 ```
@@ -317,7 +317,7 @@ export default function OrderTable({
 
 **File: `src/components/OrderModal.js`**
 
-```jaascript
+```javascript
 'use client';
 import { useState } from 'react';
 
@@ -352,14 +352,14 @@ export default function OrderModal({
   };
 
   const statusColors = {
-    ACCEPT: 'bg-green-500 hoer:bg-green-600',
-    REJECT: 'bg-red-500 hoer:bg-red-600',
-    DONE: 'bg-blue-500 hoer:bg-blue-600'
+    ACCEPT: 'bg-green-500 hover:bg-green-600',
+    REJECT: 'bg-red-500 hover:bg-red-600',
+    DONE: 'bg-blue-500 hover:bg-blue-600'
   };
 
   const handleConfirm = async () => {
     if (!selectedStatus) {
-      alert('ui lòng chọn trạng thái');
+      alert('Vui lòng chọn trạng thái');
       return;
     }
     await onConfirm(orderId, selectedStatus);
@@ -372,24 +372,24 @@ export default function OrderModal({
   };
 
   return (
-    <di className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <di className="bg-white rounded-lg shadow-xl p-6 w-96 max-w-full">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg shadow-xl p-6 w-96 max-w-full">
         <h2 className="text-xl font-bold mb-4">Xử Lý Trạng Thái Đơn Hàng</h2>
         
         {/* Thông tin đơn hàng */}
-        <di className="mb-6 p-4 bg-gray-100 rounded">
+        <div className="mb-6 p-4 bg-gray-100 rounded">
           <p className="text-sm text-gray-600">Đơn hàng #<span className="font-bold">{orderId}</span></p>
           <p className="text-sm text-gray-600">
             Trạng thái hiện tại: 
             <span className="font-bold ml-2">{statusTexts[currentStatus]}</span>
           </p>
-        </di>
+        </div>
 
         {/* Danh sách trạng thái khả dụng */}
         {nextStatuses.length > 0 ? (
-          <di>
+          <div>
             <p className="text-sm font-medium mb-3">Chọn trạng thái tiếp theo:</p>
-            <di className="space-y-2 mb-6">
+            <div className="space-y-2 mb-6">
               {nextStatuses.map((status) => (
                 <label key={status} className="flex items-center p-3 border-2 rounded cursor-pointer transition"
                   style={{
@@ -399,28 +399,28 @@ export default function OrderModal({
                   <input
                     type="radio"
                     name="status"
-                    alue={status}
+                    value={status}
                     checked={selectedStatus === status}
-                    onChange={(e) => setSelectedStatus(e.target.alue)}
+                    onChange={(e) => setSelectedStatus(e.target.value)}
                     className="mr-3"
                   />
                   <span className="font-medium">{statusTexts[status]}</span>
                 </label>
               ))}
-            </di>
-          </di>
+            </div>
+          </div>
         ) : (
-          <di className="mb-6 p-4 bg-gray-100 text-gray-600 rounded text-sm">
+          <div className="mb-6 p-4 bg-gray-100 text-gray-600 rounded text-sm">
             ℹ️ Không thể thay đổi trạng thái từ <strong>{statusTexts[currentStatus]}</strong>
-          </di>
+          </div>
         )}
 
         {/* Nút hành động */}
-        <di className="flex gap-3">
+        <div className="flex gap-3">
           <button
             onClick={handleClose}
             disabled={loading}
-            className="flex-1 px-4 py-2 bg-gray-300 text-gray-800 rounded hoer:bg-gray-400 disabled:opacity-50 transition"
+            className="flex-1 px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 disabled:opacity-50 transition"
           >
             Hủy
           </button>
@@ -429,15 +429,15 @@ export default function OrderModal({
               onClick={handleConfirm}
               disabled={loading || !selectedStatus}
               className={`flex-1 px-4 py-2 text-white rounded transition disabled:opacity-50 ${
-                statusColors[selectedStatus] || 'bg-blue-500 hoer:bg-blue-600'
+                statusColors[selectedStatus] || 'bg-blue-500 hover:bg-blue-600'
               }`}
             >
               {loading ? 'Đang xử lý...' : 'Xác Nhận'}
             </button>
           )}
-        </di>
-      </di>
-    </di>
+        </div>
+      </div>
+    </div>
   );
 }
 ```
@@ -446,7 +446,7 @@ export default function OrderModal({
 
 **File: `src/components/OrderDetailModal.js`**
 
-```jaascript
+```javascript
 'use client';
 
 export default function OrderDetailModal({
@@ -473,7 +473,7 @@ export default function OrderDetailModal({
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('i-N', {
+    return new Date(dateString).toLocaleDateString('vi-VN', {
       year: 'numeric',
       month: '2-digit',
       day: '2-digit',
@@ -483,91 +483,91 @@ export default function OrderDetailModal({
   };
 
   return (
-    <di className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <di className="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl max-h-[90h] oerflow-y-auto">
-        <di className="flex justify-between items-center mb-6">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-bold">Chi Tiết Đơn Hàng #{order.id}</h2>
           <button
             onClick={onClose}
-            className="text-2xl text-gray-500 hoer:text-gray-700"
+            className="text-2xl text-gray-500 hover:text-gray-700"
           >
             ✕
           </button>
-        </di>
+        </div>
 
         {loading ? (
-          <di className="text-center py-8">Đang tải chi tiết...</di>
+          <div className="text-center py-8">Đang tải chi tiết...</div>
         ) : (
           <>
             {/* Thông tin khách hàng */}
-            <di className="mb-6 p-4 bg-gray-50 rounded">
-              <h3 className="font-bold mb-3"> Thông Tin Khách Hàng</h3>
+            <div className="mb-6 p-4 bg-gray-50 rounded">
+              <h3 className="font-bold mb-3">👤 Thông Tin Khách Hàng</h3>
               <p className="text-sm"><span className="font-medium">Tên:</span> {order.user_name}</p>
               <p className="text-sm"><span className="font-medium">Email:</span> {order.email}</p>
               <p className="text-sm"><span className="font-medium">Ngày đặt:</span> {formatDate(order.created_at)}</p>
-            </di>
+            </div>
 
             {/* Trạng thái đơn hàng */}
-            <di className="mb-6 p-4 bg-blue-50 rounded">
+            <div className="mb-6 p-4 bg-blue-50 rounded">
               <h3 className="font-bold mb-2">📊 Trạng Thái Đơn Hàng</h3>
               <p className={`text-lg font-bold ${statusColors[order.status]}`}>
                 {statusTexts[order.status]}
               </p>
-            </di>
+            </div>
 
             {/* Chi tiết sản phẩm */}
-            <di className="mb-6">
-              <h3 className="font-bold mb-3"> Sản Phẩm Trong Đơn Hàng</h3>
-              <di className="space-y-3">
+            <div className="mb-6">
+              <h3 className="font-bold mb-3">📚 Sản Phẩm Trong Đơn Hàng</h3>
+              <div className="space-y-3">
                 {details.length > 0 ? (
                   details.map((item) => (
-                    <di key={item.id} className="flex gap-4 p-3 border rounded">
+                    <div key={item.id} className="flex gap-4 p-3 border rounded">
                       {item.image_url && (
                         <img
                           src={item.image_url}
                           alt={item.title}
-                          className="w-16 h-20 object-coer rounded"
+                          className="w-16 h-20 object-cover rounded"
                         />
                       )}
-                      <di className="flex-1">
+                      <div className="flex-1">
                         <p className="font-medium">{item.title}</p>
                         <p className="text-sm text-gray-600">Số lượng: {item.quantity}</p>
                         <p className="text-sm text-gray-600">
-                          Giá: {item.price.toLocaleString('i-N')}₫ × {item.quantity} = 
+                          Giá: {item.price.toLocaleString('vi-VN')}₫ × {item.quantity} = 
                           <span className="font-bold ml-2">
-                            {(item.price * item.quantity).toLocaleString('i-N')}₫
+                            {(item.price * item.quantity).toLocaleString('vi-VN')}₫
                           </span>
                         </p>
-                      </di>
-                    </di>
+                      </div>
+                    </div>
                   ))
                 ) : (
                   <p className="text-gray-500">Không có sản phẩm</p>
                 )}
-              </di>
-            </di>
+              </div>
+            </div>
 
             {/* Tổng tiền */}
-            <di className="mb-6 p-4 bg-gray-100 rounded">
-              <di className="flex justify-between items-center">
+            <div className="mb-6 p-4 bg-gray-100 rounded">
+              <div className="flex justify-between items-center">
                 <span className="font-bold text-lg">Tổng Tiền:</span>
                 <span className="font-bold text-2xl text-green-600">
-                  {order.total_amount.toLocaleString('i-N')}₫
+                  {order.total_amount.toLocaleString('vi-VN')}₫
                 </span>
-              </di>
-            </di>
+              </div>
+            </div>
 
             {/* Nút đóng */}
             <button
               onClick={onClose}
-              className="w-full px-4 py-2 bg-blue-500 text-white rounded hoer:bg-blue-600 transition"
+              className="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
             >
               Đóng
             </button>
           </>
         )}
-      </di>
-    </di>
+      </div>
+    </div>
   );
 }
 ```
@@ -576,7 +576,7 @@ export default function OrderDetailModal({
 
 **File: `src/pages/admin/orders.js`**
 
-```jaascript
+```javascript
 'use client';
 import { useState, useEffect } from 'react';
 import { AdminLayout } from '@/components';
@@ -630,7 +630,7 @@ export default function AdminOrders() {
   };
 
   // ========================= Xem chi tiết đơn hàng =========================
-  const handleiewDetail = async (orderId) => {
+  const handleViewDetail = async (orderId) => {
     setLoadingDetail(true);
     try {
       const response = await axios.get('/api/admin/orders', {
@@ -680,27 +680,27 @@ export default function AdminOrders() {
 
   return (
     <AdminLayout>
-      <di className="p-6">
+      <div className="p-6">
         <h1 className="text-3xl font-bold mb-6">Quản Lý Đơn Hàng</h1>
 
         {error && (
-          <di className="mb-4 p-4 bg-red-100 text-red-700 rounded">
+          <div className="mb-4 p-4 bg-red-100 text-red-700 rounded">
             {error}
-          </di>
+          </div>
         )}
 
         {/* Bảng đơn hàng */}
-        <di className="bg-white rounded-lg shadow">
+        <div className="bg-white rounded-lg shadow">
           <OrderTable
             orders={orders}
             loading={loading}
             page={page}
             totalPages={totalPages}
             onPageChange={setPage}
-            oniewDetail={handleiewDetail}
+            onViewDetail={handleViewDetail}
             onUpdateStatus={handleUpdateStatus}
           />
-        </di>
+        </div>
 
         {/* Modal xử lý trạng thái */}
         <OrderModal
@@ -720,7 +720,7 @@ export default function AdminOrders() {
           loading={loadingDetail}
           onClose={() => setDetailModalOpen(false)}
         />
-      </di>
+      </div>
     </AdminLayout>
   );
 }
@@ -734,17 +734,17 @@ PENDING ──→ ACCEPT ──→ DONE
   │           │
   └─→ REJECT  └─→ REJECT
   
-REJECT à DONE là trạng thái kết thúc
+REJECT và DONE là trạng thái kết thúc
 ```
 
 ### 2. **API Security**
-- Kiểm tra quyền admin trước khi trả ề dữ liệu
-- alidate dữ liệu đầu ào
+- Kiểm tra quyền admin trước khi trả về dữ liệu
+- Validate dữ liệu đầu vào
 - Sử dụng HTTPS trong production
 
 ### 3. **Error Handling**
 - Bắt tất cả exception
-- Trả ề error messages rõ ràng
+- Trả về error messages rõ ràng
 - Log errors để debug
 
 ### 4. **Performance**
@@ -756,7 +756,7 @@ REJECT à DONE là trạng thái kết thúc
 - Hiện loading state
 - Confirm trước khi cập nhật trạng thái
 - Toast/Alert feedback
-- Responsie design
+- Responsive design
 
 ## 📝 Checklist Hoàn Thiện
 
@@ -765,18 +765,18 @@ REJECT à DONE là trạng thái kết thúc
 - [ ] Tạo component `OrderModal.js` (popup xử lý trạng thái)
 - [ ] Tạo component `OrderDetailModal.js` (xem chi tiết)
 - [ ] Tạo trang `pages/admin/orders.js`
-- [ ] Thêm route ào `AdminSidebar.js`
+- [ ] Thêm route vào `AdminSidebar.js`
 - [ ] Test tất cả tính năng
 - [ ] Thêm loading state
 - [ ] Thêm error handling
-- [ ] Responsie design cho mobile
+- [ ] Responsive design cho mobile
 
 ## 🔗 Cấu Hình AdminSidebar
 
-Thêm menu item ào `src/components/AdminSidebar.js`:
-```jaascript
+Thêm menu item vào `src/components/AdminSidebar.js`:
+```javascript
 <Link href="/admin/orders">
-  <a className="flex items-center gap-3 px-4 py-2 hoer:bg-gray-700">
+  <a className="flex items-center gap-3 px-4 py-2 hover:bg-gray-700">
     📋 Quản Lý Đơn Hàng
   </a>
 </Link>
@@ -784,4 +784,4 @@ Thêm menu item ào `src/components/AdminSidebar.js`:
 
 ---
 
-**Bây giờ bạn đã có hướng dẫn đầy đủ để xây dựng trang Admin Orders! **
+**Bây giờ bạn đã có hướng dẫn đầy đủ để xây dựng trang Admin Orders! 🚀**

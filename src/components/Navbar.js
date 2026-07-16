@@ -15,7 +15,7 @@ const fetchCart = async () => {
   return response.data;
 };
 
-export default function Nabar() {
+export default function Navbar() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -43,21 +43,21 @@ export default function Nabar() {
   });
 
   useEffect(() => {
-    const handleClickOutside = (eent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(eent.target)) {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setDropdownOpen(false);
       }
     };
 
-    document.addEentListener('mousedown', handleClickOutside);
-    return () => document.remoeEentListener('mousedown', handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   const handleLogout = async () => {
     try {
       await axios.post('/api/auth/logout');
-      await queryClient.remoeQueries({ queryKey: ['current-user'] });
-      await queryClient.remoeQueries({ queryKey: ['cart'] });
+      await queryClient.removeQueries({ queryKey: ['current-user'] });
+      await queryClient.removeQueries({ queryKey: ['cart'] });
       setDropdownOpen(false);
       router.push('/login');
     } catch (error) {
@@ -69,24 +69,24 @@ export default function Nabar() {
   const cartItemCount = cart?.items?.length || 0;
 
   return (
-    <na className="bg-blue-600 text-white shadow-md sticky top-0 z-50">
-      <di className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <di className="flex justify-between h-16 items-center">
-
-          <di className="shrink-0 font-bold text-2xl tracking-wide">
+    <nav className="bg-blue-600 text-white shadow-md sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16 items-center">
+          
+          <div className="shrink-0 font-bold text-2xl tracking-wide">
             <Link href={isAdmin ? '/admin' : '/products'}>
-              inaBook
+              VinaBook
             </Link>
-          </di>
+          </div>
 
-          <di className="flex items-center space-x-6 font-medium">
+          <div className="flex items-center space-x-6 font-medium">
             {!isAdmin && (
               <>
-                <Link href="/products" className="hoer:text-blue-200 transition-colors">
+                <Link href="/products" className="hover:text-blue-200 transition-colors">
                   Cửa Hàng
                 </Link>
 
-                <Link href="/cart" className="hoer:text-blue-200 transition-colors flex items-center">
+                <Link href="/cart" className="hover:text-blue-200 transition-colors flex items-center">
                   Giỏ Hàng
                   {cartItemCount > 0 && (
                     <span className="ml-2 bg-yellow-400 text-blue-900 text-xs font-bold px-2 py-0.5 rounded-full">
@@ -98,11 +98,11 @@ export default function Nabar() {
             )}
 
             {user ? (
-              <di ref={dropdownRef} className="relatie">
+              <div ref={dropdownRef} className="relative">
                 <button
                   type="button"
                   onClick={() => setDropdownOpen((open) => !open)}
-                  className="hoer:text-blue-200 transition-colors font-semibold flex items-center gap-1"
+                  className="hover:text-blue-200 transition-colors font-semibold flex items-center gap-1"
                 >
                   Xin chào, {user.name}
                   <span className={`text-xs transition-transform ${dropdownOpen ? 'rotate-180' : ''}`}>
@@ -111,40 +111,40 @@ export default function Nabar() {
                 </button>
 
                 {dropdownOpen ? (
-                  <di className="absolute right-0 mt-3 w-44 rounded-xl bg-white text-slate-900 shadow-lg border border-slate-200 py-2 oerflow-hidden">
+                  <div className="absolute right-0 mt-3 w-44 rounded-xl bg-white text-slate-900 shadow-lg border border-slate-200 py-2 overflow-hidden">
                     <Link
                       href="/profile"
                       onClick={() => setDropdownOpen(false)}
-                      className="block px-4 py-2 text-sm hoer:bg-slate-100 transition-colors"
+                      className="block px-4 py-2 text-sm hover:bg-slate-100 transition-colors"
                     >
                       Hồ sơ
                     </Link>
                     <Link
                       href="/orders"
                       onClick={() => setDropdownOpen(false)}
-                      className="block px-4 py-2 text-sm hoer:bg-slate-100 transition-colors"
+                      className="block px-4 py-2 text-sm hover:bg-slate-100 transition-colors"
                     >
                       Lịch sử đơn hàng
                     </Link>
                     <button
                       type="button"
                       onClick={handleLogout}
-                      className="block w-full text-left px-4 py-2 text-sm hoer:bg-slate-100 transition-colors text-red-600"
+                      className="block w-full text-left px-4 py-2 text-sm hover:bg-slate-100 transition-colors text-red-600"
                     >
                       Đăng xuất
                     </button>
-                  </di>
+                  </div>
                 ) : null}
-              </di>
+              </div>
             ) : (
-              <Link href="/login" className="hoer:text-blue-200 transition-colors">
+              <Link href="/login" className="hover:text-blue-200 transition-colors">
                 Đăng nhập
               </Link>
             )}
-          </di>
+          </div>
 
-        </di>
-      </di>
-    </na>
+        </div>
+      </div>
+    </nav>
   );
 }

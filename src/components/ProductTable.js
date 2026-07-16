@@ -19,7 +19,7 @@ export default function ProductTable({
     const map = {};
     categories.forEach((c) => {
       if (!c) return;
-      const id = c.id ?? c.category_id ?? c.alue;
+      const id = c.id ?? c.category_id ?? c.value;
       const name = c.name || c.title || c.label || c.category_name;
       if (id != null) map[id] = name;
     });
@@ -40,13 +40,13 @@ export default function ProductTable({
     }
 
     const statusConfig = {
-      AAILABLE: { text: 'Có sẵn', color: 'bg-green-100 text-green-800' },
+      AVAILABLE: { text: 'Có sẵn', color: 'bg-green-100 text-green-800' },
       OUT_OF_STOCK: { text: 'Hết hàng', color: 'bg-yellow-100 text-yellow-800' },
       HIDDEN: { text: 'Đã ẩn', color: 'bg-gray-100 text-gray-800' },
       DELETED: { text: 'Đã xóa', color: 'bg-red-100 text-red-800' },
     };
 
-    const config = statusConfig[status] || statusConfig.AAILABLE;
+    const config = statusConfig[status] || statusConfig.AVAILABLE;
     return (
       <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${config.color}`}>
         {config.text}
@@ -58,24 +58,24 @@ export default function ProductTable({
     const { id, status } = product;
 
     return (
-      <di className="flex items-center gap-2 justify-center">
+      <div className="flex items-center gap-2 justify-center">
         {/* Edit - luôn show */}
         <button
           onClick={() => onEdit(product)}
           disabled={loading}
           title="Chỉnh sửa sản phẩm"
-          className="p-2 text-blue-600 hoer:bg-blue-50 rounded-lg disabled:opacity-50 transition"
+          className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg disabled:opacity-50 transition"
         >
           Chỉnh sửa
         </button>
 
-        {/* Hide - show khi AAILABLE hoặc OUT_OF_STOCK */}
-        {(status === 'AAILABLE' || status === 'OUT_OF_STOCK') && (
+        {/* Hide - show khi AVAILABLE hoặc OUT_OF_STOCK */}
+        {(status === 'AVAILABLE' || status === 'OUT_OF_STOCK') && (
           <button
             onClick={() => onHide(id)}
             disabled={loading}
             title="Ẩn sản phẩm này"
-            className="p-2 text-yellow-600 hoer:bg-yellow-50 rounded-lg disabled:opacity-50 transition"
+            className="p-2 text-yellow-600 hover:bg-yellow-50 rounded-lg disabled:opacity-50 transition"
           >
             Ẩn
           </button>
@@ -87,7 +87,7 @@ export default function ProductTable({
             onClick={() => onShow(id)}
             disabled={loading}
             title="Hiện sản phẩm này"
-            className="p-2 text-purple-600 hoer:bg-purple-50 rounded-lg disabled:opacity-50 transition"
+            className="p-2 text-purple-600 hover:bg-purple-50 rounded-lg disabled:opacity-50 transition"
           >
             Hiển thị
           </button>
@@ -102,37 +102,37 @@ export default function ProductTable({
           }}
           disabled={loading}
           title="Xóa sản phẩm này"
-          className="p-2 text-red-600 hoer:bg-red-50 rounded-lg disabled:opacity-50 transition"
+          className="p-2 text-red-600 hover:bg-red-50 rounded-lg disabled:opacity-50 transition"
         >
           Xóa
         </button>
-      </di>
+      </div>
     );
   };
 
   // Error
   if (error) {
     return (
-      <di className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+      <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
         <p className="text-red-800 font-medium"> Lỗi: {error}</p>
-      </di>
+      </div>
     );
   }
 
   // Empty
   if (!loading && products.length === 0) {
     return (
-      <di className="bg-gray-50 border border-gray-200 rounded-lg p-12 text-center">
+      <div className="bg-gray-50 border border-gray-200 rounded-lg p-12 text-center">
         <p className="text-gray-600 text-lg font-medium mb-2"> Không có sản phẩm</p>
         <p className="text-gray-500 text-sm">Hãy tạo sản phẩm mới để bắt đầu</p>
-      </di>
+      </div>
     );
   }
 
   return (
-    <di className="space-y-4">
+    <div className="space-y-4">
       {/* Table */}
-      <di className="oerflow-x-auto border border-gray-200 rounded-lg">
+      <div className="overflow-x-auto border border-gray-200 rounded-lg">
         <table className="w-full border-collapse">
           {/* Header */}
           <thead>
@@ -141,7 +141,7 @@ export default function ProductTable({
               <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Tên Sách</th>
               <th className="px-6 py-4 text-center text-sm font-semibold text-gray-700 w-24">Hình Ảnh</th>
               <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700 w-24">Thể Loại</th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700 w-32">Giá (ND)</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700 w-32">Giá (VND)</th>
               <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700 w-20">Kho</th>
               <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700 w-40">Trạng Thái</th>
               <th className="px-6 py-4 text-center text-sm font-semibold text-gray-700 w-48">Hành Động</th>
@@ -155,31 +155,31 @@ export default function ProductTable({
               Array.from({ length: 5 }).map((_, idx) => (
                 <tr key={idx} className="border-b border-gray-200 animate-pulse">
                   <td className="px-6 py-4">
-                    <di className="h-4 bg-gray-200 rounded w-8" />
+                    <div className="h-4 bg-gray-200 rounded w-8" />
                   </td>
                   <td className="px-6 py-4">
-                    <di className="h-4 bg-gray-200 rounded w-48" />
+                    <div className="h-4 bg-gray-200 rounded w-48" />
                   </td>
                   <td className="px-6 py-4 text-center">
-                    <di className="h-12 bg-gray-200 rounded w-12 inline-block" />
+                    <div className="h-12 bg-gray-200 rounded w-12 inline-block" />
                   </td>
                   <td className="px-6 py-4">
-                    <di className="h-4 bg-gray-200 rounded w-20" />
+                    <div className="h-4 bg-gray-200 rounded w-20" />
                   </td>
                   <td className="px-6 py-4">
-                    <di className="h-4 bg-gray-200 rounded w-24" />
+                    <div className="h-4 bg-gray-200 rounded w-24" />
                   </td>
                   <td className="px-6 py-4">
-                    <di className="h-4 bg-gray-200 rounded w-12" />
+                    <div className="h-4 bg-gray-200 rounded w-12" />
                   </td>
                   <td className="px-6 py-4">
-                    <di className="h-6 bg-gray-200 rounded w-28" />
+                    <div className="h-6 bg-gray-200 rounded w-28" />
                   </td>
                   <td className="px-6 py-4">
-                    <di className="flex gap-2 justify-center">
-                      <di className="h-8 bg-gray-200 rounded w-8" />
-                      <di className="h-8 bg-gray-200 rounded w-8" />
-                    </di>
+                    <div className="flex gap-2 justify-center">
+                      <div className="h-8 bg-gray-200 rounded w-8" />
+                      <div className="h-8 bg-gray-200 rounded w-8" />
+                    </div>
                   </td>
                 </tr>
               ))
@@ -188,7 +188,7 @@ export default function ProductTable({
               products.map((product) => (
                 <tr
                   key={product.id}
-                  className="border-b border-gray-200 hoer:bg-gray-50 transition"
+                  className="border-b border-gray-200 hover:bg-gray-50 transition"
                 >
                   <td className="px-6 py-4 text-sm font-semibold text-gray-900">
                     #{product.id}
@@ -201,12 +201,12 @@ export default function ProductTable({
                   </td>
 
                   <td className="px-6 py-4 text-center">
-                    <img
-                      src={product.image_url}
+                    <img 
+                      src={product.image_url} 
                       alt={product.title}
-                      className="h-12 w-12 object-coer rounded border border-gray-200"
+                      className="h-12 w-12 object-cover rounded border border-gray-200"
                       onError={(e) => {
-                        e.target.src = 'https://ia.placeholder.com/48?text=No+Image';
+                        e.target.src = 'https://via.placeholder.com/48?text=No+Image';
                       }}
                     />
                   </td>
@@ -216,13 +216,13 @@ export default function ProductTable({
                   </td>
 
                   <td className="px-6 py-4 text-sm text-gray-700 font-medium">
-                    {new Intl.NumberFormat('i-N').format(product.price)}
+                    {new Intl.NumberFormat('vi-VN').format(product.price)}
                   </td>
 
                   <td className="px-6 py-4 text-sm text-center">
                     <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${product.stock > 0
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-red-100 text-red-800'
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-red-100 text-red-800'
                       }`}>
                       {product.stock}
                     </span>
@@ -240,15 +240,15 @@ export default function ProductTable({
             )}
           </tbody>
         </table>
-      </di>
+      </div>
 
       {/* Pagination */}
       {!loading && totalPages > 1 && (
         <Pagination currentPage={page} totalPages={totalPages} onPageChange={onPageChange} />
       )}
-    </di>
+    </div>
   );
 
 };
-
+   
 

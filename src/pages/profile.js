@@ -17,7 +17,7 @@ export default function ProfilePage() {
   if (isLoading) {
     return (
       <main className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
-        <di className="text-slate-500">Đang tải hồ sơ...</di>
+        <div className="text-slate-500">Đang tải hồ sơ...</div>
       </main>
     );
   }
@@ -25,17 +25,17 @@ export default function ProfilePage() {
   if (error) {
     return (
       <main className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
-        <di className="rounded-xl bg-white border border-slate-200 px-6 py-4 text-slate-700 shadow-sm">
+        <div className="rounded-xl bg-white border border-slate-200 px-6 py-4 text-slate-700 shadow-sm">
           Bạn cần đăng nhập để xem hồ sơ.
-        </di>
+        </div>
       </main>
     );
   }
 
   return (
     <main className="min-h-screen bg-slate-50 px-4 py-12">
-      <di className="max-w-4xl mx-auto">
-        <motion.di
+      <div className="max-w-4xl mx-auto">
+        <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
@@ -45,18 +45,18 @@ export default function ProfilePage() {
           <h1 className="text-3xl font-bold text-slate-900 mb-2">Xin chào, {user?.name}</h1>
           <p className="text-slate-600 mb-8">Thông tin tài khoản đang đăng nhập.</p>
 
-          <di className="grid gap-4 sm:grid-cols-2">
-            <di className="rounded-2xl bg-slate-50 border border-slate-200 p-5">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="rounded-2xl bg-slate-50 border border-slate-200 p-5">
               <p className="text-sm text-slate-500 mb-1">Họ tên</p>
               <p className="font-semibold text-slate-900">{user?.name}</p>
-            </di>
-            <di className="rounded-2xl bg-slate-50 border border-slate-200 p-5">
+            </div>
+            <div className="rounded-2xl bg-slate-50 border border-slate-200 p-5">
               <p className="text-sm text-slate-500 mb-1">Email</p>
               <p className="font-semibold text-slate-900">{user?.email}</p>
-            </di>
-          </di>
-        </motion.di>
-      </di>
+            </div>
+          </div>
+        </motion.div>
+      </div>
     </main>
   );
 }
