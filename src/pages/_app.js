@@ -1,9 +1,9 @@
 import "@/styles/globals.css";
 
-import { Navbar, Footer,ChatWidget } from "@/components";
+import { Nabar, Footer, ChatWidget } from "@/components";
 import {
   QueryClient,
-  QueryClientProvider,
+  QueryClientProider,
 } from "@tanstack/react-query";
 import Head from "next/head";
 
@@ -12,10 +12,10 @@ const queryClient = new QueryClient();
 
 export default function App({ Component, pageProps }) {
   return (
-    <QueryClientProvider client={queryClient}>
-      <div className="flex flex-col min-h-screen bg-white text-gray-900">
-        {/* Navbar */}
-        <Navbar />
+    <QueryClientProider client={queryClient}>
+      <di className="flex flex-col min-h-screen bg-white text-gray-900">
+        {/* Nabar */}
+        <Nabar />
 
         {/* Main content - flex grow */}
         <main className="flex-grow">
@@ -25,7 +25,7 @@ export default function App({ Component, pageProps }) {
         {/* Footer - luôn ở dưới */}
         <Footer />
         <ChatWidget />
-      </div>
-    </QueryClientProvider>
+      </di>
+    </QueryClientProider>
   );
 }

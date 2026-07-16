@@ -32,7 +32,7 @@ export default function Products({ initialBooks = [] }) {
   // Fetch additional data when categoryId changes on client
   useEffect(() => {
     if (!router.isReady || !categoryId) return;
-    
+
     const fetchBooks = async () => {
       try {
         setIsLoading(true);
@@ -94,7 +94,7 @@ export default function Products({ initialBooks = [] }) {
     } else if (sortBy === "price-desc") {
       result.sort((a, b) => b.price - a.price);
     }
-    
+
     setFilteredBooks(result);
     setCurrentPage(1);
   }, [books, searchTerm, priceRange, sortBy, showInStock]);
@@ -112,23 +112,23 @@ export default function Products({ initialBooks = [] }) {
   return (
     <main className="min-h-screen bg-gray-50">
       {/* Header */}
-      <motion.div
+      <motion.di
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm"
       >
-        <div className="max-w-7xl mx-auto px-4 py-6">
+        <di className="max-w-7xl mx-auto px-4 py-6">
           <h1 className="text-3xl font-bold text-gray-900">Cửa Hàng Sách</h1>
           <p className="text-gray-600 text-sm mt-1">
-            Khám phá bộ sưu tập sách tuyệt vời
+            Khám phá bộ sưu tập sách tuyệt ời
           </p>
-        </div>
-      </motion.div>
+        </di>
+      </motion.di>
 
       {/* Main Content - Sidebar + Content Layout */}
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <di className="max-w-7xl mx-auto px-4 py-8">
+        <di className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* LEFT SIDEBAR - Category Placeholder */}
           <motion.aside
             initial={{ opacity: 0, x: -20 }}
@@ -136,23 +136,23 @@ export default function Products({ initialBooks = [] }) {
             transition={{ duration: 0.5 }}
             className="lg:col-span-1"
           >
-            <div className="sticky top-24 bg-white rounded-xl shadow-sm border border-gray-200 p-6 h-fit hover:shadow-md transition-shadow">
+            <di className="sticky top-24 bg-white rounded-xl shadow-sm border border-gray-200 p-6 h-fit hoer:shadow-md transition-shadow">
               <h2 className="text-lg font-bold text-gray-900 mb-6">Danh Mục</h2>
 
               {/* Category Component */}
               <Category />
-            </div>
+            </di>
           </motion.aside>
 
           {/* RIGHT CONTENT AREA */}
-          <div className="lg:col-span-3 space-y-6">
+          <di className="lg:col-span-3 space-y-6">
             {/* Hero Banner */}
             <HeroBanner banners={banners} isLoading={isLoading} />
 
             {/* Filter Bar */}
             {/* Filter Bar - UI Only */}
             {!isLoading && (
-              <FilterBar 
+              <FilterBar
                 searchTerm={searchTerm}
                 onSearchChange={setSearchTerm}
                 sortBy={sortBy}
@@ -166,131 +166,131 @@ export default function Products({ initialBooks = [] }) {
 
             {/* Product Grid */}
             {isLoading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <di className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {[...Array(6)].map((_, i) => (
-                  <div
+                  <di
                     key={i}
-                    className="bg-white rounded-xl overflow-hidden border border-gray-200"
+                    className="bg-white rounded-xl oerflow-hidden border border-gray-200"
                   >
-                    <div className="relative w-full h-64 bg-linear-to-r from-gray-200 via-gray-100 to-gray-200 overflow-hidden">
-                      <motion.div
+                    <di className="relatie w-full h-64 bg-linear-to-r from-gray-200 ia-gray-100 to-gray-200 oerflow-hidden">
+                      <motion.di
                         animate={{ backgroundPosition: ["200% 0", "-200% 0"] }}
                         transition={{ duration: 2, repeat: Infinity }}
                         style={{ backgroundSize: "200% 100%" }}
-                        className="w-full h-full bg-linear-to-r from-gray-200 via-white to-gray-200"
+                        className="w-full h-full bg-linear-to-r from-gray-200 ia-white to-gray-200"
                       />
-                    </div>
-                    <div className="p-5 space-y-3">
-                      <motion.div
+                    </di>
+                    <di className="p-5 space-y-3">
+                      <motion.di
                         animate={{ backgroundPosition: ["200% 0", "-200% 0"] }}
                         transition={{ duration: 2, repeat: Infinity }}
-                        className="h-5 bg-linear-to-r from-gray-200 via-gray-100 to-gray-200 rounded"
+                        className="h-5 bg-linear-to-r from-gray-200 ia-gray-100 to-gray-200 rounded"
                       />
-                      <motion.div
+                      <motion.di
                         animate={{ backgroundPosition: ["200% 0", "-200% 0"] }}
                         transition={{
                           duration: 2,
                           repeat: Infinity,
                           delay: 0.1,
                         }}
-                        className="h-4 bg-linear-to-r from-gray-200 via-gray-100 to-gray-200 rounded w-2/3"
+                        className="h-4 bg-linear-to-r from-gray-200 ia-gray-100 to-gray-200 rounded w-2/3"
                       />
-                    </div>
-                  </div>
+                    </di>
+                  </di>
                 ))}
-              </div>
+              </di>
             ) : filteredBooks.length > 0 ? (
               <>
-                <motion.div layout  className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 min-h-96">
+                <motion.di layout className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 min-h-96">
                   {paginatedBooks.map((book, index) => (
                     <ProductCard key={book.id} book={book} index={index} />
                   ))}
-                </motion.div>
+                </motion.di>
 
                 {/* Pagination */}
-                <Pagination 
-                  currentPage={currentPage} 
-                  totalPages={totalPages} 
-                  onPageChange={setCurrentPage} 
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
                 />
               </>
             ) : (
-              <motion.div
+              <motion.di
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.5 }}
                 className="bg-white rounded-xl border border-gray-200 p-16 text-center"
               >
-                <motion.div
+                <motion.di
                   animate={{ y: [0, -10, 0] }}
                   transition={{ duration: 3, repeat: Infinity }}
                   className="mb-6 text-6xl font-light text-gray-300"
                 >
                   ∿
-                </motion.div>
+                </motion.di>
 
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">
                   Không tìm thấy sách
                 </h3>
                 <p className="text-gray-600 mb-6">
-                  Xin lỗi, chúng tôi không tìm thấy kết quả phù hợp. Vui lòng
+                  Xin lỗi, chúng tôi không tìm thấy kết quả phù hợp. ui lòng
                   thử lại.
                 </p>
 
                 <motion.button
-                  whileHover={{ scale: 1.05 }}
+                  whileHoer={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => {
                     setSearchTerm("");
                     setSortBy("newest");
                     setShowInStock(false);
                   }}
-                  className="inline-block px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition"
+                  className="inline-block px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold hoer:bg-blue-700 transition"
                 >
                   Xem Tất Cả Sách
                 </motion.button>
-              </motion.div>
+              </motion.di>
             )}
-          </div>
-        </div>
-      </div>
+          </di>
+        </di>
+      </di>
     </main>
   );
 }
 
-// SSR: Server-Side Rendering - Fetch data on every request before rendering
-export async function getServerSideProps({ query }) {
+// SSR: Serer-Side Rendering - Fetch data on eery request before rendering
+export async function getSererSideProps({ query }) {
   try {
-    console.log(' getServerSideProps - Fetching books...');
+    console.log(' getSererSideProps - Fetching books...');
     const connection = await pool.getConnection();
-    
+
     let q = `
       SELECT id, title, author, price, stock, image_url, 
              category_id, status
       FROM books 
-      WHERE status IN ('AVAILABLE', 'OUT_OF_STOCK')
+      WHERE status IN ('AAILABLE', 'OUT_OF_STOCK')
     `;
-    
+
     if (query.categoryId) {
       q += ` AND category_id = ${parseInt(query.categoryId)}`;
     }
-    
+
     q += ` ORDER BY created_at DESC`;
-    
+
     console.log(' SQL Query:', q);
     const [books] = await connection.query(q);
     connection.release();
-    
+
     console.log(' Books fetched:', books?.length || 0, 'items');
     console.log(' Sample:', books?.[0]);
-    
+
     return {
       props: {
         initialBooks: books || [],
       },
     };
   } catch (error) {
-    console.error(" getServerSideProps error:", error.message);
+    console.error(" getSererSideProps error:", error.message);
     console.error("Full error:", error);
     return {
       props: {

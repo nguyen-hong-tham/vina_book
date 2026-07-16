@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
 import pool from '@/lib/db';
 
-const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = process.en.JWT_SECRET;
 
 function requireAdmin(req, res) {
   const cookies = parse(req.headers.cookie || '');
@@ -14,7 +14,7 @@ function requireAdmin(req, res) {
   }
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const decoded = jwt.erify(token, JWT_SECRET);
     if (String(decoded.role || '').toLowerCase() !== 'admin') {
       res.status(403).json({ message: 'Không có quyền truy cập' });
       return null;
@@ -71,7 +71,7 @@ export default async function handler(req, res) {
           return res.status(400).json({ message: 'Role không hợp lệ' });
         }
 
-        // Prevent admin from demoting themself
+        // Preent admin from demoting themself
         if (String(admin.id) === String(userId) && normalizedRole !== 'ADMIN') {
           connection.release();
           return res.status(400).json({ message: 'Không thể hạ quyền chính mình' });
@@ -93,12 +93,12 @@ export default async function handler(req, res) {
 
       if (req.body.status) {
         const s = String(req.body.status || '').toUpperCase();
-        if (!['ACTIVE', 'LOCKED'].includes(s)) {
+        if (!['ACTIE', 'LOCKED'].includes(s)) {
           connection.release();
           return res.status(400).json({ message: 'Status không hợp lệ' });
         }
 
-        // Prevent admin from locking themself
+        // Preent admin from locking themself
         if (String(admin.id) === String(userId) && s === 'LOCKED') {
           connection.release();
           return res.status(400).json({ message: 'Không thể khóa chính mình' });

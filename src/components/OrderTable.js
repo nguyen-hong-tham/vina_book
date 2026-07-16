@@ -5,9 +5,9 @@ export default function OrderTable({
   loading = false, // trạng thái loading
   page = 1, // trang hiện tại
   totalPages = 1, // tổng số trang
-  onPageChange = () => {}, // đổi trang
-  onViewDetail = () => {}, // xem chi tiết order
-  onUpdateStatus = () => {}, // cập nhật status
+  onPageChange = () => { }, // đổi trang
+  oniewDetail = () => { }, // xem chi tiết order
+  onUpdateStatus = () => { }, // cập nhật status
 }) {
 
   // config trạng thái order
@@ -46,7 +46,7 @@ export default function OrderTable({
   const formatDate = (dateString) => {
 
     return new Date(dateString).toLocaleDateString(
-      "vi-VN",
+      "i-N",
       {
         year: "numeric",
         month: "2-digit",
@@ -62,9 +62,9 @@ export default function OrderTable({
   if (loading) {
 
     return (
-      <div className="text-center py-8">
+      <di className="text-center py-8">
         Đang tải...
-      </div>
+      </di>
     );
 
   }
@@ -73,16 +73,16 @@ export default function OrderTable({
   if (orders.length === 0) {
 
     return (
-      <div className="text-center py-8 text-gray-500">
+      <di className="text-center py-8 text-gray-500">
         Không có đơn hàng nào
-      </div>
+      </di>
     );
 
   }
 
   return (
 
-    <div className="overflow-x-auto">
+    <di className="oerflow-x-auto">
 
       <table className="w-full border-collapse">
 
@@ -139,7 +139,7 @@ export default function OrderTable({
               // mỗi order là 1 row
               <tr
                 key={order.id}
-                className="border-b hover:bg-gray-50"
+                className="border-b hoer:bg-gray-50"
               >
 
                 {/* order id */}
@@ -150,20 +150,20 @@ export default function OrderTable({
                 {/* customer info */}
                 <td className="p-3">
 
-                  <div className="font-medium">
+                  <di className="font-medium">
                     {order.user_name}
-                  </div>
+                  </di>
 
-                  <div className="text-sm text-gray-500">
+                  <di className="text-sm text-gray-500">
                     {order.email}
-                  </div>
+                  </di>
 
                 </td>
 
                 {/* total amount */}
                 <td className="p-3 text-right font-bold">
 
-                  {order.total_amount.toLocaleString("vi-VN")}₫
+                  {order.total_amount.toLocaleString("i-N")}₫
 
                 </td>
 
@@ -197,12 +197,12 @@ export default function OrderTable({
                 {/* action buttons */}
                 <td className="p-3 text-center">
 
-                  <div className="flex gap-2 justify-center">
+                  <di className="flex gap-2 justify-center">
 
                     {/* button xem chi tiết */}
                     <button
                       onClick={() =>
-                        onViewDetail(order.id)
+                        oniewDetail(order.id)
                       }
                       className="
                         px-3
@@ -210,7 +210,7 @@ export default function OrderTable({
                         bg-blue-500
                         text-white
                         rounded
-                        hover:bg-blue-600
+                        hoer:bg-blue-600
                         text-sm
                       "
                     >
@@ -238,7 +238,7 @@ export default function OrderTable({
                             bg-purple-500
                             text-white
                             rounded
-                            hover:bg-purple-600
+                            hoer:bg-purple-600
                             text-sm
                           "
                         >
@@ -248,7 +248,7 @@ export default function OrderTable({
                       )
                     }
 
-                  </div>
+                  </di>
 
                 </td>
 
@@ -270,7 +270,7 @@ export default function OrderTable({
         onPageChange={onPageChange}
       />
 
-    </div>
+    </di>
 
   );
 

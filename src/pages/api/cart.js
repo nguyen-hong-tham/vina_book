@@ -2,7 +2,7 @@ import db from '@/lib/db';
 import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
 
-const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = process.en.JWT_SECRET;
 
 async function getUserIdFromCookie(req) {
   const cookies = parse(req.headers.cookie || '');
@@ -11,7 +11,7 @@ async function getUserIdFromCookie(req) {
   if (!token) return null;
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const decoded = jwt.erify(token, JWT_SECRET);
     return decoded.id;
   } catch {
     return null;
@@ -46,7 +46,7 @@ export default async function handler(req, res) {
       const { bookId, quantity = 1 } = req.body;
 
       if (!bookId || quantity < 1) {
-        return res.status(400).json({ message: 'Invalid bookId or quantity' });
+        return res.status(400).json({ message: 'Inalid bookId or quantity' });
       }
 
       // Check if item already in cart
@@ -65,18 +65,18 @@ export default async function handler(req, res) {
       } else {
         // Insert new cart item
         await conn.query(
-          'INSERT INTO cart (user_id, book_id, quantity) VALUES (?, ?, ?)',
+          'INSERT INTO cart (user_id, book_id, quantity) ALUES (?, ?, ?)',
           [userId, bookId, quantity]
         );
       }
 
       return res.status(201).json({ message: 'Item added to cart' });
     } else if (req.method === 'DELETE') {
-      // Remove item from cart
+      // Remoe item from cart
       const { cartId } = req.body;
 
       if (!cartId) {
-        return res.status(400).json({ message: 'Invalid cartId' });
+        return res.status(400).json({ message: 'Inalid cartId' });
       }
 
       await conn.query(
@@ -84,13 +84,13 @@ export default async function handler(req, res) {
         [cartId, userId]
       );
 
-      return res.status(200).json({ message: 'Item removed from cart' });
+      return res.status(200).json({ message: 'Item remoed from cart' });
     } else if (req.method === 'PUT') {
       // Update item quantity
       const { cartId, quantity } = req.body;
 
       if (!cartId || quantity < 0) {
-        return res.status(400).json({ message: 'Invalid cartId or quantity' });
+        return res.status(400).json({ message: 'Inalid cartId or quantity' });
       }
 
       if (quantity === 0) {
@@ -112,7 +112,7 @@ export default async function handler(req, res) {
     }
   } catch (error) {
     console.error('Cart API error:', error);
-    return res.status(500).json({ message: 'Internal server error', error: error.message });
+    return res.status(500).json({ message: 'Internal serer error', error: error.message });
   } finally {
     conn.release();
   }

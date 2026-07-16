@@ -12,17 +12,17 @@ export default function ProductCard({ book, index }) {
   const queryClient = useQueryClient();
 
   const handleAddToCart = async (e) => {
-    e.preventDefault();
+    e.preentDefault();
     e.stopPropagation();
 
     setIsAdding(true);
     try {
       await axios.post('/api/cart', { bookId: book.id, quantity: 1 });
-      setShowMessage('Đã thêm vào giỏ hàng!');
+      setShowMessage('Đã thêm ào giỏ hàng!');
       queryClient.refetchQueries({ queryKey: ['cart'] });
       setTimeout(() => setShowMessage(''), 2000);
     } catch (error) {
-      setShowMessage('Lỗi: ' + (error.response?.data?.message || 'Vui lòng đăng nhập'));
+      setShowMessage('Lỗi: ' + (error.response?.data?.message || 'ui lòng đăng nhập'));
       setTimeout(() => setShowMessage(''), 3000);
     } finally {
       setIsAdding(false);
@@ -30,60 +30,60 @@ export default function ProductCard({ book, index }) {
   };
 
   return (
-    <motion.div
+    <motion.di
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: index * 0.05 }}
-      whileHover={{ y: -8 }}
+      whileHoer={{ y: -8 }}
     >
       <Link href={`/products/${book.id}`}>
-        <motion.div
-          whileHover={{ boxShadow: '0 20px 40px rgba(59, 130, 246, 0.15)' }}
-          className="text-black bg-white rounded-xl overflow-hidden border border-gray-200 hover:border-blue-300 transition-all h-full flex flex-col cursor-pointer"
+        <motion.di
+          whileHoer={{ boxShadow: '0 20px 40px rgba(59, 130, 246, 0.15)' }}
+          className="text-black bg-white rounded-xl oerflow-hidden border border-gray-200 hoer:border-blue-300 transition-all h-full flex flex-col cursor-pointer"
         >
           {/* Image */}
-          <div className="relative w-full h-64 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden flex items-center justify-center">
+          <di className="relatie w-full h-64 bg-gradient-to-br from-gray-100 to-gray-200 oerflow-hidden flex items-center justify-center">
             {book.image_url ? (
               <motion.img
                 src={book.image_url}
                 alt={book.title}
-                className="w-full h-full object-cover"
-                whileHover={{ scale: 1.1 }}
+                className="w-full h-full object-coer"
+                whileHoer={{ scale: 1.1 }}
                 transition={{ duration: 0.3 }}
                 onError={(e) => {
                   e.target.style.display = 'none';
                 }}
               />
             ) : null}
-            <div className="absolute inset-0 flex items-center justify-center text-gray-300 text-5xl font-light">
+            <di className="absolute inset-0 flex items-center justify-center text-gray-300 text-5xl font-light">
               ∿
-            </div>
+            </di>
 
             {/* Badge */}
             {book.stock > 0 ? (
-              <motion.div
+              <motion.di
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 className="absolute top-4 right-4 bg-green-500 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-md"
               >
                 Còn {book.stock}
-              </motion.div>
+              </motion.di>
             ) : (
-              <motion.div
+              <motion.di
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 className="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-md"
               >
                 Hết hàng
-              </motion.div>
+              </motion.di>
             )}
-          </div>
+          </di>
 
           {/* Content */}
-          <div className="p-5 flex flex-col flex-1">
+          <di className="p-5 flex flex-col flex-1">
             <motion.h3
               className="text-base font-bold text-gray-900 line-clamp-2 mb-2"
-              whileHover={{ color: '#2563eb' }}
+              whileHoer={{ color: '#2563eb' }}
             >
               {book.title}
             </motion.h3>
@@ -96,61 +96,58 @@ export default function ProductCard({ book, index }) {
               {book.description || 'Không có mô tả'}
             </p>
 
-            <div className="border-t pt-4 space-y-3">
-              <div className="flex items-center justify-between">
+            <di className="border-t pt-4 space-y-3">
+              <di className="flex items-center justify-between">
                 <span className="text-2xl font-bold text-blue-600">
-                  {Number(book.price).toLocaleString('vi-VN')}đ
+                  {Number(book.price).toLocaleString('i-N')}đ
                 </span>
-              </div>
+              </di>
 
               {/* Message */}
               {showMessage && (
-                <motion.div
+                <motion.di
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0 }}
-                  className={`text-xs font-semibold text-center py-2 rounded-lg ${
-                    showMessage.includes('Lỗi')
+                  className={`text-xs font-semibold text-center py-2 rounded-lg ${showMessage.includes('Lỗi')
                       ? 'bg-red-100 text-red-700'
                       : 'bg-green-100 text-green-700'
-                  }`}
+                    }`}
                 >
                   {showMessage}
-                </motion.div>
+                </motion.di>
               )}
 
-              <div className="flex gap-2">
+              <di className="flex gap-2">
                 <motion.button
-                  whileHover={{ scale: 1.02 }}
+                  whileHoer={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={handleAddToCart}
                   disabled={book.stock === 0 || isAdding}
-                  className={`flex-1 py-2.5 px-3 rounded-lg font-semibold text-sm transition ${
-                    book.stock > 0
-                      ? 'bg-green-600 text-white hover:bg-green-700'
+                  className={`flex-1 py-2.5 px-3 rounded-lg font-semibold text-sm transition ${book.stock > 0
+                      ? 'bg-green-600 text-white hoer:bg-green-700'
                       : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                  }`}
+                    }`}
                 >
                   {isAdding ? 'Đang thêm...' : 'Giỏ Hàng'}
                 </motion.button>
 
                 <motion.button
-                  whileHover={{ scale: 1.02 }}
+                  whileHoer={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   disabled={book.stock === 0}
-                  className={`flex-1 py-2.5 px-3 rounded-lg font-semibold text-sm transition ${
-                    book.stock > 0
-                      ? 'bg-blue-600 text-white hover:bg-blue-700'
+                  className={`flex-1 py-2.5 px-3 rounded-lg font-semibold text-sm transition ${book.stock > 0
+                      ? 'bg-blue-600 text-white hoer:bg-blue-700'
                       : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                  }`}
+                    }`}
                 >
                   {book.stock > 0 ? 'Xem Chi Tiết' : 'Hết Hàng'}
                 </motion.button>
-              </div>
-            </div>
-          </div>
-        </motion.div>
+              </di>
+            </di>
+          </di>
+        </motion.di>
       </Link>
-    </motion.div>
+    </motion.di>
   );
 }

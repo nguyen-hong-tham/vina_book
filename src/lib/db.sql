@@ -5,32 +5,32 @@ USE bookstore_db;
 
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
+    name ARCHAR(100) NOT NULL,
+    email ARCHAR(100) UNIQUE NOT NULL,
     role ENUM('USER', 'ADMIN') DEFAULT 'USER',
-    password VARCHAR(255) NOT NULL,
+    password ARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    status ENUM('ACTIVE', 'LOCKED')  NOT NULL DEFAULT 'ACTIVE'
+    status ENUM('ACTIE', 'LOCKED')  NOT NULL DEFAULT 'ACTIE'
 );
 
 
 CREATE TABLE categories (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL
+    name ARCHAR(100) NOT NULL
 );
 
 
 CREATE TABLE books (
     id INT AUTO_INCREMENT PRIMARY KEY,
     category_id INT,
-    title VARCHAR(255) NOT NULL,
-    author VARCHAR(150),
+    title ARCHAR(255) NOT NULL,
+    author ARCHAR(150),
     description TEXT,
-    image_url VARCHAR(255),
+    image_url ARCHAR(255),
     price INT NOT NULL,
     stock INT DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    status ENUM('AVAILABLE', 'OUT_OF_STOCK', 'HIDDEN', 'DELETED') DEFAULT 'AVAILABLE',
+    status ENUM('AAILABLE', 'OUT_OF_STOCK', 'HIDDEN', 'DELETED') DEFAULT 'AAILABLE',
     FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
 );
 

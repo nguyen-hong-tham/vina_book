@@ -1,41 +1,41 @@
 import { useState } from "react";
 
-export default function ChatWidget(){
+export default function ChatWidget() {
 
-  const [open,setOpen]=useState(false);
-  const [message,setMessage]=useState("");
-  const [messages,setMessages]=useState([]);
-  const [loading,setLoading]=useState(false);
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const sendMessage = async()=>{
+  const sendMessage = async () => {
 
-    if(!message.trim()) return;
+    if (!message.trim()) return;
 
     const userText = message;
 
-    setMessages(prev=>[
-      ...prev,
+    setMessages(pre => [
+      ...pre,
       {
-        sender:"user",
-        text:userText
+        sender: "user",
+        text: userText
       }
     ]);
 
     setMessage("");
     setLoading(true);
 
-    try{
+    try {
 
-      const res = await fetch("/api/chat",{
+      const res = await fetch("/api/chat", {
 
-        method:"POST",
+        method: "POST",
 
-        headers:{
-          "Content-Type":"application/json"
+        headers: {
+          "Content-Type": "application/json"
         },
 
-        body:JSON.stringify({
-          message:userText
+        body: JSON.stringify({
+          message: userText
         })
 
       });
@@ -46,25 +46,25 @@ export default function ChatWidget(){
         throw new Error(data.message || "Lỗi kết nối chatbot.");
       }
 
-      setMessages(prev=>[
-        ...prev,
+      setMessages(pre => [
+        ...pre,
         {
-          sender:"bot",
-          text:data.reply
+          sender: "bot",
+          text: data.reply
         }
       ]);
 
-    }catch(err){
+    } catch (err) {
 
-      setMessages(prev=>[
-        ...prev,
+      setMessages(pre => [
+        ...pre,
         {
-          sender:"bot",
-          text:err.message || "Lỗi kết nối chatbot."
+          sender: "bot",
+          text: err.message || "Lỗi kết nối chatbot."
         }
       ]);
 
-    }finally{
+    } finally {
 
       setLoading(false);
 
@@ -72,10 +72,10 @@ export default function ChatWidget(){
 
   };
 
-  return(
+  return (
     <>
       <button
-        onClick={()=>setOpen(!open)}
+        onClick={() => setOpen(!open)}
         className="
         fixed
         bottom-6
@@ -94,7 +94,7 @@ export default function ChatWidget(){
 
       {open && (
 
-        <div
+        <di
           className="
           fixed
           right-6
@@ -111,38 +111,38 @@ export default function ChatWidget(){
           "
         >
 
-          <div className="p-4 border-b font-bold">
+          <di className="p-4 border-b font-bold">
 
-            Vinabook Assistant
+            inabook Assistant
 
-          </div>
+          </di>
 
-          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          <di className="flex-1 oerflow-y-auto p-4 space-y-4">
 
-            {messages.map((msg,index)=>(
+            {messages.map((msg, index) => (
 
-              <div
+              <di
                 key={index}
                 className={
-                  msg.sender==="user"
-                  ? "text-right"
-                  : "text-left"
+                  msg.sender === "user"
+                    ? "text-right"
+                    : "text-left"
                 }
               >
 
-                <div
+                <di
                   className={
-                    msg.sender==="user"
-                    ? "inline-block bg-blue-600 text-white px-4 py-2 rounded-xl whitespace-pre-wrap max-w-[85%] text-left"
-                    : "inline-block bg-gray-100 px-4 py-2 rounded-xl whitespace-pre-wrap max-w-[85%]"
+                    msg.sender === "user"
+                      ? "inline-block bg-blue-600 text-white px-4 py-2 rounded-xl whitespace-pre-wrap max-w-[85%] text-left"
+                      : "inline-block bg-gray-100 px-4 py-2 rounded-xl whitespace-pre-wrap max-w-[85%]"
                   }
                 >
 
                   {msg.text}
 
-                </div>
+                </di>
 
-              </div>
+              </di>
 
             ))}
 
@@ -156,23 +156,23 @@ export default function ChatWidget(){
 
             )}
 
-          </div>
+          </di>
 
-          <div className="p-4 border-t flex gap-2">
+          <di className="p-4 border-t flex gap-2">
 
             <input
-              value={message}
-              onChange={(e)=>setMessage(e.target.value)}
-              onKeyDown={(e)=>{
+              alue={message}
+              onChange={(e) => setMessage(e.target.alue)}
+              onKeyDown={(e) => {
 
-                if(e.key==="Enter"){
+                if (e.key === "Enter") {
 
                   sendMessage();
 
                 }
 
               }}
-              placeholder="Hỏi về sách..."
+              placeholder="Hỏi ề sách..."
               className="
               flex-1
               border
@@ -194,9 +194,9 @@ export default function ChatWidget(){
               Send
             </button>
 
-          </div>
+          </di>
 
-        </div>
+        </di>
 
       )}
 

@@ -1,3 +1,3 @@
-import Products, { getServerSideProps } from './products';
-export { getServerSideProps };
+import Products, { getSererSideProps } from './products';
+export { getSererSideProps };
 export default Products;

@@ -9,7 +9,7 @@ export default function ProductModal({
   initialData = {}, // dữ liệu cũ khi edit
   loading = false, // trạng thái loading khi submit form
   categories = [], // danh sách danh mục từ parent
-  onSubmit, // hàm gọi khi submit form, nhận vào object { title, author, description, image_url, price, stock, category_id }
+  onSubmit, // hàm gọi khi submit form, nhận ào object { title, author, description, image_url, price, stock, category_id }
   onClose // hàm gọi khi đóng modal
 }) {
 
@@ -25,25 +25,25 @@ export default function ProductModal({
 
   const [error, setError] = useState({});
   const [imageFile, setImageFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState('');
+  const [imagePreiew, setImagePreiew] = useState('');
   const [uploadingImage, setUploadingImage] = useState(false);
   const [uploadError, setUploadError] = useState('');
 
-  const cloudinaryCloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-  const cloudinaryUploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+  const cloudinaryCloudName = process.en.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+  const cloudinaryUploadPreset = process.en.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 
   const canUploadToCloudinary = useMemo(
     () => Boolean(cloudinaryCloudName && cloudinaryUploadPreset),
     [cloudinaryCloudName, cloudinaryUploadPreset]
   );
 
-  // useEffect reset form :reset form khi mở modal + đổ dữ liệu cũ vào form khi edit
+  // useEffect reset form :reset form khi mở modal + đổ dữ liệu cũ ào form khi edit
   useEffect(() => {
     if (isOpen) {
 
       queueMicrotask(() => {
         if (mode === 'edit' && initialData !== null && initialData !== undefined) {
-          // fill dữ liệu cũ vào input
+          // fill dữ liệu cũ ào input
           setFormData({
             title: initialData.title || '',
             author: initialData.author || '',
@@ -64,9 +64,9 @@ export default function ProductModal({
             image_url: ''
           });
         }
-        setError({}); //reset error về rỗng
+        setError({}); //reset error ề rỗng
         setImageFile(null);
-        setImagePreview('');
+        setImagePreiew('');
         setUploadError('');
       });
     }
@@ -75,25 +75,25 @@ export default function ProductModal({
 
   useEffect(() => {
     return () => {
-      if (imagePreview?.startsWith('blob:')) {
-        URL.revokeObjectURL(imagePreview);
+      if (imagePreiew?.startsWith('blob:')) {
+        URL.reokeObjectURL(imagePreiew);
       }
     };
-  }, [imagePreview]);
+  }, [imagePreiew]);
 
 
   //  =======================khi user nhập input -> update formData =========================
   const handleChange = (e) => {
-    const { name, value } = e.target;  //<input name="title" />
-    setFormData(prev => ({
-      ...prev, //Giữ dữ liệu cũ.
-      [name]: value  //[name] : dynamic key, sẽ là title, author, price,... tùy input nào thay đổi
+    const { name, alue } = e.target;  //<input name="title" />
+    setFormData(pre => ({
+      ...pre, //Giữ dữ liệu cũ.
+      [name]: alue  //[name] : dynamic key, sẽ là title, author, price,... tùy input nào thay đổi
     }));
 
-    // Xóa error khi user nhập vào trường đó
+    // Xóa error khi user nhập ào trường đó
     if (error[name]) {
-      setError(prev => ({
-        ...prev,
+      setError(pre => ({
+        ...pre,
         [name]: '' //xóa lỗi của trường đang nhập
       }));
     }
@@ -101,16 +101,16 @@ export default function ProductModal({
 
   const handleImageChange = (e) => {
     const file = e.target.files?.[0] || null;
-    if (imagePreview?.startsWith('blob:')) {
-      URL.revokeObjectURL(imagePreview);
+    if (imagePreiew?.startsWith('blob:')) {
+      URL.reokeObjectURL(imagePreiew);
     }
     setImageFile(file);
     setUploadError('');
-    setImagePreview(file ? URL.createObjectURL(file) : '');
+    setImagePreiew(file ? URL.createObjectURL(file) : '');
 
     if (file && error.image_url) {
-      setError((prev) => ({
-        ...prev,
+      setError((pre) => ({
+        ...pre,
         image_url: '',
       }));
     }
@@ -122,7 +122,7 @@ export default function ProductModal({
     }
 
     if (!canUploadToCloudinary) {
-      throw new Error('Thiếu cấu hình Cloudinary. Hãy thêm NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME và NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET.');
+      throw new Error('Thiếu cấu hình Cloudinary. Hãy thêm NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME à NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET.');
     }
 
     const uploadData = new FormData();
@@ -130,7 +130,7 @@ export default function ProductModal({
     uploadData.append('upload_preset', cloudinaryUploadPreset);
 
     const response = await fetch(
-      `https://api.cloudinary.com/v1_1/${cloudinaryCloudName}/image/upload`,
+      `https://api.cloudinary.com/1_1/${cloudinaryCloudName}/image/upload`,
       {
         method: 'POST',
         body: uploadData,
@@ -148,21 +148,21 @@ export default function ProductModal({
 
 
   // ======================kiểm tra form hợp lệ trước khi submit======================
-  const validateForm = () => {
+  const alidateForm = () => {
     const newError = {};
 
     // Title - Required, max 255
     if (!formData.title.trim()) {
       newError.title = 'Tên sách không được để trống';
     } else if (formData.title.length > 255) {
-      newError.title = 'Tên sách không được vượt quá 255 ký tự';
+      newError.title = 'Tên sách không được ượt quá 255 ký tự';
     }
 
     // Author - Required, max 150
     if (!formData.author.trim()) {
       newError.author = 'Tác giả không được để trống';
     } else if (formData.author.length > 150) {
-      newError.author = 'Tác giả không được vượt quá 150 ký tự';
+      newError.author = 'Tác giả không được ượt quá 150 ký tự';
     }
 
     // Price - Required, >= 1000
@@ -191,7 +191,7 @@ export default function ProductModal({
 
     // Image - Required: either upload file or paste URL
     if (!formData.image_url.trim() && !imageFile) {
-      newError.image_url = 'Vui lòng tải ảnh lên hoặc nhập link hình ảnh';
+      newError.image_url = 'ui lòng tải ảnh lên hoặc nhập link hình ảnh';
     }
 
     setError(newError);
@@ -201,9 +201,9 @@ export default function ProductModal({
 
   // ======================khi submit form======================
   const handleSubmit = (e) => {
-    e.preventDefault(); // ngăn form submit reload page
+    e.preentDefault(); // ngăn form submit reload page
 
-    if (!validateForm()) {
+    if (!alidateForm()) {
       return; // nếu form không hợp lệ thì dừng submit
     }
 
@@ -238,43 +238,43 @@ export default function ProductModal({
   if (!isOpen) return null; // nếu modal đóng thì không render gì
 
 
-  // tạo biến title và buttonText tùy theo mode để hiển thị khác nhau giữa create và edit
+  // tạo biến title à buttonText tùy theo mode để hiển thị khác nhau giữa create à edit
   const title = mode === 'create' ? 'Tạo Sản Phẩm Mới' : 'Chỉnh Sửa Sản Phẩm';
   const buttonText = mode === 'create' ? 'Tạo Sản Phẩm' : 'Lưu Thay Đổi';
   const isBusy = loading || uploadingImage;
   return (
     <>
-      {/* Overlay */}
-      <div
+      {/* Oerlay */}
+      <di
         className="fixed inset-0 bg-black/50 z-40"
         onClick={onClose}
       />
 
       {/* Modal */}
-      <div className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-2xl z-50 w-full max-w-2xl max-h-[90vh] overflow-y-auto p-8">
+      <di className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-2xl z-50 w-full max-w-2xl max-h-[90h] oerflow-y-auto p-8">
         {/* Header */}
-        <div className="flex justify-between items-center mb-6">
+        <di className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-gray-900">{title}</h2>
           <button
             onClick={onClose}
             disabled={isBusy}
-            className="text-gray-500 hover:text-gray-700 disabled:opacity-50 text-2xl transition"
+            className="text-gray-500 hoer:text-gray-700 disabled:opacity-50 text-2xl transition"
           >
             ✕
           </button>
-        </div>
+        </di>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Title - Required */}
-          <div>
+          <di>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Tên Sách <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
               name="title"
-              value={formData.title}
+              alue={formData.title}
               onChange={handleChange}
               disabled={isBusy}
               placeholder="Nhập tên sách..."
@@ -282,17 +282,17 @@ export default function ProductModal({
                 }`}
             />
             {error.title && <p className="text-red-500 text-sm mt-1">⚠️ {error.title}</p>}
-          </div>
+          </di>
 
           {/* Author - Required */}
-          <div>
+          <di>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Tác Giả <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
               name="author"
-              value={formData.author}
+              alue={formData.author}
               onChange={handleChange}
               disabled={isBusy}
               placeholder="Nhập tác giả..."
@@ -300,19 +300,19 @@ export default function ProductModal({
                 }`}
             />
             {error.author && <p className="text-red-500 text-sm mt-1"> {error.author}</p>}
-          </div>
+          </di>
 
           {/* Price & Stock - 2 cột */}
-          <div className="grid grid-cols-2 gap-4">
+          <di className="grid grid-cols-2 gap-4">
             {/* Price */}
-            <div>
+            <di>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Giá (VND) <span className="text-red-500">*</span>
+                Giá (ND) <span className="text-red-500">*</span>
               </label>
               <input
                 type="number"
                 name="price"
-                value={formData.price}
+                alue={formData.price}
                 onChange={handleChange}
                 disabled={isBusy}
                 placeholder="1000"
@@ -321,17 +321,17 @@ export default function ProductModal({
                   }`}
               />
               {error.price && <p className="text-red-500 text-sm mt-1">⚠️ {error.price}</p>}
-            </div>
+            </di>
 
             {/* Stock */}
-            <div>
+            <di>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Kho Hàng <span className="text-red-500">*</span>
               </label>
               <input
                 type="number"
                 name="stock"
-                value={formData.stock}
+                alue={formData.stock}
                 onChange={handleChange}
                 disabled={isBusy}
                 placeholder="0"
@@ -340,58 +340,56 @@ export default function ProductModal({
                   }`}
               />
               {error.stock && <p className="text-red-500 text-sm mt-1">⚠️ {error.stock}</p>}
-            </div>
-          </div>
+            </di>
+          </di>
 
           {/* Category - Required */}
-          <div>
+          <di>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Danh Mục <span className="text-red-500">*</span>
             </label>
             <select
               name="category_id"
-              value={formData.category_id}
+              alue={formData.category_id}
               onChange={handleChange}
               disabled={isBusy}
-              className={`text-black w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 transition ${
-                error.category_id ? 'border-red-500' : 'border-gray-300'
-              }`}
+              className={`text-black w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 transition ${error.category_id ? 'border-red-500' : 'border-gray-300'
+                }`}
             >
-              <option value="">-- Chọn danh mục --</option>
+              <option alue="">-- Chọn danh mục --</option>
               {categories.map((c) => {
-                const id = c.id ?? c.value ?? c.category_id;
+                const id = c.id ?? c.alue ?? c.category_id;
                 const name = c.name || c.title || c.label || c.category_name;
                 return (
-                  <option key={id} value={id}>
+                  <option key={id} alue={id}>
                     {name}
                   </option>
                 );
               })}
             </select>
             {error.category_id && <p className="text-red-500 text-sm mt-1">⚠️ {error.category_id}</p>}
-          </div>
+          </di>
 
           {/* Description - Required */}
-          <div>
+          <di>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Mô Tả <span className="text-red-500">*</span>
             </label>
             <textarea
               name="description"
-              value={formData.description}
+              alue={formData.description}
               onChange={handleChange}
               disabled={isBusy}
               placeholder="Nhập mô tả sản phẩm..."
               rows="3"
-              className={`text-black w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 transition ${
-                error.description ? 'border-red-500' : 'border-gray-300'
-              }`}
+              className={`text-black w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 transition ${error.description ? 'border-red-500' : 'border-gray-300'
+                }`}
             />
             {error.description && <p className="text-red-500 text-sm mt-1">⚠️ {error.description}</p>}
-          </div>
+          </di>
 
           {/* Image Upload */}
-          <div>
+          <di>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Hình Ảnh <span className="text-red-500">*</span>
             </label>
@@ -404,39 +402,38 @@ export default function ProductModal({
             />
             <p className="text-xs text-gray-500 mt-2">
               Tải ảnh lên Cloudinary để tự lấy link.{' '}
-              {!canUploadToCloudinary && 'Hiện chưa cấu hình Cloudinary nên bạn vẫn có thể dán link thủ công bên dưới.'}
+              {!canUploadToCloudinary && 'Hiện chưa cấu hình Cloudinary nên bạn ẫn có thể dán link thủ công bên dưới.'}
             </p>
-            {(imagePreview || formData.image_url) && (
-              <div className="mt-3 overflow-hidden rounded-lg border border-gray-200 bg-gray-50">
+            {(imagePreiew || formData.image_url) && (
+              <di className="mt-3 oerflow-hidden rounded-lg border border-gray-200 bg-gray-50">
                 <img
-                  src={imagePreview || formData.image_url}
-                  alt="Preview"
-                  className="h-48 w-full object-cover"
+                  src={imagePreiew || formData.image_url}
+                  alt="Preiew"
+                  className="h-48 w-full object-coer"
                 />
-              </div>
+              </di>
             )}
             <input
               type="url"
               name="image_url"
-              value={formData.image_url}
+              alue={formData.image_url}
               onChange={handleChange}
               disabled={isBusy}
               placeholder="Hoặc dán link ảnh nếu cần"
-              className={`text-black w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 transition ${
-                error.image_url ? 'border-red-500' : 'border-gray-300'
-              }`}
+              className={`text-black w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 transition ${error.image_url ? 'border-red-500' : 'border-gray-300'
+                }`}
             />
             {error.image_url && <p className="text-red-500 text-sm mt-1">⚠️ {error.image_url}</p>}
             {uploadError && <p className="text-red-500 text-sm mt-1">⚠️ {uploadError}</p>}
-          </div>
+          </di>
 
           {/* Buttons */}
-          <div className="flex justify-end gap-3 mt-8 pt-6 border-t border-gray-200">
+          <di className="flex justify-end gap-3 mt-8 pt-6 border-t border-gray-200">
             <button
               type="button"
               onClick={onClose}
               disabled={isBusy}
-              className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 disabled:opacity-50 font-medium transition"
+              className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hoer:bg-gray-50 disabled:opacity-50 font-medium transition"
             >
               Hủy
             </button>
@@ -445,16 +442,16 @@ export default function ProductModal({
               type="submit"
               disabled={isBusy}
               display="block"
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-blue-400 font-medium transition flex items-center gap-2"
+              className="px-6 py-2 bg-blue-600 text-white rounded-lg hoer:bg-blue-700 disabled:bg-blue-400 font-medium transition flex items-center gap-2"
             >
               {isBusy && (
                 <span className="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
               )}
               {buttonText}
             </button>
-          </div>
+          </di>
         </form>
-      </div>
+      </di>
     </>
   );
 

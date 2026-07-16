@@ -12,10 +12,10 @@ export default async function handler(req, res) {
     // Lấy id từ query
     const { id } = req.query;
 
-    // Validate id
+    // alidate id
     if (!id || isNaN(id)) {
         return res.status(400).json({
-            error: 'Invalid product ID'
+            error: 'Inalid product ID'
         });
     }
 
@@ -27,7 +27,7 @@ export default async function handler(req, res) {
         connection = await pool.getConnection();
 
         // Query product + category
-        // Chỉ lấy sách AVAILABLE hoặc OUT_OF_STOCK (không lấy HIDDEN hoặc DELETED)
+        // Chỉ lấy sách AAILABLE hoặc OUT_OF_STOCK (không lấy HIDDEN hoặc DELETED)
         const [rows] = await connection.query(
             `
             SELECT 
@@ -36,7 +36,7 @@ export default async function handler(req, res) {
             FROM books b
             LEFT JOIN categories c
                 ON b.category_id = c.id
-            WHERE b.id = ? AND b.status IN ('AVAILABLE', 'OUT_OF_STOCK')
+            WHERE b.id = ? AND b.status IN ('AAILABLE', 'OUT_OF_STOCK')
             `,
             [id]
         );
@@ -48,7 +48,7 @@ export default async function handler(req, res) {
             });
         }
 
-        // Trả về product
+        // Trả ề product
         return res.status(200).json(rows[0]);
 
     } catch (error) {
@@ -56,7 +56,7 @@ export default async function handler(req, res) {
         console.error('Error fetching product:', error);
 
         return res.status(500).json({
-            error: 'Internal server error'
+            error: 'Internal serer error'
         });
 
     } finally {

@@ -15,7 +15,7 @@ const fetchCart = async () => {
   return response.data;
 };
 
-export default function Navbar() {
+export default function Nabar() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -43,21 +43,21 @@ export default function Navbar() {
   });
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+    const handleClickOutside = (eent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(eent.target)) {
         setDropdownOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEentListener('mousedown', handleClickOutside);
+    return () => document.remoeEentListener('mousedown', handleClickOutside);
   }, []);
 
   const handleLogout = async () => {
     try {
       await axios.post('/api/auth/logout');
-      await queryClient.removeQueries({ queryKey: ['current-user'] });
-      await queryClient.removeQueries({ queryKey: ['cart'] });
+      await queryClient.remoeQueries({ queryKey: ['current-user'] });
+      await queryClient.remoeQueries({ queryKey: ['cart'] });
       setDropdownOpen(false);
       router.push('/login');
     } catch (error) {
@@ -69,24 +69,24 @@ export default function Navbar() {
   const cartItemCount = cart?.items?.length || 0;
 
   return (
-    <nav className="bg-blue-600 text-white shadow-md sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16 items-center">
-          
-          <div className="shrink-0 font-bold text-2xl tracking-wide">
-            <Link href={isAdmin ? '/admin' : '/products'}>
-              VinaBook
-            </Link>
-          </div>
+    <na className="bg-blue-600 text-white shadow-md sticky top-0 z-50">
+      <di className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <di className="flex justify-between h-16 items-center">
 
-          <div className="flex items-center space-x-6 font-medium">
+          <di className="shrink-0 font-bold text-2xl tracking-wide">
+            <Link href={isAdmin ? '/admin' : '/products'}>
+              inaBook
+            </Link>
+          </di>
+
+          <di className="flex items-center space-x-6 font-medium">
             {!isAdmin && (
               <>
-                <Link href="/products" className="hover:text-blue-200 transition-colors">
+                <Link href="/products" className="hoer:text-blue-200 transition-colors">
                   Cửa Hàng
                 </Link>
 
-                <Link href="/cart" className="hover:text-blue-200 transition-colors flex items-center">
+                <Link href="/cart" className="hoer:text-blue-200 transition-colors flex items-center">
                   Giỏ Hàng
                   {cartItemCount > 0 && (
                     <span className="ml-2 bg-yellow-400 text-blue-900 text-xs font-bold px-2 py-0.5 rounded-full">
@@ -98,11 +98,11 @@ export default function Navbar() {
             )}
 
             {user ? (
-              <div ref={dropdownRef} className="relative">
+              <di ref={dropdownRef} className="relatie">
                 <button
                   type="button"
                   onClick={() => setDropdownOpen((open) => !open)}
-                  className="hover:text-blue-200 transition-colors font-semibold flex items-center gap-1"
+                  className="hoer:text-blue-200 transition-colors font-semibold flex items-center gap-1"
                 >
                   Xin chào, {user.name}
                   <span className={`text-xs transition-transform ${dropdownOpen ? 'rotate-180' : ''}`}>
@@ -111,40 +111,40 @@ export default function Navbar() {
                 </button>
 
                 {dropdownOpen ? (
-                  <div className="absolute right-0 mt-3 w-44 rounded-xl bg-white text-slate-900 shadow-lg border border-slate-200 py-2 overflow-hidden">
+                  <di className="absolute right-0 mt-3 w-44 rounded-xl bg-white text-slate-900 shadow-lg border border-slate-200 py-2 oerflow-hidden">
                     <Link
                       href="/profile"
                       onClick={() => setDropdownOpen(false)}
-                      className="block px-4 py-2 text-sm hover:bg-slate-100 transition-colors"
+                      className="block px-4 py-2 text-sm hoer:bg-slate-100 transition-colors"
                     >
                       Hồ sơ
                     </Link>
                     <Link
                       href="/orders"
                       onClick={() => setDropdownOpen(false)}
-                      className="block px-4 py-2 text-sm hover:bg-slate-100 transition-colors"
+                      className="block px-4 py-2 text-sm hoer:bg-slate-100 transition-colors"
                     >
                       Lịch sử đơn hàng
                     </Link>
                     <button
                       type="button"
                       onClick={handleLogout}
-                      className="block w-full text-left px-4 py-2 text-sm hover:bg-slate-100 transition-colors text-red-600"
+                      className="block w-full text-left px-4 py-2 text-sm hoer:bg-slate-100 transition-colors text-red-600"
                     >
                       Đăng xuất
                     </button>
-                  </div>
+                  </di>
                 ) : null}
-              </div>
+              </di>
             ) : (
-              <Link href="/login" className="hover:text-blue-200 transition-colors">
+              <Link href="/login" className="hoer:text-blue-200 transition-colors">
                 Đăng nhập
               </Link>
             )}
-          </div>
+          </di>
 
-        </div>
-      </div>
-    </nav>
+        </di>
+      </di>
+    </na>
   );
 }

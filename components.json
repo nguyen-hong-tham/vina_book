@@ -1,13 +1,13 @@
 {
   "$schema": "https://ui.shadcn.com/schema.json",
-  "style": "base-nova",
+  "style": "base-noa",
   "rsc": false,
   "tsx": false,
   "tailwind": {
     "config": "",
     "css": "src/styles/globals.css",
     "baseColor": "neutral",
-    "cssVariables": true,
+    "cssariables": true,
     "prefix": ""
   },
   "iconLibrary": "lucide",

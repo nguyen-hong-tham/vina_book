@@ -11,16 +11,16 @@ export default function AdminOrders() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [limit] = useState(10);
-  
+
   const [loading, setLoading] = useState(false);
   const [updating, setUpdating] = useState(false);
   const [error, setError] = useState('');
-  
+
   // Modal xử lý trạng thái
   const [statusModalOpen, setStatusModalOpen] = useState(false);
   const [selectedOrderForStatus, setSelectedOrderForStatus] = useState(null);
   const [selectedOrderCurrentStatus, setSelectedOrderCurrentStatus] = useState('PENDING');
-  
+
   // Modal xem chi tiết
   const [detailModalOpen, setDetailModalOpen] = useState(false);
   const [selectedOrderDetail, setSelectedOrderDetail] = useState(null);
@@ -51,7 +51,7 @@ export default function AdminOrders() {
   };
 
   // ========================= Xem chi tiết đơn hàng =========================
-  const handleViewDetail = async (orderId) => {
+  const handleiewDetail = async (orderId) => {
     setLoadingDetail(true);
     try {
       const response = await axios.get('/api/admin/orders', {
@@ -83,12 +83,12 @@ export default function AdminOrders() {
         orderId,
         status: newStatus
       });
-      
+
       // Cập nhật UI
       setOrders(orders.map(order =>
         order.id === orderId ? { ...order, status: newStatus } : order
       ));
-      
+
       setStatusModalOpen(false);
       alert('Cập nhật trạng thái thành công');
     } catch (err) {
@@ -101,27 +101,27 @@ export default function AdminOrders() {
 
   return (
     <AdminLayout>
-      <div className="p-6">
+      <di className="p-6">
         <h1 className="text-black text-3xl font-bold mb-6">Quản Lý Đơn Hàng</h1>
 
         {error && (
-          <div className="text-black mb-4 p-4 bg-red-100 text-red-700 rounded">
+          <di className="text-black mb-4 p-4 bg-red-100 text-red-700 rounded">
             {error}
-          </div>
+          </di>
         )}
 
         {/* Bảng đơn hàng */}
-        <div className="text-black bg-white rounded-lg shadow">
+        <di className="text-black bg-white rounded-lg shadow">
           <OrderTable
             orders={orders}
             loading={loading}
             page={page}
             totalPages={totalPages}
             onPageChange={setPage}
-            onViewDetail={handleViewDetail}
+            oniewDetail={handleiewDetail}
             onUpdateStatus={handleUpdateStatus}
           />
-        </div>
+        </di>
 
         {/* Modal xử lý trạng thái */}
         <OrderModal
@@ -141,7 +141,7 @@ export default function AdminOrders() {
           loading={loadingDetail}
           onClose={() => setDetailModalOpen(false)}
         />
-      </div>
+      </di>
     </AdminLayout>
   );
 }

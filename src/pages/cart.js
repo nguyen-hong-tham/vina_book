@@ -26,7 +26,7 @@ export default function CartPage() {
     retry: false,
   });
 
-  const removeItemMutation = useMutation({
+  const remoeItemMutation = useMutation({
     mutationFn: (cartId) => axios.delete('/api/cart', { data: { cartId } }),
     onSuccess: () => refetch(),
   });
@@ -50,9 +50,9 @@ export default function CartPage() {
   if (isLoading) {
     return (
       <main className="min-h-screen bg-linear-to-b from-slate-50 to-slate-100 px-4 py-8">
-        <div className="max-w-6xl mx-auto flex items-center justify-center h-screen">
-          <div className="text-slate-500">Đang tải giỏ hàng...</div>
-        </div>
+        <di className="max-w-6xl mx-auto flex items-center justify-center h-screen">
+          <di className="text-slate-500">Đang tải giỏ hàng...</di>
+        </di>
       </main>
     );
   }
@@ -60,23 +60,23 @@ export default function CartPage() {
   if (error) {
     return (
       <main className="min-h-screen bg-linear-to-b from-slate-50 to-slate-100 px-4 py-8">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
+        <di className="max-w-6xl mx-auto">
+          <motion.di
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="rounded-2xl bg-red-50 border border-red-200 px-6 py-4 text-red-700 shadow-sm text-center"
           >
             Bạn cần đăng nhập để xem giỏ hàng.
-          </motion.div>
-          <motion.div className="mt-4 text-center">
+          </motion.di>
+          <motion.di className="mt-4 text-center">
             <Link
               href="/login"
-              className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition"
+              className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hoer:bg-blue-700 transition"
             >
               Đăng nhập
             </Link>
-          </motion.div>
-        </div>
+          </motion.di>
+        </di>
       </main>
     );
   }
@@ -86,9 +86,9 @@ export default function CartPage() {
 
   return (
     <main className="min-h-screen bg-linear-to-b from-slate-50 to-slate-100 px-4 py-8">
-      <div className="max-w-6xl mx-auto">
+      <di className="max-w-6xl mx-auto">
         {/* Header */}
-        <motion.div
+        <motion.di
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
@@ -99,10 +99,10 @@ export default function CartPage() {
           <h1 className="text-4xl font-bold text-slate-900">
             {isEmpty ? 'Giỏ hàng trống' : `${items.length} sản phẩm`}
           </h1>
-        </motion.div>
+        </motion.di>
 
         {checkoutResult ? (
-          <motion.div
+          <motion.di
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             className="mb-8 rounded-3xl border border-emerald-200 bg-emerald-50 p-6 shadow-sm"
@@ -114,123 +114,123 @@ export default function CartPage() {
               Đơn hàng #{checkoutResult.orderId} đã được tạo
             </h2>
             <p className="text-emerald-800 mb-4">
-              Tổng tiền: {Number(checkoutResult.totalAmount).toLocaleString('vi-VN')}đ
+              Tổng tiền: {Number(checkoutResult.totalAmount).toLocaleString('i-N')}đ
             </p>
             <Link
               href="/products"
-              className="inline-flex items-center rounded-xl bg-emerald-600 px-5 py-3 font-semibold text-white transition hover:bg-emerald-700"
+              className="inline-flex items-center rounded-xl bg-emerald-600 px-5 py-3 font-semibold text-white transition hoer:bg-emerald-700"
             >
               Tiếp tục mua sắm
             </Link>
-          </motion.div>
+          </motion.di>
         ) : null}
 
         {isEmpty ? (
-          <motion.div
+          <motion.di
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
             className="grid gap-8 lg:grid-cols-3"
           >
-            <div className="lg:col-span-2">
-              <div className="rounded-3xl bg-white border border-slate-200 shadow-lg p-12 text-center">
-                <div className="text-6xl mb-4">🛒</div>
+            <di className="lg:col-span-2">
+              <di className="rounded-3xl bg-white border border-slate-200 shadow-lg p-12 text-center">
+                <di className="text-6xl mb-4">🛒</di>
                 <h2 className="text-2xl font-bold text-slate-900 mb-2">
                   Giỏ hàng của bạn đang trống
                 </h2>
                 <p className="text-slate-600 mb-8">
-                  Hãy thêm một số sách yêu thích vào giỏ hàng của bạn
+                  Hãy thêm một số sách yêu thích ào giỏ hàng của bạn
                 </p>
                 <Link
                   href="/products"
-                  className="inline-block px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition"
+                  className="inline-block px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold hoer:bg-blue-700 transition"
                 >
                   Tiếp tục mua sắm
                 </Link>
-              </div>
-            </div>
+              </di>
+            </di>
 
             {/* Empty Cart Summary */}
-            <motion.div
+            <motion.di
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3 }}
               className="rounded-3xl bg-white border border-slate-200 shadow-lg p-6 h-fit"
             >
               <h3 className="text-xl font-bold text-slate-900 mb-4">Tóm tắt</h3>
-              <div className="space-y-3 pb-4 border-b border-slate-200 mb-4">
-                <div className="flex justify-between text-slate-600">
+              <di className="space-y-3 pb-4 border-b border-slate-200 mb-4">
+                <di className="flex justify-between text-slate-600">
                   <span>Tạm tính:</span>
                   <span>0đ</span>
-                </div>
-                <div className="flex justify-between text-slate-600">
-                  <span>Vận chuyển:</span>
+                </di>
+                <di className="flex justify-between text-slate-600">
+                  <span>ận chuyển:</span>
                   <span>0đ</span>
-                </div>
-              </div>
-              <div className="flex justify-between text-lg font-bold text-slate-900 mb-6">
+                </di>
+              </di>
+              <di className="flex justify-between text-lg font-bold text-slate-900 mb-6">
                 <span>Tổng cộng:</span>
                 <span>0đ</span>
-              </div>
+              </di>
               <button
                 disabled
                 className="w-full py-3 px-4 rounded-lg font-semibold text-white bg-gray-300 cursor-not-allowed transition"
               >
                 Thanh toán
               </button>
-            </motion.div>
-          </motion.div>
+            </motion.di>
+          </motion.di>
         ) : (
-          <motion.div
+          <motion.di
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
             className="grid gap-8 lg:grid-cols-3"
           >
             {/* Cart Items */}
-            <div className="lg:col-span-2 space-y-4">
+            <di className="lg:col-span-2 space-y-4">
               {items.map((item, index) => (
-                <motion.div
+                <motion.di
                   key={item.id}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.05 }}
-                  className="rounded-2xl bg-white border border-slate-200 shadow-md p-4 flex gap-4 hover:shadow-lg transition-shadow"
+                  className="rounded-2xl bg-white border border-slate-200 shadow-md p-4 flex gap-4 hoer:shadow-lg transition-shadow"
                 >
                   {/* Image */}
-                  <div className="w-24 h-32 rounded-lg bg-linear-to-br from-slate-100 to-slate-200 flex items-center justify-center shrink-0 overflow-hidden">
+                  <di className="w-24 h-32 rounded-lg bg-linear-to-br from-slate-100 to-slate-200 flex items-center justify-center shrink-0 oerflow-hidden">
                     {item.image_url ? (
                       <img
                         src={item.image_url}
                         alt={item.title}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-coer"
                         onError={(e) => {
                           e.target.style.display = 'none';
                         }}
                       />
                     ) : (
-                      <div className="text-3xl text-slate-300">∿</div>
+                      <di className="text-3xl text-slate-300">∿</di>
                     )}
-                  </div>
+                  </di>
 
                   {/* Content */}
-                  <div className="flex-1 flex flex-col justify-between">
-                    <div>
+                  <di className="flex-1 flex flex-col justify-between">
+                    <di>
                       <h3 className="font-semibold text-slate-900 line-clamp-2">
                         {item.title}
                       </h3>
                       <p className="text-sm text-slate-500 mt-1">{item.author}</p>
-                    </div>
+                    </di>
 
-                    <div className="flex items-center justify-between">
+                    <di className="flex items-center justify-between">
                       <span className="text-lg font-bold text-blue-600">
-                        {Number(item.price).toLocaleString('vi-VN')}đ
+                        {Number(item.price).toLocaleString('i-N')}đ
                       </span>
 
                       {/* Quantity Controls */}
-                      <div className="flex items-center gap-2">
+                      <di className="flex items-center gap-2">
                         <motion.button
-                          whileHover={{ scale: 1.1 }}
+                          whileHoer={{ scale: 1.1 }}
                           whileTap={{ scale: 0.95 }}
                           onClick={() =>
                             updateQuantityMutation.mutate({
@@ -239,7 +239,7 @@ export default function CartPage() {
                             })
                           }
                           disabled={updateQuantityMutation.isPending}
-                          className="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 font-semibold text-slate-700 transition disabled:opacity-50"
+                          className="w-8 h-8 rounded-lg bg-slate-100 hoer:bg-slate-200 font-semibold text-slate-700 transition disabled:opacity-50"
                         >
                           −
                         </motion.button>
@@ -249,7 +249,7 @@ export default function CartPage() {
                         </span>
 
                         <motion.button
-                          whileHover={{ scale: 1.1 }}
+                          whileHoer={{ scale: 1.1 }}
                           whileTap={{ scale: 0.95 }}
                           onClick={() =>
                             updateQuantityMutation.mutate({
@@ -258,36 +258,36 @@ export default function CartPage() {
                             })
                           }
                           disabled={updateQuantityMutation.isPending || item.quantity >= item.stock}
-                          className="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 font-semibold text-slate-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="w-8 h-8 rounded-lg bg-slate-100 hoer:bg-slate-200 font-semibold text-slate-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           +
                         </motion.button>
-                      </div>
-                    </div>
-                  </div>
+                      </di>
+                    </di>
+                  </di>
 
-                  {/* Remove Button */}
+                  {/* Remoe Button */}
                   <motion.button
-                    whileHover={{ scale: 1.05 }}
+                    whileHoer={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={() => removeItemMutation.mutate(item.id)}
-                    disabled={removeItemMutation.isPending}
-                    className="text-red-500 hover:text-red-700 hover:bg-red-50 p-3 rounded-lg transition disabled:opacity-50"
+                    onClick={() => remoeItemMutation.mutate(item.id)}
+                    disabled={remoeItemMutation.isPending}
+                    className="text-red-500 hoer:text-red-700 hoer:bg-red-50 p-3 rounded-lg transition disabled:opacity-50"
                   >
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <sg className="w-5 h-5" fill="currentColor" iewBox="0 0 20 20">
                       <path
-                        fillRule="evenodd"
-                        d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                        clipRule="evenodd"
+                        fillRule="eenodd"
+                        d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 210a2 2 0 002 2h8a2 2 0 002-26a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 06a1 1 0 11-2 08zm5-1a1 1 0 00-1 16a1 1 0 102 08a1 1 0 00-1-1z"
+                        clipRule="eenodd"
                       />
-                    </svg>
+                    </sg>
                   </motion.button>
-                </motion.div>
+                </motion.di>
               ))}
-            </div>
+            </di>
 
             {/* Summary */}
-            <motion.div
+            <motion.di
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3 }}
@@ -296,30 +296,30 @@ export default function CartPage() {
               <h3 className="text-xl font-bold text-slate-900 mb-6">Tóm tắt đơn hàng</h3>
 
               {/* Subtotal */}
-              <div className="space-y-3 pb-4 border-b border-slate-200 mb-4">
-                <div className="flex justify-between text-slate-600">
+              <di className="space-y-3 pb-4 border-b border-slate-200 mb-4">
+                <di className="flex justify-between text-slate-600">
                   <span>Tạm tính:</span>
-                  <span>{Number(total).toLocaleString('vi-VN')}đ</span>
-                </div>
-                <div className="flex justify-between text-slate-600">
-                  <span>Vận chuyển:</span>
+                  <span>{Number(total).toLocaleString('i-N')}đ</span>
+                </di>
+                <di className="flex justify-between text-slate-600">
+                  <span>ận chuyển:</span>
                   <span className="text-amber-600">Miễn phí</span>
-                </div>
-              </div>
+                </di>
+              </di>
 
               {/* Total */}
-              <div className="flex justify-between text-lg font-bold text-slate-900 mb-6">
+              <di className="flex justify-between text-lg font-bold text-slate-900 mb-6">
                 <span>Tổng cộng:</span>
-                <span className="text-blue-600">{Number(total).toLocaleString('vi-VN')}đ</span>
-              </div>
+                <span className="text-blue-600">{Number(total).toLocaleString('i-N')}đ</span>
+              </di>
 
               {/* Checkout Button */}
               <motion.button
-                whileHover={{ scale: 1.02 }}
+                whileHoer={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => checkoutMutation.mutate()}
                 disabled={checkoutMutation.isPending || isEmpty}
-                className="w-full py-3 px-4 rounded-lg font-semibold text-white bg-blue-600 hover:bg-blue-700 transition shadow-md hover:shadow-lg mb-3"
+                className="w-full py-3 px-4 rounded-lg font-semibold text-white bg-blue-600 hoer:bg-blue-700 transition shadow-md hoer:shadow-lg mb-3"
               >
                 {checkoutMutation.isPending ? 'Đang xử lý...' : 'Thanh toán'}
               </motion.button>
@@ -327,14 +327,14 @@ export default function CartPage() {
               {/* Continue Shopping */}
               <Link
                 href="/products"
-                className="block text-center py-3 px-4 rounded-lg font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 transition"
+                className="block text-center py-3 px-4 rounded-lg font-semibold text-blue-600 bg-blue-50 hoer:bg-blue-100 transition"
               >
                 Tiếp tục mua sắm
               </Link>
-            </motion.div>
-          </motion.div>
+            </motion.di>
+          </motion.di>
         )}
-      </div>
+      </di>
     </main>
   );
 }
