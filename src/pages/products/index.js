@@ -14,20 +14,18 @@ const HeroBanner = dynamic(() => import("@/components/HeroBanner"), {
 export default function Products({ initialBooks = [] }) {
   const router = useRouter();
   const categoryId = router.query.categoryId;
-  const [mounted, setMounted] = useState(false);
   const [books, setBooks] = useState(initialBooks);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
+  // Sync state with props during render to avoid useEffect warnings
+  const [prevInitialBooks, setPrevInitialBooks] = useState(initialBooks);
+  if (initialBooks !== prevInitialBooks) {
     setBooks(initialBooks);
+    setPrevInitialBooks(initialBooks);
     setError(null);
     setIsLoading(false);
-  }, []);
+  }
 
   // Fetch additional data when categoryId changes on client
   useEffect(() => {
@@ -50,7 +48,6 @@ export default function Products({ initialBooks = [] }) {
     fetchBooks();
   }, [categoryId, router.isReady]);
 
-  const [filteredBooks, setFilteredBooks] = useState(initialBooks || []);
   const [sortBy, setSortBy] = useState("newest");
   const [searchTerm, setSearchTerm] = useState("");
   const [showInStock, setShowInStock] = useState(false);
@@ -66,38 +63,54 @@ export default function Products({ initialBooks = [] }) {
     return price >= min && price <= max;
   };
 
-  // Apply filters and sorting
-  useEffect(() => {
-    let result = [...books];
-
-    // Search filter
-    if (searchTerm) {
-      result = result.filter(
-        (book) =>
-          book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          book.author.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-
-    // Price range filter
-    if (priceRange) {
-      result = result.filter((book) => isPriceInRange(book.price, priceRange));
-    }
-
-    if (showInStock) {
-      result = result.filter((book) => book.stock > 0);
-    }
-
-    // Sort
-    if (sortBy === "price-asc") {
-      result.sort((a, b) => a.price - b.price);
-    } else if (sortBy === "price-desc") {
-      result.sort((a, b) => b.price - a.price);
-    }
-    
-    setFilteredBooks(result);
+  // Helper handlers to reset to page 1 on filter changes
+  const handleSearchChange = (term) => {
+    setSearchTerm(term);
     setCurrentPage(1);
-  }, [books, searchTerm, priceRange, sortBy, showInStock]);
+  };
+
+  const handleSortChange = (sort) => {
+    setSortBy(sort);
+    setCurrentPage(1);
+  };
+
+  const handleStockFilterChange = (inStock) => {
+    setShowInStock(inStock);
+    setCurrentPage(1);
+  };
+
+  const handlePriceRangeChange = (range) => {
+    setPriceRange(range);
+    setCurrentPage(1);
+  };
+
+  // Calculate filtered and sorted books on-the-fly during render
+  let filteredBooks = [...books];
+
+  // Search filter
+  if (searchTerm) {
+    filteredBooks = filteredBooks.filter(
+      (book) =>
+        book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        book.author.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }
+
+  // Price range filter
+  if (priceRange) {
+    filteredBooks = filteredBooks.filter((book) => isPriceInRange(book.price, priceRange));
+  }
+
+  if (showInStock) {
+    filteredBooks = filteredBooks.filter((book) => book.stock > 0);
+  }
+
+  // Sort
+  if (sortBy === "price-asc") {
+    filteredBooks.sort((a, b) => a.price - b.price);
+  } else if (sortBy === "price-desc") {
+    filteredBooks.sort((a, b) => b.price - a.price);
+  }
 
   // Pagination logic
   const totalPages = Math.ceil(filteredBooks.length / itemsPerPage);
@@ -154,13 +167,13 @@ export default function Products({ initialBooks = [] }) {
             {!isLoading && (
               <FilterBar 
                 searchTerm={searchTerm}
-                onSearchChange={setSearchTerm}
+                onSearchChange={handleSearchChange}
                 sortBy={sortBy}
-                onSortChange={setSortBy}
+                onSortChange={handleSortChange}
                 showInStock={showInStock}
-                onStockFilterChange={setShowInStock}
+                onStockFilterChange={handleStockFilterChange}
                 priceRange={priceRange}
-                onPriceRangeChange={setPriceRange}
+                onPriceRangeChange={handlePriceRangeChange}
               />
             )}
 
@@ -244,6 +257,7 @@ export default function Products({ initialBooks = [] }) {
                     setSearchTerm("");
                     setSortBy("newest");
                     setShowInStock(false);
+                    setCurrentPage(1);
                   }}
                   className="inline-block px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition"
                 >

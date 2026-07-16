@@ -1,12 +1,12 @@
-# 📚 Vinabook Demo - Hệ Thống Bán Sách Trực Tuyến
+#  Vinabook Demo - Hệ Thống Bán Sách Trực Tuyến
 
 Vinabook Demo là một ứng dụng web thương mại điện tử bán sách trực tuyến hoàn chỉnh, được lấy cảm hứng từ trang thương mại điện tử Vinabook. Dự án được phát triển bằng **Next.js (Pages Router)**, **React 19**, **Tailwind CSS v4**, **Supabase (PostgreSQL)**, và tích hợp trợ lý ảo thông minh **AI Chatbot (GPT-4o-mini)**.
 
 ---
 
-## 🚀 Các Tính Năng Nổi Bật
+##  Các Tính Năng Nổi Bật
 
-### 👤 Dành Cho Khách Hàng (Customer Client)
+###  Dành Cho Khách Hàng (Customer Client)
 - **Trang chủ & Danh sách sách**: Giao diện hiển thị trực quan các đầu sách, hỗ trợ phân trang (`Pagination`), thanh tìm kiếm (`FilterBar`) theo tên, lọc theo thể loại (`Category`) và sắp xếp theo giá tiền hoặc tên sách.
 - **Chi tiết sản phẩm**: Xem chi tiết thông tin sách (tên sách, tác giả, giá, mô tả, tình trạng kho hàng).
 - **Giỏ hàng trực tuyến**: Thêm sách vào giỏ, cập nhật số lượng, xóa sản phẩm và tự động tính tổng tiền theo thời gian thực.
@@ -17,7 +17,7 @@ Vinabook Demo là một ứng dụng web thương mại điện tử bán sách 
   - Hỗ trợ giải đáp nhanh thông tin sách có sẵn trong hệ thống (tác giả, giá cả, tồn kho, thể loại) sử dụng OpenAI API (`gpt-4o-mini`).
   - **Quy tắc an toàn (Safety Prompting)**: Chỉ trả lời các nội dung liên quan tới hệ thống sách của cửa hàng. Từ chối lịch sự đối với các câu hỏi ngoài lề (thời tiết, kiến thức chung, chính trị...) bằng câu trả lời tiêu chuẩn để tránh lạm dụng token.
 
-### 🔑 Dành Cho Quản Trị Viên (Admin Panel)
+###  Dành Cho Quản Trị Viên (Admin Panel)
 - **Dashboard quản trị**: Xem nhanh các số liệu thống kê tổng quan của hệ thống.
 - **Quản lý sản phẩm**: Danh sách sách dạng bảng (`ProductTable`), hỗ trợ thêm sách mới, chỉnh sửa thông tin hoặc xóa/ẩn sách. Tích hợp upload ảnh bìa trực tiếp lên **Cloudinary**.
 - **Quản lý đơn hàng**:
@@ -28,7 +28,7 @@ Vinabook Demo là một ứng dụng web thương mại điện tử bán sách 
 
 ---
 
-## 🛠️ Công Nghệ Sử Dụng (Tech Stack)
+##  Công Nghệ Sử Dụng (Tech Stack)
 
 ### Frontend
 - **Framework**: [Next.js v16.2](https://nextjs.org/) (Pages Router) & [React v19.2](https://react.dev/)
@@ -46,7 +46,7 @@ Vinabook Demo là một ứng dụng web thương mại điện tử bán sách 
 
 ---
 
-## 📁 Cấu Trúc Thư Mục Dự Án
+##  Cấu Trúc Thư Mục Dự Án
 
 ```text
 vinabook-demo/
@@ -76,7 +76,7 @@ vinabook-demo/
 
 ---
 
-## ⚙️ Hướng Dẫn Cài Đặt & Chạy Dự Án
+##  Hướng Dẫn Cài Đặt & Chạy Dự Án
 
 ### 1. Chuẩn bị môi trường
 - Máy tính đã cài đặt **Node.js** (Khuyên dùng phiên bản LTS v18 trở lên).
@@ -126,7 +126,7 @@ npm run dev
 
 ---
 
-## ⚡ Điểm Nhấn Kỹ Thuật (Architectural Details)
+##  Điểm Nhấn Kỹ Thuật (Architectural Details)
 
 ### PostgreSQL & MySQL Query Wrapper
 Để giải quyết bài toán chuyển từ cơ sở dữ liệu MySQL sang PostgreSQL (Supabase) nhưng không muốn viết lại toàn bộ mã nguồn chứa các truy vấn SQL chuẩn MySQL, dự án sử dụng tệp [db.js](file:///d:/WEB_SACH-%20CAC%20CONG%20NGHE%20HIEN%20DAI/vinabook-demo/src/lib/db.js) làm lớp trung gian:

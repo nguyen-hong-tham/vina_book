@@ -25,18 +25,9 @@ export default function AdminProducts() {
   const [error, setError] = useState(''); // lỗi nếu có
 
 
-  // page đổi  || search thay đổi => gọi API
-  useEffect(() => {
-    fetchProducts();
-  }, [page, search]);
-
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
-
   // ========================= Lấy danh sách sản phẩm từ API =========================
-  const fetchProducts = async () => {
+  async function fetchProducts() {
+    await Promise.resolve();
     setLoading(true); //Bắt đầu loading.
     setError('');
     try {
@@ -54,16 +45,28 @@ export default function AdminProducts() {
     } finally {
       setLoading(false);
     }
-  };
+  }
 
-  const fetchCategories = async () => {
+  async function fetchCategories() {
+    await Promise.resolve();
     try {
       const response = await axios.get('/api/category');
       setCategories(response.data || []);
     } catch (err) {
       console.error('Failed to fetch categories', err);
     }
-  };
+  }
+
+  // page đổi  || search thay đổi => gọi API
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchProducts();
+  }, [page, search]);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchCategories();
+  }, []);
 
   // ========================= Xử lý tìm kiếm =========================
   const handleSearchSubmit = (e) => {

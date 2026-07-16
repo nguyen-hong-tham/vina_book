@@ -27,13 +27,9 @@ export default function AdminOrders() {
   const [orderDetails, setOrderDetails] = useState([]);
   const [loadingDetail, setLoadingDetail] = useState(false);
 
-  // Lấy danh sách đơn hàng khi page thay đổi
-  useEffect(() => {
-    fetchOrders();
-  }, [page]);
-
   // ========================= Lấy danh sách đơn hàng =========================
-  const fetchOrders = async () => {
+  async function fetchOrders() {
+    await Promise.resolve();
     setLoading(true);
     setError('');
     try {
@@ -48,7 +44,13 @@ export default function AdminOrders() {
     } finally {
       setLoading(false);
     }
-  };
+  }
+
+  // Lấy danh sách đơn hàng khi page thay đổi
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchOrders();
+  }, [page]);
 
   // ========================= Xem chi tiết đơn hàng =========================
   const handleViewDetail = async (orderId) => {
