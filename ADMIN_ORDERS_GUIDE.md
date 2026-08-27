@@ -221,7 +221,7 @@ export default function OrderTable({
   onUpdateStatus = () => {},
 }) {
   const statusConfig = {
-    PENDING: { text: 'Chờ xác nhận', color: 'bg-yellow-100 text-yellow-800', badge: '⏳' },
+    PENDING: { text: 'Chờ xác nhận', color: 'bg-yellow-100 text-yellow-800', badge: '' },
     ACCEPT: { text: 'Đã xác nhận', color: 'bg-blue-100 text-blue-800', badge: '✓' },
     REJECT: { text: 'Đã từ chối', color: 'bg-red-100 text-red-800', badge: '✗' },
     DONE: { text: 'Hoàn thành', color: 'bg-green-100 text-green-800', badge: '✓✓' }
@@ -459,7 +459,7 @@ export default function OrderDetailModal({
   if (!isOpen || !order) return null;
 
   const statusTexts = {
-    PENDING: '⏳ Chờ xác nhận',
+    PENDING: ' Chờ xác nhận',
     ACCEPT: '✓ Đã xác nhận',
     REJECT: '✗ Đã từ chối',
     DONE: '✓✓ Hoàn thành'
@@ -501,7 +501,7 @@ export default function OrderDetailModal({
           <>
             {/* Thông tin khách hàng */}
             <div className="mb-6 p-4 bg-gray-50 rounded">
-              <h3 className="font-bold mb-3">👤 Thông Tin Khách Hàng</h3>
+              <h3 className="font-bold mb-3"> Thông Tin Khách Hàng</h3>
               <p className="text-sm"><span className="font-medium">Tên:</span> {order.user_name}</p>
               <p className="text-sm"><span className="font-medium">Email:</span> {order.email}</p>
               <p className="text-sm"><span className="font-medium">Ngày đặt:</span> {formatDate(order.created_at)}</p>
@@ -517,7 +517,7 @@ export default function OrderDetailModal({
 
             {/* Chi tiết sản phẩm */}
             <div className="mb-6">
-              <h3 className="font-bold mb-3">📚 Sản Phẩm Trong Đơn Hàng</h3>
+              <h3 className="font-bold mb-3"> Sản Phẩm Trong Đơn Hàng</h3>
               <div className="space-y-3">
                 {details.length > 0 ? (
                   details.map((item) => (

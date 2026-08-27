@@ -39,7 +39,7 @@ export default async function handler(req, res) {
     conn = await db.getConnection();
 
     const [[order]] = await conn.query(
-      `SELECT id, user_id, total_amount, status, created_at
+      `SELECT id, user_id, total_amount, status, created_at, recipient_name, phone, shipping_address, payment_method, notes
        FROM orders
        WHERE id = ?`,
       [id]
@@ -54,7 +54,7 @@ export default async function handler(req, res) {
     }
 
     const [details] = await conn.query(
-      `SELECT od.id, od.book_id, od.quantity, od.price, b.title, b.image_url
+      `SELECT od.id, od.book_id, od.quantity, od.price, b.title, b.author, b.image_url
        FROM order_details od
        JOIN books b ON b.id = od.book_id
        WHERE od.order_id = ?`,
@@ -67,6 +67,11 @@ export default async function handler(req, res) {
         total_amount: order.total_amount,
         status: order.status,
         created_at: order.created_at,
+        recipient_name: order.recipient_name,
+        phone: order.phone,
+        shipping_address: order.shipping_address,
+        payment_method: order.payment_method || 'COD',
+        notes: order.notes,
       },
       details,
     });

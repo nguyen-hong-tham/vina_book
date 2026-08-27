@@ -50,12 +50,15 @@ export default function OrderDetailModal({
           <div className="text-black text-center py-8">Đang tải chi tiết...</div>
         ) : (
           <>
-            {/* Thông tin khách hàng */}
-            <div className="text-black mb-6 p-4 bg-gray-50 rounded">
-              <h3 className="font-bold mb-3"> Thông Tin Khách Hàng</h3>
-              <p className="text-sm"><span className="font-medium">Tên:</span> {order.user_name}</p>
-              <p className="text-sm"><span className="font-medium">Email:</span> {order.email}</p>
-              <p className="text-sm"><span className="font-medium">Ngày đặt:</span> {formatDate(order.created_at)}</p>
+            {/* Thông tin khách hàng & Giao hàng */}
+            <div className="text-black mb-6 p-4 bg-gray-50 rounded-xl space-y-1.5 text-sm">
+              <h3 className="font-bold mb-3 text-base">📦 Thông Tin Nhận Hàng & Khách Hàng</h3>
+              <p><span className="font-medium">Người nhận:</span> {order.recipient_name || order.user_name}</p>
+              <p><span className="font-medium">Số điện thoại:</span> {order.phone || 'Chưa cập nhật'}</p>
+              <p><span className="font-medium">Địa chỉ giao hàng:</span> {order.shipping_address || 'Địa chỉ mặc định'}</p>
+              <p><span className="font-medium">Phương thức thanh toán:</span> Thanh toán khi nhận hàng (COD)</p>
+              {order.notes && <p><span className="font-medium">Ghi chú:</span> {order.notes}</p>}
+              <p className="text-xs text-gray-500 pt-1"><span className="font-medium">Tài khoản đặt:</span> {order.user_name} ({order.email}) - {formatDate(order.created_at)}</p>
             </div>
 
             {/* Trạng thái đơn hàng */}

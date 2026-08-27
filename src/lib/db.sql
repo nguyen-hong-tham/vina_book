@@ -50,6 +50,11 @@ CREATE TABLE orders (
     user_id INT,
     total_amount INT NOT NULL,
     status ENUM('PENDING', 'ACCEPT', 'REJECT', 'DONE') DEFAULT 'PENDING',
+    recipient_name VARCHAR(150),
+    phone VARCHAR(20),
+    shipping_address TEXT,
+    payment_method VARCHAR(50) DEFAULT 'COD',
+    notes TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );

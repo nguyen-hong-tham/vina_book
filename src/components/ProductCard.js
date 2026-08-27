@@ -3,10 +3,12 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import axios from 'axios';
 import { useQueryClient } from '@tanstack/react-query';
 
 export default function ProductCard({ book, index }) {
+  const router = useRouter();
   const [isAdding, setIsAdding] = useState(false);
   const [showMessage, setShowMessage] = useState('');
   const queryClient = useQueryClient();
@@ -22,8 +24,18 @@ export default function ProductCard({ book, index }) {
       queryClient.refetchQueries({ queryKey: ['cart'] });
       setTimeout(() => setShowMessage(''), 2000);
     } catch (error) {
-      setShowMessage('Lỗi: ' + (error.response?.data?.message || 'Vui lòng đăng nhập'));
-      setTimeout(() => setShowMessage(''), 3000);
+      const status = error.response?.status;
+      if (status === 401) {
+        setShowMessage('Vui lòng đăng nhập để mua hàng!');
+        setTimeout(() => {
+          setShowMessage('');
+          router.push('/login');
+        }, 1200);
+      } else {
+        const errorMsg = error.response?.data?.message || 'Có lỗi xảy ra khi thêm vào giỏ';
+        setShowMessage(errorMsg);
+        setTimeout(() => setShowMessage(''), 3000);
+      }
     } finally {
       setIsAdding(false);
     }
@@ -110,9 +122,9 @@ export default function ProductCard({ book, index }) {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0 }}
                   className={`text-xs font-semibold text-center py-2 rounded-lg ${
-                    showMessage.includes('Lỗi')
-                      ? 'bg-red-100 text-red-700'
-                      : 'bg-green-100 text-green-700'
+                    showMessage.includes('Đã thêm')
+                      ? 'bg-green-100 text-green-700'
+                      : 'bg-red-100 text-red-700'
                   }`}
                 >
                   {showMessage}

@@ -14,6 +14,7 @@ const fetchCart = async () => {
 export default function CartPage() {
   const [mounted, setMounted] = useState(false);
   const [checkoutResult, setCheckoutResult] = useState(null);
+  const [checkoutError, setCheckoutError] = useState('');
 
   useEffect(() => {
     queueMicrotask(() => setMounted(true));
@@ -28,20 +29,35 @@ export default function CartPage() {
 
   const removeItemMutation = useMutation({
     mutationFn: (cartId) => axios.delete('/api/cart', { data: { cartId } }),
-    onSuccess: () => refetch(),
+    onSuccess: () => {
+      setCheckoutError('');
+      refetch();
+    },
   });
 
   const updateQuantityMutation = useMutation({
     mutationFn: ({ cartId, quantity }) =>
       axios.put('/api/cart', { cartId, quantity }),
-    onSuccess: () => refetch(),
+    onSuccess: () => {
+      setCheckoutError('');
+      refetch();
+    },
   });
 
   const checkoutMutation = useMutation({
     mutationFn: () => axios.post('/api/checkout'),
+    onMutate: () => {
+      setCheckoutError('');
+    },
     onSuccess: async (response) => {
+      setCheckoutError('');
       setCheckoutResult(response.data);
       await refetch();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    },
+    onError: (err) => {
+      const msg = err?.response?.data?.message || 'Có lỗi xảy ra trong quá trình thanh toán.';
+      setCheckoutError(msg);
     },
   });
 
@@ -313,16 +329,24 @@ export default function CartPage() {
                 <span className="text-blue-600">{Number(total).toLocaleString('vi-VN')}đ</span>
               </div>
 
+              {/* Checkout Error */}
+              {checkoutError && (
+                <motion.div
+                  initial={{ opacity: 0, y: -5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mb-4 rounded-xl bg-red-50 border border-red-200 p-3 text-xs font-semibold text-red-700 text-center"
+                >
+                  {checkoutError}
+                </motion.div>
+              )}
+
               {/* Checkout Button */}
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => checkoutMutation.mutate()}
-                disabled={checkoutMutation.isPending || isEmpty}
-                className="w-full py-3 px-4 rounded-lg font-semibold text-white bg-blue-600 hover:bg-blue-700 transition shadow-md hover:shadow-lg mb-3"
+              <Link
+                href="/checkout"
+                className="block text-center w-full py-3.5 px-4 rounded-xl font-semibold text-white bg-blue-600 hover:bg-blue-700 transition shadow-md hover:shadow-lg mb-3"
               >
-                {checkoutMutation.isPending ? 'Đang xử lý...' : 'Thanh toán'}
-              </motion.button>
+                Tiến hành thanh toán →
+              </Link>
 
               {/* Continue Shopping */}
               <Link

@@ -20,13 +20,33 @@ async function getUserIdFromCookie(req) {
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method not allowed' });
+    return res.status(405).json({ message: 'Phương thức không được hỗ trợ' });
   }
 
   const userId = await getUserIdFromCookie(req);
 
   if (!userId) {
-    return res.status(401).json({ message: 'Unauthorized' });
+    return res.status(401).json({ message: 'Vui lòng đăng nhập để thanh toán' });
+  }
+
+  const {
+    recipientName,
+    phone,
+    shippingAddress,
+    paymentMethod = 'COD',
+    notes = '',
+  } = req.body || {};
+
+  if (!recipientName || !recipientName.trim()) {
+    return res.status(400).json({ message: 'Vui lòng nhập họ tên người nhận' });
+  }
+
+  if (!phone || !phone.trim()) {
+    return res.status(400).json({ message: 'Vui lòng nhập số điện thoại nhận hàng' });
+  }
+
+  if (!shippingAddress || !shippingAddress.trim()) {
+    return res.status(400).json({ message: 'Vui lòng nhập địa chỉ giao hàng' });
   }
 
   const conn = await db.getConnection();
@@ -35,7 +55,7 @@ export default async function handler(req, res) {
     await conn.beginTransaction();
 
     const [items] = await conn.query(
-      `SELECT c.book_id, c.quantity, b.price, b.stock
+      `SELECT c.book_id, c.quantity, b.title, b.price, b.stock
        FROM cart c
        JOIN books b ON b.id = c.book_id
        WHERE c.user_id = ? FOR UPDATE`,
@@ -44,7 +64,17 @@ export default async function handler(req, res) {
 
     if (items.length === 0) {
       await conn.rollback();
-      return res.status(400).json({ message: 'Cart is empty' });
+      return res.status(400).json({ message: 'Giỏ hàng đang trống' });
+    }
+
+    // Check stock for each item before placing order
+    for (const item of items) {
+      if (item.stock < item.quantity) {
+        await conn.rollback();
+        return res.status(400).json({
+          message: `Sản phẩm "${item.title || 'Mã #' + item.book_id}" không đủ hàng trong kho (chỉ còn ${item.stock})`,
+        });
+      }
     }
 
     const totalAmount = items.reduce(
@@ -53,11 +83,21 @@ export default async function handler(req, res) {
     );
 
     const [orderResult] = await conn.query(
-      'INSERT INTO orders (user_id, total_amount, status) VALUES (?, ?, ?)',
-      [userId, totalAmount, 'PENDING']
+      `INSERT INTO orders (user_id, total_amount, status, recipient_name, phone, shipping_address, payment_method, notes)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        userId,
+        totalAmount,
+        'PENDING',
+        recipientName.trim(),
+        phone.trim(),
+        shippingAddress.trim(),
+        paymentMethod,
+        notes.trim(),
+      ]
     );
 
-    const orderId = orderResult.insertId;
+    const orderId = orderResult.insertId || orderResult[0]?.id;
 
     for (const item of items) {
       await conn.query(
@@ -66,16 +106,13 @@ export default async function handler(req, res) {
       );
     }
 
-    // Decrease stock for each item, ensure enough stock
+    // Decrease stock for each item and update status if out of stock
     for (const item of items) {
-      if (item.stock < item.quantity) {
-        await conn.rollback();
-        return res.status(400).json({ message: `Sản phẩm ${item.book_id} không đủ hàng` });
-      }
-
+      const nextStock = Math.max(0, item.stock - item.quantity);
+      const nextStatus = nextStock === 0 ? 'OUT_OF_STOCK' : 'AVAILABLE';
       await conn.query(
-        'UPDATE books SET stock = stock - ? WHERE id = ?',
-        [item.quantity, item.book_id]
+        'UPDATE books SET stock = ?, status = ? WHERE id = ?',
+        [nextStock, nextStatus, item.book_id]
       );
     }
 
@@ -91,7 +128,7 @@ export default async function handler(req, res) {
   } catch (error) {
     await conn.rollback();
     console.error('Checkout error:', error);
-    return res.status(500).json({ message: 'Checkout failed', error: error.message });
+    return res.status(500).json({ message: 'Thanh toán thất bại', error: error.message });
   } finally {
     conn.release();
   }

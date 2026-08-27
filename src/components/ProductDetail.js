@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import { ShoppingCart } from "lucide-react";
 
 const fetchProduct = async (id) => {
@@ -66,15 +66,16 @@ export default function ProductDetail({ id }) {
             } catch (err) {
                 const status = err?.response?.status;
                 if (status === 401) {
+                    alert('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng!');
                     router.push('/login');
                     return;
                 }
                 if (status === 403) {
-                    alert(err.response?.data?.message || 'Bạn không có quyền');
+                    alert(err.response?.data?.message || 'Bạn không có quyền thực hiện thao tác này');
                     return;
                 }
                 console.error('Add to cart error', err);
-                alert('Có lỗi khi thêm vào giỏ hàng');
+                alert(err?.response?.data?.message || 'Có lỗi khi thêm vào giỏ hàng');
             } finally {
                 setAdding(false);
             }

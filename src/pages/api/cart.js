@@ -22,7 +22,7 @@ export default async function handler(req, res) {
   const userId = await getUserIdFromCookie(req);
 
   if (!userId) {
-    return res.status(401).json({ message: 'Unauthorized' });
+    return res.status(401).json({ message: 'Vui lòng đăng nhập để thao tác giỏ hàng' });
   }
 
   const conn = await db.getConnection();
@@ -46,7 +46,7 @@ export default async function handler(req, res) {
       const { bookId, quantity = 1 } = req.body;
 
       if (!bookId || quantity < 1) {
-        return res.status(400).json({ message: 'Invalid bookId or quantity' });
+        return res.status(400).json({ message: 'Thông tin sách hoặc số lượng không hợp lệ' });
       }
 
       // Check if item already in cart
@@ -70,13 +70,13 @@ export default async function handler(req, res) {
         );
       }
 
-      return res.status(201).json({ message: 'Item added to cart' });
+      return res.status(201).json({ message: 'Đã thêm sản phẩm vào giỏ hàng' });
     } else if (req.method === 'DELETE') {
       // Remove item from cart
       const { cartId } = req.body;
 
       if (!cartId) {
-        return res.status(400).json({ message: 'Invalid cartId' });
+        return res.status(400).json({ message: 'Mã giỏ hàng không hợp lệ' });
       }
 
       await conn.query(
@@ -84,13 +84,13 @@ export default async function handler(req, res) {
         [cartId, userId]
       );
 
-      return res.status(200).json({ message: 'Item removed from cart' });
+      return res.status(200).json({ message: 'Đã xóa sản phẩm khỏi giỏ hàng' });
     } else if (req.method === 'PUT') {
       // Update item quantity
       const { cartId, quantity } = req.body;
 
       if (!cartId || quantity < 0) {
-        return res.status(400).json({ message: 'Invalid cartId or quantity' });
+        return res.status(400).json({ message: 'Thông tin cập nhật không hợp lệ' });
       }
 
       if (quantity === 0) {
@@ -106,13 +106,13 @@ export default async function handler(req, res) {
         );
       }
 
-      return res.status(200).json({ message: 'Quantity updated' });
+      return res.status(200).json({ message: 'Đã cập nhật số lượng' });
     } else {
-      return res.status(405).json({ message: 'Method not allowed' });
+      return res.status(405).json({ message: 'Phương thức không được hỗ trợ' });
     }
   } catch (error) {
     console.error('Cart API error:', error);
-    return res.status(500).json({ message: 'Internal server error', error: error.message });
+    return res.status(500).json({ message: 'Lỗi máy chủ khi xử lý giỏ hàng', error: error.message });
   } finally {
     conn.release();
   }
